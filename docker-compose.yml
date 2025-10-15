@@ -1,0 +1,64 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    container_name: wishmachine_app
+    ports:
+      - "8080:8080"
+    environment:
+      - FLASK_APP=app.py
+      - FLASK_ENV=production
+      - DATABASE_URL=postgresql://wishuser:wishpass@db:5432/wishmachine
+      - RATELIMIT_STORAGE_URL=redis://redis:6379
+    env_file:
+      - .env
+    depends_on:
+      - db
+      - redis
+    restart: unless-stopped
+    volumes:
+      - ./migrations:/app/migrations
+    networks:
+      - wishnet
+
+  db:
+    image: postgres:15-alpine
+    container_name: wishmachine_db
+    environment:
+      - POSTGRES_USER=wishuser
+      - POSTGRES_PASSWORD=wishpass
+      - POSTGRES_DB=wishmachine
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+    networks:
+      - wishnet
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U wishuser -d wishmachine"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: wishmachine_redis
+    ports:
+      - "6379:6379"
+    restart: unless-stopped
+    networks:
+      - wishnet
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+volumes:
+  postgres_data:
+
+networks:
+  wishnet:
+    driver: bridge

@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pricing - The Wish Machine</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;600;700&family=Inter:wght@300;400;600&display=swap">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: white;
+            padding: 40px 20px;
+        }
+        .container { max-width: 1200px; margin: 0 auto; }
+        h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 48px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .subtitle {
+            text-align: center;
+            font-size: 20px;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 60px;
+        }
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        .pricing-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 40px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        .pricing-card:hover { transform: translateY(-10px); border-color: rgba(255, 255, 255, 0.4); }
+        .pricing-card.featured {
+            border-color: #f093fb;
+            box-shadow: 0 20px 60px rgba(240, 147, 251, 0.3);
+        }
+        .badge {
+            position: absolute;
+            top: -15px;
+            right: 20px;
+            background: #f093fb;
+            color: white;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+        .tier-name {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        .price {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+        .price-period { font-size: 16px; color: rgba(255, 255, 255, 0.7); margin-bottom: 30px; }
+        .features {
+            list-style: none;
+            margin-bottom: 30px;
+        }
+        .features li {
+            padding: 12px 0;
+            padding-left: 30px;
+            position: relative;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .features li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #f093fb;
+            font-weight: 700;
+        }
+        .cta-button {
+            width: 100%;
+            padding: 18px;
+            background: white;
+            color: #667eea;
+            border: none;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: block;
+            text-align: center;
+        }
+        .cta-button:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3); }
+        .cta-button.secondary {
+            background: transparent;
+            border: 2px solid white;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Choose Your Plan</h1>
+        <p class="subtitle">Select the perfect tier to manifest your reality</p>
+
+        <div class="pricing-grid">
+            <div class="pricing-card">
+                <div class="tier-name">Free</div>
+                <div class="price">$0</div>
+                <div class="price-period">forever</div>
+                <ul class="features">
+                    <li>10 wishes per month</li>
+                    <li>Standard quantum processing</li>
+                    <li>Basic analytics</li>
+                    <li>Community support</li>
+                </ul>
+                {% if current_user.is_authenticated %}
+                    {% if current_user.subscription_tier == 'free' %}
+                        <button class="cta-button" disabled>Current Plan</button>
+                    {% else %}
+                        <a href="/auth/account" class="cta-button secondary">Manage Plan</a>
+                    {% endif %}
+                {% else %}
+                    <a href="/signup" class="cta-button">Get Started Free</a>
+                {% endif %}
+            </div>
+
+            <div class="pricing-card featured">
+                <div class="badge">Most Popular</div>
+                <div class="tier-name">Premium</div>
+                <div class="price">$9.99</div>
+                <div class="price-period">per month</div>
+                <ul class="features">
+                    <li>100 wishes per month</li>
+                    <li>Priority quantum processing</li>
+                    <li>Advanced analytics & insights</li>
+                    <li>Wish history & tracking</li>
+                    <li>Email support</li>
+                </ul>
+                {% if current_user.is_authenticated %}
+                    {% if current_user.subscription_tier == 'premium' and current_user.subscription_status == 'active' %}
+                        <button class="cta-button" disabled>Current Plan</button>
+                    {% else %}
+                        <a href="/subscribe/premium" class="cta-button">Upgrade to Premium</a>
+                    {% endif %}
+                {% else %}
+                    <a href="/signup" class="cta-button">Start Premium Trial</a>
+                {% endif %}
+            </div>
+
+            <div class="pricing-card">
+                <div class="tier-name">Unlimited</div>
+                <div class="price">$29.99</div>
+                <div class="price-period">per month</div>
+                <ul class="features">
+                    <li>Unlimited wishes</li>
+                    <li>Highest priority processing</li>
+                    <li>Premium analytics dashboard</li>
+                    <li>Unlimited wish history</li>
+                    <li>Priority email & chat support</li>
+                    <li>Early access to new features</li>
+                    <li>API access (coming soon)</li>
+                </ul>
+                {% if current_user.is_authenticated %}
+                    {% if current_user.subscription_tier == 'unlimited' and current_user.subscription_status == 'active' %}
+                        <button class="cta-button" disabled>Current Plan</button>
+                    {% else %}
+                        <a href="/subscribe/unlimited" class="cta-button">Go Unlimited</a>
+                    {% endif %}
+                {% else %}
+                    <a href="/signup" class="cta-button">Get Unlimited</a>
+                {% endif %}
+            </div>
+        </div>
+
+        <div style="text-align: center; margin-top: 40px;">
+            <a href="/" style="color: white; text-decoration: underline;">Back to Home</a>
+        </div>
+    </div>
+</body>
+</html>
