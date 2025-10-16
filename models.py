@@ -59,9 +59,12 @@ class User(UserMixin, db.Model):
 
     def can_make_wish(self) -> bool:
         """Check if user has wishes remaining this month."""
-        # Check bonus wishes first
-        if self.bonus_wishes > 0:
-            return True
+        # Check bonus wishes first (with graceful fallback for older database schemas)
+        try:
+            if hasattr(self, 'bonus_wishes') and self.bonus_wishes > 0:
+                return True
+        except:
+            pass
 
         # Reset counter if it's a new month
         now = datetime.utcnow()
@@ -74,10 +77,13 @@ class User(UserMixin, db.Model):
 
     def increment_wish_count(self) -> None:
         """Increment the wish counter."""
-        # Use bonus wishes first
-        if self.bonus_wishes > 0:
-            self.bonus_wishes -= 1
-        else:
+        # Use bonus wishes first (with graceful fallback for older database schemas)
+        try:
+            if hasattr(self, 'bonus_wishes') and self.bonus_wishes > 0:
+                self.bonus_wishes -= 1
+            else:
+                self.wishes_this_month += 1
+        except:
             self.wishes_this_month += 1
 
         self.total_wishes += 1
