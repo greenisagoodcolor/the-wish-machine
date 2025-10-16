@@ -6,8 +6,8 @@ import os
 from datetime import datetime
 from typing import Optional, Dict, Any
 import stripe
-from flask import Blueprint, request, jsonify, redirect, url_for, flash, current_app
-from flask_login import login_required, current_user
+from flask import Blueprint, request, jsonify, redirect, url_for, flash, current_app, session
+from flask_login import login_required, current_user, login_user
 from models import db, User, Payment
 from email_service import email_service
 
@@ -80,6 +80,47 @@ class StripeService:
 
         except Exception as e:
             current_app.logger.error(f'Error creating checkout session: {str(e)}')
+            return None
+
+    def create_guest_wish_checkout(self, success_url: str, cancel_url: str, session_id: str) -> Optional[str]:
+        """
+        Create a Stripe checkout session for anonymous guest wish purchase.
+
+        Args:
+            success_url: URL to redirect on success
+            cancel_url: URL to redirect on cancel
+            session_id: Flask session ID to track the guest
+
+        Returns:
+            Checkout session URL or None
+        """
+        try:
+            if not self.price_id_single:
+                current_app.logger.error('No price ID configured for single wish')
+                return None
+
+            # Create checkout session for guest (no pre-existing customer)
+            checkout_session = stripe.checkout.Session.create(
+                payment_method_types=['card'],
+                line_items=[{
+                    'price': self.price_id_single,
+                    'quantity': 1,
+                }],
+                mode='payment',  # One-time payment
+                success_url=success_url,
+                cancel_url=cancel_url,
+                billing_address_collection='required',  # Collect email
+                client_reference_id=session_id,  # Track session
+                metadata={
+                    'guest_purchase': 'true',
+                    'session_id': session_id
+                }
+            )
+
+            return checkout_session.url
+
+        except Exception as e:
+            current_app.logger.error(f'Error creating guest wish checkout: {str(e)}')
             return None
 
     def create_single_wish_checkout(self, user: User, success_url: str, cancel_url: str) -> Optional[str]:
@@ -166,6 +207,53 @@ class StripeService:
             session: Stripe checkout session object
         """
         try:
+            # Check if this is a guest purchase
+            is_guest_purchase = session['metadata'].get('guest_purchase') == 'true'
+
+            if is_guest_purchase:
+                # Guest purchase - create new user account
+                customer_details = session.get('customer_details', {})
+                email = customer_details.get('email')
+
+                if not email:
+                    current_app.logger.error('No email found in guest checkout session')
+                    return
+
+                # Check if user already exists
+                existing_user = User.query.filter_by(email=email).first()
+
+                if existing_user:
+                    # User exists - just add bonus wish
+                    existing_user.bonus_wishes += 1
+                    existing_user.updated_at = datetime.utcnow()
+                    db.session.commit()
+                    current_app.logger.info(f'Added bonus wish to existing user {existing_user.id}')
+                    return
+
+                # Create new user account
+                import secrets
+                new_user = User(
+                    email=email,
+                    subscription_tier='free',
+                    bonus_wishes=1  # Grant the purchased wish
+                )
+                # Set a random secure password (user will need to reset if they want to login with password)
+                new_user.set_password(secrets.token_urlsafe(32))
+
+                # Add Stripe customer info if available
+                if session.get('customer'):
+                    new_user.stripe_customer_id = session['customer']
+
+                db.session.add(new_user)
+                db.session.commit()
+
+                current_app.logger.info(f'Created new user account for guest purchase: {email} (ID: {new_user.id})')
+
+                # Note: We can't directly set Flask session from webhook
+                # The frontend will need to handle login after purchase
+                return
+
+            # Regular checkout for existing users
             user_id = int(session['metadata']['user_id'])
             purchase_type = session['metadata'].get('purchase_type')
 
@@ -316,7 +404,7 @@ def subscribe(tier: str):
 @payments_bp.route('/buy-single-wish')
 @login_required
 def buy_single_wish():
-    """Create a checkout session for one-time wish purchase."""
+    """Create a checkout session for one-time wish purchase (logged-in users)."""
     # Create checkout session
     success_url = url_for('payments.purchase_success', _external=True)
     cancel_url = url_for('index', _external=True)
@@ -325,6 +413,30 @@ def buy_single_wish():
         user=current_user,
         success_url=success_url,
         cancel_url=cancel_url
+    )
+
+    if not checkout_url:
+        flash('Error creating checkout session. Please try again.', 'error')
+        return redirect(url_for('index'))
+
+    return redirect(checkout_url)
+
+
+@payments_bp.route('/buy-single-wish-guest')
+def buy_single_wish_guest():
+    """Create a checkout session for anonymous guest wish purchase."""
+    # Store a reference in session to track this purchase
+    import secrets
+    session['guest_purchase_ref'] = secrets.token_urlsafe(16)
+
+    # Create checkout session for guest
+    success_url = url_for('payments.guest_purchase_success', _external=True)
+    cancel_url = url_for('index', _external=True)
+
+    checkout_url = stripe_service.create_guest_wish_checkout(
+        success_url=success_url,
+        cancel_url=cancel_url,
+        session_id=session['guest_purchase_ref']
     )
 
     if not checkout_url:
@@ -345,9 +457,32 @@ def subscription_success():
 @payments_bp.route('/purchase/success')
 @login_required
 def purchase_success():
-    """One-time purchase success page."""
+    """One-time purchase success page (logged-in users)."""
     flash('Purchase successful! Your special wish has been added to your account.', 'success')
     return redirect(url_for('app_main'))
+
+
+@payments_bp.route('/guest-purchase/success')
+def guest_purchase_success():
+    """Guest purchase success page with auto-login."""
+    # Check if there's a pending user ID from webhook
+    pending_user_id = session.get('pending_user_id')
+
+    if pending_user_id:
+        user = User.query.get(pending_user_id)
+        if user:
+            # Auto-login the newly created user
+            login_user(user)
+            session.pop('pending_user_id', None)
+            session.pop('guest_purchase_ref', None)
+            session.pop('anonymous_wish_count', None)  # Reset anonymous counter
+
+            flash('Welcome! Your account has been created and your special wish is ready to use.', 'success')
+            return redirect(url_for('index'))
+
+    # Fallback if webhook hasn't processed yet
+    flash('Payment successful! Your account is being set up...', 'info')
+    return redirect(url_for('index'))
 
 
 @payments_bp.route('/manage-subscription')

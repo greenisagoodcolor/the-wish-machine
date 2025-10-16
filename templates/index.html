@@ -622,6 +622,153 @@
             margin-bottom: 15px;
         }
 
+        /* Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(8px);
+            z-index: 9999;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .modal-overlay.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.95) 0%, rgba(118, 75, 162, 0.95) 100%);
+            backdrop-filter: blur(20px);
+            border-radius: 32px;
+            padding: 50px 40px;
+            max-width: 500px;
+            width: 100%;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5);
+            position: relative;
+            animation: slideUp 0.4s ease-out;
+            text-align: center;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 20px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-close:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: rotate(90deg);
+        }
+
+        .modal-emoji {
+            font-size: 72px;
+            margin-bottom: 20px;
+            animation: pulse 2s infinite;
+        }
+
+        .modal-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            background: linear-gradient(135deg, #ffffff 0%, #f093fb 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .modal-subtitle {
+            font-size: 18px;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .modal-price {
+            font-size: 56px;
+            font-weight: 700;
+            margin: 20px 0;
+            color: white;
+        }
+
+        .modal-price-label {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 30px;
+        }
+
+        .modal-cta-primary {
+            width: 100%;
+            padding: 20px;
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--primary);
+            background: white;
+            border: none;
+            border-radius: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Space Grotesk', sans-serif;
+            margin-bottom: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .modal-cta-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .modal-cta-secondary {
+            width: 100%;
+            padding: 18px;
+            font-size: 16px;
+            font-weight: 600;
+            color: white;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Inter', sans-serif;
+            text-decoration: none;
+            display: block;
+        }
+
+        .modal-cta-secondary:hover {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+
         /* Footer */
         footer {
             text-align: center;
@@ -640,6 +787,23 @@
             .card { padding: 30px 20px; }
             .pricing-grid { grid-template-columns: 1fr; }
             .nav-links { gap: 15px; font-size: 13px; }
+
+            .modal {
+                padding: 40px 25px;
+                margin: 0 10px;
+            }
+
+            .modal-title {
+                font-size: 28px;
+            }
+
+            .modal-subtitle {
+                font-size: 16px;
+            }
+
+            .modal-price {
+                font-size: 48px;
+            }
         }
     </style>
 </head>
@@ -715,24 +879,6 @@
             <p class="pricing-subtitle">Select the perfect tier to manifest your reality</p>
 
             <div class="pricing-grid">
-                <div class="pricing-card special">
-                    <div class="badge">Try It First!</div>
-                    <div class="tier-name">One Special Wish</div>
-                    <div class="price">$0.25</div>
-                    <div class="price-period">one time</div>
-                    <ul class="features">
-                        <li>One quantum wish</li>
-                        <li>Perfect for first-timers</li>
-                        <li>No subscription needed</li>
-                        <li>Experience the magic</li>
-                    </ul>
-                    {% if user and user.is_authenticated %}
-                        <a href="/buy-single-wish" class="cta-button">Buy One Wish</a>
-                    {% else %}
-                        <a href="/auth/signup" class="cta-button">Sign Up & Buy</a>
-                    {% endif %}
-                </div>
-
                 <div class="pricing-card">
                     <div class="tier-name">Free</div>
                     <div class="price">$0</div>
@@ -773,7 +919,7 @@
                             <a href="/subscribe/premium" class="cta-button">Upgrade to Premium</a>
                         {% endif %}
                     {% else %}
-                        <a href="/auth/signup" class="cta-button">Start Premium Trial</a>
+                        <a href="/auth/signup" class="cta-button">Start Premium</a>
                     {% endif %}
                 </div>
 
@@ -819,6 +965,20 @@
         <footer>
             <p>&copy; 2025 The Wish Machine. All rights reserved.</p>
         </footer>
+    </div>
+
+    <!-- Upsell Modal -->
+    <div class="modal-overlay" id="upsellModal">
+        <div class="modal">
+            <button class="modal-close" onclick="closeModal()">&times;</button>
+            <div class="modal-emoji">✨</div>
+            <h3 class="modal-title">Loved it?</h3>
+            <p class="modal-subtitle">Get one more wish for just a quarter! Perfect for trying out the magic before committing.</p>
+            <div class="modal-price">$0.25</div>
+            <div class="modal-price-label">one-time, no subscription</div>
+            <a href="/buy-single-wish-guest" class="modal-cta-primary">Get One More Wish</a>
+            <a href="/auth/signup" class="modal-cta-secondary">Or Sign Up for 10 Free Wishes/Month</a>
+        </div>
     </div>
 
     <script>
@@ -907,6 +1067,13 @@
 
                 displayResults(data, wish, intensity);
 
+                // Show modal for anonymous users after first wish
+                if (data.show_modal && data.anonymous) {
+                    setTimeout(() => {
+                        showModal();
+                    }, 1500);  // Show modal 1.5s after results appear
+                }
+
             } catch (error) {
                 console.error('Error:', error);
                 alert('Something went wrong with the quantum field...');
@@ -974,6 +1141,33 @@
                     target.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 }
             });
+        });
+
+        // Modal functions
+        function showModal() {
+            const modal = document.getElementById('upsellModal');
+            modal.classList.add('show');
+            document.body.style.overflow = 'hidden';  // Prevent scrolling
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('upsellModal');
+            modal.classList.remove('show');
+            document.body.style.overflow = '';  // Restore scrolling
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('upsellModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+
+        // Close modal with Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeModal();
+            }
         });
     </script>
 </body>

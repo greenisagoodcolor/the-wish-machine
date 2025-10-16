@@ -6,7 +6,7 @@ Connected to PostgreSQL database.
 
 import os
 from datetime import datetime
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, session
 from flask_login import LoginManager, login_required, current_user
 from flask_migrate import Migrate
 from flask_limiter import Limiter
@@ -174,20 +174,10 @@ def pricing():
 
 
 @app.route('/make_wish', methods=['POST'])
-@login_required
 @limiter.limit("30 per hour")
 def make_wish():
-    """Process a wish and return quantum collapse results."""
+    """Process a wish and return quantum collapse results. Allows one free anonymous wish."""
     try:
-        # Check if user has wishes remaining
-        if not current_user.can_make_wish():
-            limit = current_user.get_wish_limit()
-            return jsonify({
-                "error": f"You've reached your monthly limit of {limit} wishes. Please upgrade your plan.",
-                "limit_reached": True,
-                "current_tier": current_user.subscription_tier
-            }), 429
-
         data = request.get_json()
         wish_text = data.get('wish', '')
         intensity = int(data.get('intensity', 50))
@@ -202,41 +192,71 @@ def make_wish():
         if len(wish_text) > 500:
             return jsonify({"error": "Wish text must be 500 characters or less"}), 400
 
+        # Check if user is authenticated or anonymous
+        is_authenticated = current_user.is_authenticated
+
+        if is_authenticated:
+            # Authenticated user - check their wish limit
+            if not current_user.can_make_wish():
+                limit = current_user.get_wish_limit()
+                return jsonify({
+                    "error": f"You've reached your monthly limit of {limit} wishes. Please upgrade your plan.",
+                    "limit_reached": True,
+                    "current_tier": current_user.subscription_tier
+                }), 429
+        else:
+            # Anonymous user - check session for free wish (max 1)
+            anonymous_wishes = session.get('anonymous_wish_count', 0)
+            if anonymous_wishes >= 1:
+                return jsonify({
+                    "error": "You've used your free wish. Sign up for 10 free wishes per month!",
+                    "limit_reached": True,
+                    "anonymous": True,
+                    "show_upsell": True
+                }), 429
+
         # Run simulation
         results = run_wish_simulation(wish_text, intensity)
 
-        # Increment user's wish count
-        current_user.increment_wish_count()
+        if is_authenticated:
+            # Save to database and increment counter for authenticated users
+            current_user.increment_wish_count()
 
-        # Save wish to database
-        wish_record = Wish(
-            user_id=current_user.id,
-            wish_text=wish_text,
-            intensity=intensity,
-            manifested_percent=results['manifested_percent'],
-            not_manifested_percent=results['not_manifested_percent'],
-            difference_from_baseline=results['difference_from_baseline'],
-            manifested_count=results['manifested_count'],
-            not_manifested_count=results['not_manifested_count'],
-            num_trials=results['num_trials'],
-            consciousness_level=results['consciousness_level'],
-            preference_strength=results['preference_strength'],
-            ip_address=request.remote_addr
-        )
-        db.session.add(wish_record)
-        db.session.commit()
+            wish_record = Wish(
+                user_id=current_user.id,
+                wish_text=wish_text,
+                intensity=intensity,
+                manifested_percent=results['manifested_percent'],
+                not_manifested_percent=results['not_manifested_percent'],
+                difference_from_baseline=results['difference_from_baseline'],
+                manifested_count=results['manifested_count'],
+                not_manifested_count=results['not_manifested_count'],
+                num_trials=results['num_trials'],
+                consciousness_level=results['consciousness_level'],
+                preference_strength=results['preference_strength'],
+                ip_address=request.remote_addr
+            )
+            db.session.add(wish_record)
+            db.session.commit()
 
-        # Add usage info to response
-        results['wishes_remaining'] = current_user.get_wish_limit() - current_user.wishes_this_month
-        results['wishes_used'] = current_user.wishes_this_month
-        results['wish_limit'] = current_user.get_wish_limit()
-        results['subscription_tier'] = current_user.subscription_tier
+            # Add usage info to response
+            results['wishes_remaining'] = current_user.get_wish_limit() - current_user.wishes_this_month
+            results['wishes_used'] = current_user.wishes_this_month
+            results['wish_limit'] = current_user.get_wish_limit()
+            results['subscription_tier'] = current_user.subscription_tier
+            results['anonymous'] = False
+        else:
+            # Anonymous user - increment session counter, don't save to DB
+            session['anonymous_wish_count'] = anonymous_wishes + 1
+            results['anonymous'] = True
+            results['show_modal'] = True  # Trigger modal on frontend
 
         return jsonify(results)
 
     except Exception as e:
         app.logger.error(f'Error making wish: {str(e)}')
-        db.session.rollback()
+        if is_authenticated:
+            db.session.rollback()
         return jsonify({"error": "An error occurred processing your wish"}), 500
 
 
