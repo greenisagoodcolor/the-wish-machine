@@ -156,9 +156,7 @@ def run_wish_simulation(wish_text, intensity):
 @app.route('/')
 def index():
     """Render the main page."""
-    if current_user.is_authenticated:
-        return render_template('index.html', user=current_user)
-    return render_template('landing.html')
+    return render_template('index.html', user=current_user)
 
 
 @app.route('/app')
