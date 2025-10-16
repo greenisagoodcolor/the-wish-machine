@@ -402,10 +402,97 @@
             background: rgba(255, 255, 255, 0.15);
             border-color: rgba(255, 255, 255, 0.4);
         }
+
+        /* Navigation */
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(15, 15, 35, 0.8);
+            backdrop-filter: blur(10px);
+            padding: 15px 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-brand {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 20px;
+            font-weight: 700;
+            color: white;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 25px;
+            align-items: center;
+        }
+
+        .nav-link {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: white;
+        }
+
+        .nav-link.btn {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            padding: 8px 20px;
+            border-radius: 8px;
+            color: white;
+        }
+
+        .nav-link.btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px var(--glow);
+        }
+
+        .container {
+            margin-top: 80px;
+        }
+
+        .user-info {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.6);
+        }
     </style>
 </head>
 <body>
     <div class="particles" id="particles"></div>
+
+    <nav class="nav">
+        <div class="nav-container">
+            <a href="/" class="nav-brand">✨ The Wish Machine</a>
+            <div class="nav-links">
+                {% if user and user.is_authenticated %}
+                    <span class="user-info">{{ user.email }}</span>
+                    <a href="/pricing" class="nav-link">Pricing</a>
+                    <a href="/auth/account" class="nav-link">Account</a>
+                    <a href="/auth/logout" class="nav-link">Logout</a>
+                {% else %}
+                    <a href="/pricing" class="nav-link">Pricing</a>
+                    <a href="/auth/login" class="nav-link">Login</a>
+                    <a href="/auth/signup" class="nav-link btn">Sign Up</a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
 
     <div class="container">
         <div class="header">
@@ -536,6 +623,27 @@
                 });
 
                 const data = await response.json();
+
+                // Check for authentication error
+                if (response.status === 401 || response.status === 403) {
+                    alert('Please sign up or log in to make wishes!');
+                    window.location.href = '/auth/signup';
+                    return;
+                }
+
+                // Check for limit reached
+                if (data.limit_reached) {
+                    alert(data.error + '\n\nClick OK to view pricing plans.');
+                    window.location.href = '/pricing';
+                    return;
+                }
+
+                // Check for other errors
+                if (data.error) {
+                    alert(data.error);
+                    return;
+                }
+
                 displayResults(data, wish, intensity);
 
             } catch (error) {
