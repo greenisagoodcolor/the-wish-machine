@@ -788,9 +788,19 @@
             .pricing-grid { grid-template-columns: 1fr; }
             .nav-links { gap: 15px; font-size: 13px; }
 
+            .modal-overlay {
+                align-items: flex-end;  /* Bottom sheet style on mobile */
+            }
+
             .modal {
                 padding: 40px 25px;
-                margin: 0 10px;
+                margin: 0;
+                border-bottom-left-radius: 0;
+                border-bottom-right-radius: 0;
+                max-height: 90vh;
+                overflow-y: auto;
+                width: 100%;
+                max-width: 100%;
             }
 
             .modal-title {
@@ -803,6 +813,13 @@
 
             .modal-price {
                 font-size: 48px;
+            }
+
+            .modal-cta-primary,
+            .modal-cta-secondary {
+                font-size: 16px;
+                padding: 18px;
+                min-height: 56px;  /* Touch-friendly tap target */
             }
         }
     </style>
@@ -973,10 +990,10 @@
             <button class="modal-close" onclick="closeModal()">&times;</button>
             <div class="modal-emoji">✨</div>
             <h3 class="modal-title">Loved it?</h3>
-            <p class="modal-subtitle">Get one more wish for just a quarter! Perfect for trying out the magic before committing.</p>
+            <p class="modal-subtitle">Love it? Get one more wish for just a quarter — no commitment, no subscription. Try it before you decide.</p>
             <div class="modal-price">$0.25</div>
             <div class="modal-price-label">one-time, no subscription</div>
-            <a href="/buy-single-wish-guest" class="modal-cta-primary">Get One More Wish</a>
+            <a href="/buy-single-wish-guest" class="modal-cta-primary">Yes! Get One More Wish ($0.25)</a>
             <a href="/auth/signup" class="modal-cta-secondary">Or Sign Up for 10 Free Wishes/Month</a>
         </div>
     </div>
@@ -1041,13 +1058,6 @@
 
                 const data = await response.json();
 
-                // Check for authentication error
-                if (response.status === 401 || response.status === 403) {
-                    alert('Please sign up or log in to make wishes!');
-                    window.location.href = '/auth/signup';
-                    return;
-                }
-
                 // Check for limit reached
                 if (data.limit_reached) {
                     alert(data.error + '\n\nClick OK to view pricing plans.');
@@ -1070,8 +1080,14 @@
                 // Show modal for anonymous users after first wish
                 if (data.show_modal && data.anonymous) {
                     setTimeout(() => {
-                        showModal();
-                    }, 1500);  // Show modal 1.5s after results appear
+                        try {
+                            showModal();
+                        } catch (e) {
+                            console.error('Error showing modal:', e);
+                            // Fallback: scroll to pricing
+                            window.location.href = '#pricing';
+                        }
+                    }, 2000);  // Show modal 2s after results for dramatic effect
                 }
 
             } catch (error) {

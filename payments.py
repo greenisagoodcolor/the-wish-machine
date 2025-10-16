@@ -107,7 +107,7 @@ class StripeService:
                     'quantity': 1,
                 }],
                 mode='payment',  # One-time payment
-                success_url=success_url,
+                success_url=f"{success_url}?session_id={{CHECKOUT_SESSION_ID}}",
                 cancel_url=cancel_url,
                 billing_address_collection='required',  # Collect email
                 client_reference_id=session_id,  # Track session
@@ -465,23 +465,35 @@ def purchase_success():
 @payments_bp.route('/guest-purchase/success')
 def guest_purchase_success():
     """Guest purchase success page with auto-login."""
-    # Check if there's a pending user ID from webhook
-    pending_user_id = session.get('pending_user_id')
+    # Get the checkout session ID from Stripe redirect
+    checkout_session_id = request.args.get('session_id')
 
-    if pending_user_id:
-        user = User.query.get(pending_user_id)
-        if user:
-            # Auto-login the newly created user
-            login_user(user)
-            session.pop('pending_user_id', None)
-            session.pop('guest_purchase_ref', None)
-            session.pop('anonymous_wish_count', None)  # Reset anonymous counter
+    if checkout_session_id:
+        try:
+            # Retrieve the Stripe checkout session to get customer email
+            checkout_session = stripe.checkout.Session.retrieve(checkout_session_id)
+            customer_email = checkout_session.customer_details.email if checkout_session.customer_details else None
 
-            flash('Welcome! Your account has been created and your special wish is ready to use.', 'success')
-            return redirect(url_for('index'))
+            if customer_email:
+                # Find the user account (created by webhook or already exists)
+                user = User.query.filter_by(email=customer_email).first()
 
-    # Fallback if webhook hasn't processed yet
-    flash('Payment successful! Your account is being set up...', 'info')
+                if user:
+                    # Auto-login the user
+                    login_user(user, remember=True)
+                    session.pop('guest_purchase_ref', None)
+                    session.pop('anonymous_wish_count', None)  # Reset anonymous counter
+
+                    flash('Welcome! Your wish has been added to your account.', 'success')
+                    return redirect(url_for('index'))
+                else:
+                    # User not created yet - webhook might be delayed
+                    current_app.logger.warning(f'Guest purchase: User with email {customer_email} not found yet')
+        except Exception as e:
+            current_app.logger.error(f'Error in guest purchase success: {str(e)}')
+
+    # Fallback if session ID missing or user not found
+    flash('Payment successful! Check your email for account details.', 'info')
     return redirect(url_for('index'))
 
 

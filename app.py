@@ -35,6 +35,12 @@ app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
     'pool_recycle': 300,
 }
 
+# Session configuration for anonymous wishes
+app.config['SESSION_TYPE'] = 'filesystem'
+app.config['SESSION_PERMANENT'] = False
+app.config['SESSION_USE_SIGNER'] = True
+app.config['PERMANENT_SESSION_LIFETIME'] = 3600  # 1 hour
+
 # Initialize extensions
 db.init_app(app)
 bcrypt.init_app(app)
