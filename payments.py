@@ -27,6 +27,7 @@ class StripeService:
         self.webhook_secret = os.getenv('STRIPE_WEBHOOK_SECRET')
         self.price_id_premium = os.getenv('STRIPE_PRICE_ID_PREMIUM')
         self.price_id_unlimited = os.getenv('STRIPE_PRICE_ID_UNLIMITED')
+        self.price_id_single = os.getenv('STRIPE_PRICE_ID_SINGLE')
 
     def create_checkout_session(self, user: User, tier: str, success_url: str, cancel_url: str) -> Optional[str]:
         """
@@ -81,6 +82,55 @@ class StripeService:
             current_app.logger.error(f'Error creating checkout session: {str(e)}')
             return None
 
+    def create_single_wish_checkout(self, user: User, success_url: str, cancel_url: str) -> Optional[str]:
+        """
+        Create a Stripe checkout session for one-time wish purchase.
+
+        Args:
+            user: User object
+            success_url: URL to redirect on success
+            cancel_url: URL to redirect on cancel
+
+        Returns:
+            Checkout session URL or None
+        """
+        try:
+            if not self.price_id_single:
+                current_app.logger.error('No price ID configured for single wish')
+                return None
+
+            # Create or get Stripe customer
+            if not user.stripe_customer_id:
+                customer = stripe.Customer.create(
+                    email=user.email,
+                    metadata={'user_id': user.id}
+                )
+                user.stripe_customer_id = customer.id
+                db.session.commit()
+
+            # Create checkout session for one-time payment
+            session = stripe.checkout.Session.create(
+                customer=user.stripe_customer_id,
+                payment_method_types=['card'],
+                line_items=[{
+                    'price': self.price_id_single,
+                    'quantity': 1,
+                }],
+                mode='payment',  # One-time payment, not subscription
+                success_url=success_url,
+                cancel_url=cancel_url,
+                metadata={
+                    'user_id': user.id,
+                    'purchase_type': 'single_wish'
+                }
+            )
+
+            return session.url
+
+        except Exception as e:
+            current_app.logger.error(f'Error creating single wish checkout: {str(e)}')
+            return None
+
     def create_customer_portal_session(self, user: User, return_url: str) -> Optional[str]:
         """
         Create a Stripe customer portal session for managing subscriptions.
@@ -117,13 +167,24 @@ class StripeService:
         """
         try:
             user_id = int(session['metadata']['user_id'])
-            tier = session['metadata']['tier']
-            subscription_id = session['subscription']
+            purchase_type = session['metadata'].get('purchase_type')
 
             user = User.query.get(user_id)
             if not user:
                 current_app.logger.error(f'User {user_id} not found for checkout completion')
                 return
+
+            # Handle one-time wish purchase
+            if purchase_type == 'single_wish':
+                user.bonus_wishes += 1
+                user.updated_at = datetime.utcnow()
+                db.session.commit()
+                current_app.logger.info(f'User {user_id} purchased one special wish')
+                return
+
+            # Handle subscription purchase
+            tier = session['metadata']['tier']
+            subscription_id = session['subscription']
 
             # Update user subscription
             user.subscription_tier = tier
@@ -252,12 +313,41 @@ def subscribe(tier: str):
     return redirect(checkout_url)
 
 
+@payments_bp.route('/buy-single-wish')
+@login_required
+def buy_single_wish():
+    """Create a checkout session for one-time wish purchase."""
+    # Create checkout session
+    success_url = url_for('payments.purchase_success', _external=True)
+    cancel_url = url_for('pricing', _external=True)
+
+    checkout_url = stripe_service.create_single_wish_checkout(
+        user=current_user,
+        success_url=success_url,
+        cancel_url=cancel_url
+    )
+
+    if not checkout_url:
+        flash('Error creating checkout session. Please try again.', 'error')
+        return redirect(url_for('pricing'))
+
+    return redirect(checkout_url)
+
+
 @payments_bp.route('/subscription/success')
 @login_required
 def subscription_success():
     """Subscription success page."""
     flash('Subscription activated! Welcome to your new plan.', 'success')
     return redirect(url_for('auth.account'))
+
+
+@payments_bp.route('/purchase/success')
+@login_required
+def purchase_success():
+    """One-time purchase success page."""
+    flash('Purchase successful! Your special wish has been added to your account.', 'success')
+    return redirect(url_for('app_main'))
 
 
 @payments_bp.route('/manage-subscription')

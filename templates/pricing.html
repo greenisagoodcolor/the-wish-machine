@@ -47,6 +47,11 @@
             border-color: #f093fb;
             box-shadow: 0 20px 60px rgba(240, 147, 251, 0.3);
         }
+        .pricing-card.special {
+            border-color: rgba(240, 147, 251, 0.4);
+            box-shadow: 0 15px 40px rgba(240, 147, 251, 0.2);
+            transform: scale(1.02);
+        }
         .badge {
             position: absolute;
             top: -15px;
@@ -116,6 +121,24 @@
         <p class="subtitle">Select the perfect tier to manifest your reality</p>
 
         <div class="pricing-grid">
+            <div class="pricing-card special">
+                <div class="badge" style="background: linear-gradient(135deg, #667eea, #764ba2);">Try It First!</div>
+                <div class="tier-name">One Special Wish</div>
+                <div class="price">$0.25</div>
+                <div class="price-period">one time</div>
+                <ul class="features">
+                    <li>One quantum wish</li>
+                    <li>Perfect for first-timers</li>
+                    <li>No subscription needed</li>
+                    <li>Experience the magic</li>
+                </ul>
+                {% if current_user.is_authenticated %}
+                    <a href="/buy-single-wish" class="cta-button">Buy One Wish</a>
+                {% else %}
+                    <a href="/signup" class="cta-button">Sign Up & Buy</a>
+                {% endif %}
+            </div>
+
             <div class="pricing-card">
                 <div class="tier-name">Free</div>
                 <div class="price">$0</div>

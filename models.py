@@ -30,6 +30,7 @@ class User(UserMixin, db.Model):
     wishes_this_month = db.Column(db.Integer, default=0, nullable=False)
     total_wishes = db.Column(db.Integer, default=0, nullable=False)
     last_wish_reset = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
+    bonus_wishes = db.Column(db.Integer, default=0, nullable=False)  # Purchased one-time wishes
 
     # Metadata
     created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
@@ -58,6 +59,10 @@ class User(UserMixin, db.Model):
 
     def can_make_wish(self) -> bool:
         """Check if user has wishes remaining this month."""
+        # Check bonus wishes first
+        if self.bonus_wishes > 0:
+            return True
+
         # Reset counter if it's a new month
         now = datetime.utcnow()
         if self.last_wish_reset.month != now.month or self.last_wish_reset.year != now.year:
@@ -69,7 +74,12 @@ class User(UserMixin, db.Model):
 
     def increment_wish_count(self) -> None:
         """Increment the wish counter."""
-        self.wishes_this_month += 1
+        # Use bonus wishes first
+        if self.bonus_wishes > 0:
+            self.bonus_wishes -= 1
+        else:
+            self.wishes_this_month += 1
+
         self.total_wishes += 1
         self.updated_at = datetime.utcnow()
 
