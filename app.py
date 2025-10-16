@@ -1,6 +1,7 @@
 """
 The Wish Machine - Web Interface
 A beautiful UI for consciousness-influenced quantum collapse
+Connected to PostgreSQL database.
 """
 
 import os
