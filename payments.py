@@ -288,7 +288,7 @@ def subscribe(tier: str):
     """Create a checkout session for subscription."""
     if tier not in ['premium', 'unlimited']:
         flash('Invalid subscription tier', 'error')
-        return redirect(url_for('pricing'))
+        return redirect(url_for('index'))
 
     # Check if already subscribed to this tier
     if current_user.subscription_tier == tier and current_user.subscription_status == 'active':
@@ -297,7 +297,7 @@ def subscribe(tier: str):
 
     # Create checkout session
     success_url = url_for('payments.subscription_success', _external=True)
-    cancel_url = url_for('pricing', _external=True)
+    cancel_url = url_for('index', _external=True)
 
     checkout_url = stripe_service.create_checkout_session(
         user=current_user,
@@ -307,8 +307,8 @@ def subscribe(tier: str):
     )
 
     if not checkout_url:
-        flash('Error creating checkout session. Please try again.', 'error')
-        return redirect(url_for('pricing'))
+        flash('Error creating checkout session. Stripe Price IDs may not be configured.', 'error')
+        return redirect(url_for('index'))
 
     return redirect(checkout_url)
 
@@ -319,7 +319,7 @@ def buy_single_wish():
     """Create a checkout session for one-time wish purchase."""
     # Create checkout session
     success_url = url_for('payments.purchase_success', _external=True)
-    cancel_url = url_for('pricing', _external=True)
+    cancel_url = url_for('index', _external=True)
 
     checkout_url = stripe_service.create_single_wish_checkout(
         user=current_user,
@@ -329,7 +329,7 @@ def buy_single_wish():
 
     if not checkout_url:
         flash('Error creating checkout session. Please try again.', 'error')
-        return redirect(url_for('pricing'))
+        return redirect(url_for('index'))
 
     return redirect(checkout_url)
 
