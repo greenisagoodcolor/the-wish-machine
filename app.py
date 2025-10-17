@@ -43,6 +43,13 @@ app.config['SESSION_COOKIE_SECURE'] = os.getenv('RAILWAY_ENVIRONMENT') == 'produ
 app.config['SESSION_COOKIE_HTTPONLY'] = True
 app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'  # Allow session cookies across redirects
 app.config['PERMANENT_SESSION_LIFETIME'] = 3600  # 1 hour
+app.config['SESSION_REFRESH_EACH_REQUEST'] = True  # Refresh session on each request
+
+# Make sessions permanent by default (persist across browser close)
+@app.before_request
+def make_session_permanent():
+    """Make Flask sessions permanent by default."""
+    session.permanent = True
 
 # Initialize extensions
 db.init_app(app)

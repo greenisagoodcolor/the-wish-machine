@@ -20,14 +20,50 @@ payments_bp = Blueprint('payments', __name__)
 class StripeService:
     """Service for handling Stripe operations."""
 
-    def __init__(self) -> None:
-        """Initialize Stripe service."""
-        self.public_key = os.getenv('STRIPE_PUBLIC_KEY')
-        self.secret_key = os.getenv('STRIPE_SECRET_KEY')
-        self.webhook_secret = os.getenv('STRIPE_WEBHOOK_SECRET')
-        self.price_id_premium = os.getenv('STRIPE_PRICE_ID_PREMIUM')
-        self.price_id_unlimited = os.getenv('STRIPE_PRICE_ID_UNLIMITED')
-        self.price_id_single = os.getenv('STRIPE_PRICE_ID_SINGLE')
+    @property
+    def public_key(self) -> Optional[str]:
+        """Get Stripe publishable key from environment."""
+        return os.getenv('STRIPE_PUBLIC_KEY')
+
+    @property
+    def secret_key(self) -> Optional[str]:
+        """Get Stripe secret key from environment."""
+        return os.getenv('STRIPE_SECRET_KEY')
+
+    @property
+    def webhook_secret(self) -> Optional[str]:
+        """Get Stripe webhook secret from environment."""
+        return os.getenv('STRIPE_WEBHOOK_SECRET')
+
+    @property
+    def price_id_premium(self) -> Optional[str]:
+        """Get Premium plan price ID from environment."""
+        key = os.getenv('STRIPE_PRICE_ID_PREMIUM')
+        if not key:
+            current_app.logger.error('STRIPE_PRICE_ID_PREMIUM not set in environment')
+        else:
+            current_app.logger.info(f'STRIPE_PRICE_ID_PREMIUM loaded: {key[:20]}...')
+        return key
+
+    @property
+    def price_id_unlimited(self) -> Optional[str]:
+        """Get Unlimited plan price ID from environment."""
+        key = os.getenv('STRIPE_PRICE_ID_UNLIMITED')
+        if not key:
+            current_app.logger.error('STRIPE_PRICE_ID_UNLIMITED not set in environment')
+        else:
+            current_app.logger.info(f'STRIPE_PRICE_ID_UNLIMITED loaded: {key[:20]}...')
+        return key
+
+    @property
+    def price_id_single(self) -> Optional[str]:
+        """Get single wish price ID from environment."""
+        key = os.getenv('STRIPE_PRICE_ID_SINGLE')
+        if not key:
+            current_app.logger.error('STRIPE_PRICE_ID_SINGLE not set in environment')
+        else:
+            current_app.logger.info(f'STRIPE_PRICE_ID_SINGLE loaded: {key[:20]}...')
+        return key
 
     def create_checkout_session(self, user: User, tier: str, success_url: str, cancel_url: str) -> Optional[str]:
         """
@@ -373,6 +409,8 @@ stripe_service = StripeService()
 @payments_bp.route('/subscribe/<tier>')
 def subscribe(tier: str):
     """Create a checkout session for subscription."""
+    current_app.logger.info(f'Subscribe route hit: tier={tier}, authenticated={current_user.is_authenticated}')
+
     if tier not in ['premium', 'unlimited']:
         flash('Invalid subscription tier', 'error')
         return redirect(url_for('index'))
@@ -381,15 +419,18 @@ def subscribe(tier: str):
     if not current_user.is_authenticated:
         session['pending_subscription'] = tier
         session.modified = True  # Explicitly mark session as modified
+        current_app.logger.info(f'Anonymous user - storing subscription intent: {tier}')
         flash(f'Please sign up to subscribe to the {tier} plan', 'info')
         return redirect(url_for('auth.signup'))
 
     # Check if already subscribed to this tier
     if current_user.subscription_tier == tier and current_user.subscription_status == 'active':
+        current_app.logger.info(f'User {current_user.id} already subscribed to {tier}')
         flash(f'You are already subscribed to the {tier} plan', 'info')
         return redirect(url_for('auth.account'))
 
     # Create checkout session
+    current_app.logger.info(f'Creating checkout session for user {current_user.id}, tier={tier}')
     success_url = url_for('payments.subscription_success', _external=True)
     cancel_url = url_for('index', _external=True)
 
@@ -401,9 +442,11 @@ def subscribe(tier: str):
     )
 
     if not checkout_url:
+        current_app.logger.error(f'Failed to create checkout session for user {current_user.id}, tier={tier}')
         flash('Error creating checkout session. Stripe Price IDs may not be configured.', 'error')
         return redirect(url_for('index'))
 
+    current_app.logger.info(f'Redirecting to Stripe checkout: {checkout_url[:50]}...')
     return redirect(checkout_url)
 
 
