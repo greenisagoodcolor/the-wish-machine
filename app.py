@@ -73,7 +73,7 @@ Talisman(
     content_security_policy=csp,
     content_security_policy_nonce_in=['script-src'],
     x_content_type_options=True,
-    x_frame_options='SAMEORIGIN',
+    frame_options='SAMEORIGIN',
 )
 
 # Rate limiting
