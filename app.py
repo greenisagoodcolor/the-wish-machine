@@ -332,7 +332,9 @@ def recent_wishes():
 
             # Calculate time ago
             now = datetime.now(timezone.utc)
-            delta = now - wish.created_at
+            # Ensure wish.created_at is timezone-aware
+            created_at = wish.created_at if wish.created_at.tzinfo else wish.created_at.replace(tzinfo=timezone.utc)
+            delta = now - created_at
             if delta.seconds < 60:
                 time_ago = "just now"
             elif delta.seconds < 3600:

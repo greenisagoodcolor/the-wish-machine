@@ -11,14 +11,21 @@ from flask_login import login_required, current_user, login_user
 from models import db, User, Payment
 from email_service import email_service
 
-# Initialize Stripe
-stripe.api_key = os.getenv('STRIPE_SECRET_KEY')
-
 payments_bp = Blueprint('payments', __name__)
 
 
 class StripeService:
     """Service for handling Stripe operations."""
+
+    def _ensure_api_key(self) -> None:
+        """Ensure Stripe API key is set (lazy initialization)."""
+        if not stripe.api_key:
+            api_key = os.getenv('STRIPE_SECRET_KEY')
+            if api_key:
+                stripe.api_key = api_key
+                current_app.logger.info('Stripe API key initialized')
+            else:
+                current_app.logger.error('STRIPE_SECRET_KEY not found in environment')
 
     @property
     def public_key(self) -> Optional[str]:
@@ -79,6 +86,9 @@ class StripeService:
             Checkout session URL or None
         """
         try:
+            # Ensure Stripe API key is initialized
+            self._ensure_api_key()
+
             # Get the appropriate price ID
             price_id = self.price_id_premium if tier == 'premium' else self.price_id_unlimited
 
@@ -131,6 +141,9 @@ class StripeService:
             Checkout session URL or None
         """
         try:
+            # Ensure Stripe API key is initialized
+            self._ensure_api_key()
+
             if not self.price_id_single:
                 current_app.logger.error('No price ID configured for single wish')
                 return None
@@ -172,6 +185,9 @@ class StripeService:
             Checkout session URL or None
         """
         try:
+            # Ensure Stripe API key is initialized
+            self._ensure_api_key()
+
             if not self.price_id_single:
                 current_app.logger.error('No price ID configured for single wish')
                 return None
@@ -220,6 +236,9 @@ class StripeService:
             Portal session URL or None
         """
         try:
+            # Ensure Stripe API key is initialized
+            self._ensure_api_key()
+
             if not user.stripe_customer_id:
                 current_app.logger.error(f'User {user.id} has no Stripe customer ID')
                 return None
