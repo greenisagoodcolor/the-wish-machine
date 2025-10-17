@@ -124,9 +124,12 @@ def login():
 def logout():
     """User logout."""
     logout_user()
-    # Clear ALL session data to prevent stale flash messages
-    session.clear()
+    # Flash message BEFORE clearing session (flash messages are stored in session)
     flash('You have been logged out.', 'info')
+    # Clear custom session keys but preserve flash messages and CSRF token
+    keys_to_remove = [k for k in list(session.keys()) if k not in ['_flashes', '_csrf_token']]
+    for key in keys_to_remove:
+        session.pop(key, None)
     return redirect(url_for('auth.login'))
 
 

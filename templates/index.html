@@ -1472,13 +1472,29 @@
             }
         });
 
-        // Intensity slider
+        // Intensity slider with defensive coding
         const intensitySlider = document.getElementById('intensity');
         const intensityValue = document.getElementById('intensity-value');
 
-        intensitySlider.addEventListener('input', (e) => {
-            intensityValue.textContent = e.target.value + '%';
-        });
+        if (intensitySlider && intensityValue) {
+            // Initialize the display value on page load
+            intensityValue.textContent = intensitySlider.value + '%';
+
+            // Update value on slider input (real-time)
+            intensitySlider.addEventListener('input', function(e) {
+                intensityValue.textContent = e.target.value + '%';
+            });
+
+            // Also listen to 'change' event for broader browser compatibility
+            intensitySlider.addEventListener('change', function(e) {
+                intensityValue.textContent = e.target.value + '%';
+            });
+        } else {
+            console.error('Intensity slider elements not found!', {
+                slider: !!intensitySlider,
+                value: !!intensityValue
+            });
+        }
 
         // Make wish functionality
         const makeWishBtn = document.getElementById('make-wish-btn');
