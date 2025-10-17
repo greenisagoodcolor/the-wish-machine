@@ -124,9 +124,8 @@ def login():
 def logout():
     """User logout."""
     logout_user()
-    # Clear any pending subscription intent to prevent stale flash messages
-    session.pop('pending_subscription', None)
-    session.pop('guest_purchase_ref', None)
+    # Clear ALL session data to prevent stale flash messages
+    session.clear()
     flash('You have been logged out.', 'info')
     return redirect(url_for('auth.login'))
 

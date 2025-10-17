@@ -3,6 +3,7 @@ Stripe payment integration for The Wish Machine
 """
 
 import os
+import traceback
 from datetime import datetime, timezone
 from typing import Optional, Dict, Any
 import stripe
@@ -11,24 +12,14 @@ from flask_login import login_required, current_user, login_user
 from models import db, User, Payment
 from email_service import email_service
 
+# Initialize Stripe API key at module level (works with gunicorn workers)
+stripe.api_key = os.getenv('STRIPE_SECRET_KEY')
+
 payments_bp = Blueprint('payments', __name__)
 
 
 class StripeService:
     """Service for handling Stripe operations."""
-
-    def _ensure_api_key(self) -> None:
-        """Ensure Stripe API key is set (lazy initialization)."""
-        # Always load from environment to ensure it's set correctly
-        api_key = os.getenv('STRIPE_SECRET_KEY')
-        current_app.logger.info(f'Loading Stripe API key... Found: {bool(api_key)}')
-
-        if api_key:
-            stripe.api_key = api_key
-            current_app.logger.info(f'Stripe API key set: {api_key[:10]}...{api_key[-4:]}')
-        else:
-            current_app.logger.error('STRIPE_SECRET_KEY not found in environment!')
-            raise ValueError('STRIPE_SECRET_KEY environment variable not set')
 
     @property
     def public_key(self) -> Optional[str]:
@@ -89,26 +80,33 @@ class StripeService:
             Checkout session URL or None
         """
         try:
-            # Ensure Stripe API key is initialized
-            self._ensure_api_key()
+            import os
+            worker_pid = os.getpid()
+            current_app.logger.info(f'[Worker {worker_pid}] Creating checkout for user {user.id}, tier={tier}')
+            current_app.logger.info(f'[Worker {worker_pid}] Stripe API key set: {bool(stripe.api_key)}')
 
             # Get the appropriate price ID
             price_id = self.price_id_premium if tier == 'premium' else self.price_id_unlimited
 
             if not price_id:
-                current_app.logger.error(f'No price ID configured for tier: {tier}')
+                current_app.logger.error(f'[Worker {worker_pid}] No price ID configured for tier: {tier}')
                 return None
+
+            current_app.logger.info(f'[Worker {worker_pid}] Price ID: {price_id}')
 
             # Create or get Stripe customer
             if not user.stripe_customer_id:
+                current_app.logger.info(f'[Worker {worker_pid}] Creating Stripe customer for {user.email}')
                 customer = stripe.Customer.create(
                     email=user.email,
                     metadata={'user_id': user.id}
                 )
                 user.stripe_customer_id = customer.id
                 db.session.commit()
+                current_app.logger.info(f'[Worker {worker_pid}] Stripe customer created: {customer.id}')
 
             # Create checkout session
+            current_app.logger.info(f'[Worker {worker_pid}] Creating Stripe checkout session...')
             session = stripe.checkout.Session.create(
                 customer=user.stripe_customer_id,
                 payment_method_types=['card'],
@@ -125,10 +123,13 @@ class StripeService:
                 }
             )
 
+            current_app.logger.info(f'[Worker {worker_pid}] Checkout session created: {session.id}')
             return session.url
 
         except Exception as e:
-            current_app.logger.error(f'Error creating checkout session: {str(e)}')
+            worker_pid = os.getpid()
+            current_app.logger.error(f'[Worker {worker_pid}] Error creating checkout session: {str(e)}')
+            current_app.logger.error(f'[Worker {worker_pid}] Full traceback:\n{traceback.format_exc()}')
             return None
 
     def create_guest_wish_checkout(self, success_url: str, cancel_url: str, session_id: str) -> Optional[str]:
@@ -144,9 +145,6 @@ class StripeService:
             Checkout session URL or None
         """
         try:
-            # Ensure Stripe API key is initialized
-            self._ensure_api_key()
-
             if not self.price_id_single:
                 current_app.logger.error('No price ID configured for single wish')
                 return None
@@ -188,9 +186,6 @@ class StripeService:
             Checkout session URL or None
         """
         try:
-            # Ensure Stripe API key is initialized
-            self._ensure_api_key()
-
             if not self.price_id_single:
                 current_app.logger.error('No price ID configured for single wish')
                 return None
@@ -239,9 +234,6 @@ class StripeService:
             Portal session URL or None
         """
         try:
-            # Ensure Stripe API key is initialized
-            self._ensure_api_key()
-
             if not user.stripe_customer_id:
                 current_app.logger.error(f'User {user.id} has no Stripe customer ID')
                 return None

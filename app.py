@@ -422,6 +422,37 @@ def subscribe_email():
         return jsonify({"error": "An error occurred. Please try again."}), 500
 
 
+@app.route('/debug/stripe-status')
+def stripe_status():
+    """Debug endpoint to verify Stripe configuration across workers."""
+    import stripe
+    worker_pid = os.getpid()
+
+    # Check if Stripe API key is set
+    api_key_set = bool(stripe.api_key)
+
+    # Safely show partial API key
+    if stripe.api_key:
+        api_key_preview = f"{stripe.api_key[:10]}...{stripe.api_key[-4:]}"
+    else:
+        api_key_preview = "NOT SET"
+
+    # Get price IDs from environment
+    price_single = os.getenv('STRIPE_PRICE_ID_SINGLE', 'NOT SET')
+    price_premium = os.getenv('STRIPE_PRICE_ID_PREMIUM', 'NOT SET')
+    price_unlimited = os.getenv('STRIPE_PRICE_ID_UNLIMITED', 'NOT SET')
+
+    return jsonify({
+        "worker_pid": worker_pid,
+        "stripe_api_key_set": api_key_set,
+        "stripe_api_key_preview": api_key_preview,
+        "stripe_price_id_single": price_single,
+        "stripe_price_id_premium": price_premium,
+        "stripe_price_id_unlimited": price_unlimited,
+        "timestamp": datetime.now(timezone.utc).isoformat()
+    })
+
+
 # Database initialization
 @app.cli.command()
 def init_db():
