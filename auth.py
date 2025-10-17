@@ -2,7 +2,7 @@
 Authentication routes and forms for The Wish Machine
 """
 
-from datetime import datetime
+from datetime import datetime, timezone
 from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify, session
 from flask_login import login_user, logout_user, login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -100,7 +100,7 @@ def login():
             return render_template('login.html')
 
         # Update last login
-        user.last_login = datetime.utcnow()
+        user.last_login = datetime.now(timezone.utc)
         db.session.commit()
 
         login_user(user, remember=remember)

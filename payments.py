@@ -3,7 +3,7 @@ Stripe payment integration for The Wish Machine
 """
 
 import os
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Optional, Dict, Any
 import stripe
 from flask import Blueprint, request, jsonify, redirect, url_for, flash, current_app, session
@@ -226,7 +226,7 @@ class StripeService:
                 if existing_user:
                     # User exists - just add bonus wish
                     existing_user.bonus_wishes += 1
-                    existing_user.updated_at = datetime.utcnow()
+                    existing_user.updated_at = datetime.now(timezone.utc)
                     db.session.commit()
                     current_app.logger.info(f'Added bonus wish to existing user {existing_user.id}')
                     return
@@ -266,7 +266,7 @@ class StripeService:
             # Handle one-time wish purchase
             if purchase_type == 'single_wish':
                 user.bonus_wishes += 1
-                user.updated_at = datetime.utcnow()
+                user.updated_at = datetime.now(timezone.utc)
                 db.session.commit()
                 current_app.logger.info(f'User {user_id} purchased one special wish')
                 return
@@ -279,11 +279,11 @@ class StripeService:
             user.subscription_tier = tier
             user.stripe_subscription_id = subscription_id
             user.subscription_status = 'active'
-            user.updated_at = datetime.utcnow()
+            user.updated_at = datetime.now(timezone.utc)
 
             # Reset wish count for new tier
             user.wishes_this_month = 0
-            user.last_wish_reset = datetime.utcnow()
+            user.last_wish_reset = datetime.now(timezone.utc)
 
             db.session.commit()
 
@@ -314,7 +314,7 @@ class StripeService:
                 return
 
             user.subscription_status = status
-            user.updated_at = datetime.utcnow()
+            user.updated_at = datetime.now(timezone.utc)
 
             # If subscription is canceled or past_due, downgrade to free
             if status in ['canceled', 'unpaid']:

@@ -2,7 +2,7 @@
 Database models for The Wish Machine
 """
 
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Optional
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin
@@ -67,7 +67,7 @@ class User(UserMixin, db.Model):
             pass
 
         # Reset counter if it's a new month
-        now = datetime.utcnow()
+        now = datetime.now(timezone.utc)
         if self.last_wish_reset.month != now.month or self.last_wish_reset.year != now.year:
             self.wishes_this_month = 0
             self.last_wish_reset = now
@@ -87,7 +87,7 @@ class User(UserMixin, db.Model):
             self.wishes_this_month += 1
 
         self.total_wishes += 1
-        self.updated_at = datetime.utcnow()
+        self.updated_at = datetime.now(timezone.utc)
 
     def __repr__(self) -> str:
         return f'<User {self.email}>'

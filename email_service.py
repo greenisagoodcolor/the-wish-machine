@@ -406,7 +406,7 @@ class EmailService:
     def _get_current_time() -> str:
         """Get current time as formatted string."""
         from datetime import datetime
-        return datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S UTC')
+        return datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M:%S UTC')
 
 
 # Global email service instance

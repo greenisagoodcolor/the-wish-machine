@@ -6,7 +6,7 @@ Connected to PostgreSQL database.
 
 import os
 import secrets
-from datetime import datetime
+from datetime import datetime, timezone
 from flask import Flask, render_template, request, jsonify, session
 from flask_login import LoginManager, login_required, current_user
 from flask_migrate import Migrate
@@ -321,7 +321,7 @@ def recent_wishes():
             wish_preview = wish.wish_text[:60] + '...' if len(wish.wish_text) > 60 else wish.wish_text
 
             # Calculate time ago
-            now = datetime.utcnow()
+            now = datetime.now(timezone.utc)
             delta = now - wish.created_at
             if delta.seconds < 60:
                 time_ago = "just now"
