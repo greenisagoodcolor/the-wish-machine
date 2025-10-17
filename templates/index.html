@@ -776,6 +776,170 @@
             margin-bottom: 0;
         }
 
+        /* Email Signup Bar */
+        .email-signup-bar {
+            margin-top: 80px;
+            padding: 40px 48px;
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            text-align: center;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .email-signup-bar:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .email-signup-bar h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: white;
+        }
+
+        .email-signup-bar p {
+            font-size: 16px;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .email-signup-form {
+            display: flex;
+            gap: 15px;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .email-signup-input {
+            flex: 1;
+            padding: 18px 24px;
+            font-size: 16px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        .email-signup-input:focus {
+            outline: none;
+            border-color: rgba(255, 255, 255, 0.6);
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.2);
+        }
+
+        .email-signup-input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .email-signup-button {
+            padding: 18px 36px;
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent2) 100%);
+            color: white;
+            border: none;
+            border-radius: 14px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Space Grotesk', sans-serif;
+            white-space: nowrap;
+        }
+
+        .email-signup-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(240, 147, 251, 0.4);
+        }
+
+        .email-signup-message {
+            margin-top: 15px;
+            font-size: 14px;
+            display: none;
+        }
+
+        /* Special Wish Card */
+        .special-wish-container {
+            margin-top: 50px;
+            margin-bottom: 60px;
+        }
+
+        .special-wish-card {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(20px);
+            border-radius: 28px;
+            padding: 48px;
+            border: 2px solid rgba(240, 147, 251, 0.3);
+            text-align: center;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .special-wish-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(240, 147, 251, 0.5);
+            box-shadow: 0 24px 60px rgba(240, 147, 251, 0.3);
+        }
+
+        .special-wish-emoji {
+            font-size: 64px;
+            margin-bottom: 20px;
+        }
+
+        .special-wish-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: white;
+        }
+
+        .special-wish-subtitle {
+            font-size: 16px;
+            color: rgba(255, 255, 255, 0.85);
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .special-wish-price {
+            font-size: 48px;
+            font-weight: 700;
+            margin: 20px 0;
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent2) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .special-wish-cta {
+            width: 100%;
+            max-width: 400px;
+            padding: 20px;
+            background: white;
+            color: var(--primary);
+            border: none;
+            border-radius: 16px;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Space Grotesk', sans-serif;
+            text-decoration: none;
+            display: inline-block;
+            margin: 0 auto;
+        }
+
+        .special-wish-cta:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+        }
+
         /* Modal */
         .modal-overlay {
             display: none;
@@ -1013,6 +1177,37 @@
                 padding: 18px;
                 min-height: 56px;  /* Touch-friendly tap target */
             }
+
+            .email-signup-bar {
+                padding: 32px 24px;
+                margin-top: 60px;
+            }
+
+            .email-signup-form {
+                flex-direction: column;
+                gap: 12px;
+            }
+
+            .email-signup-button {
+                width: 100%;
+                padding: 18px;
+            }
+
+            .special-wish-card {
+                padding: 36px 24px;
+            }
+
+            .special-wish-emoji {
+                font-size: 48px;
+            }
+
+            .special-wish-title {
+                font-size: 26px;
+            }
+
+            .special-wish-price {
+                font-size: 40px;
+            }
         }
     </style>
 </head>
@@ -1089,6 +1284,40 @@
             <div class="wish-feed" id="wish-feed">
                 <div class="wish-feed-loading">Loading recent wishes...</div>
             </div>
+        </div>
+
+        <!-- How It Works Section -->
+        <div class="info-section">
+            <h3>How It Works</h3>
+            <p>
+                Yes, this sounds ridiculous. Olympic athletes have been visualizing their performance for decades—the body doesn't know the difference between a vividly imagined experience and a real one. We're simply extending that logic to everything that matters: finishing your thesis, having that difficult conversation, organizing your neighborhood, breaking through on a creative project, showing up for your training run.
+            </p>
+            <p>
+                Your baseline consciousness is like your credit score for the universe: it starts wherever it starts, but it compounds with intention. Each wish runs 1000 quantum collapse simulations, measuring how your focused attention influences probability distributions. The more you practice, the stronger your signal gets.
+            </p>
+            <p>
+                We're not saying it's magic. We're saying intention is measurable, consciousness affects outcomes, and we're measuring it. The quantum observer effect is real physics—your attention literally changes what's being observed. Whether you're manifesting a research breakthrough, building the courage for a difficult conversation, or organizing a community action, the mechanism is the same: focused consciousness influencing probabilistic outcomes.
+            </p>
+            <p>
+                In an era of infinite digital noise, we're curating something else: deliberate, meaningful intention. One wish at a time. Start at your baseline. Build from there. Most worthwhile things are absurd until they're not.
+            </p>
+        </div>
+
+        <!-- Email Signup Bar -->
+        <div class="email-signup-bar">
+            <h3>Stay Connected</h3>
+            <p>Get matched with wish mates, receive consciousness insights, and explore the practice with us.</p>
+            <form class="email-signup-form" onsubmit="handleEmailSignup(event)">
+                <input
+                    type="email"
+                    id="main-email-input"
+                    class="email-signup-input"
+                    placeholder="your@email.com"
+                    required
+                />
+                <button type="submit" class="email-signup-button">Join the Practice</button>
+            </form>
+            <div id="main-email-message" class="email-signup-message"></div>
         </div>
 
         <!-- Pricing Section -->
@@ -1176,20 +1405,17 @@
             </div>
         </div>
 
-        <div class="info-section">
-            <h3>How It Works</h3>
-            <p>
-                Yes, this sounds ridiculous. Olympic athletes have been visualizing their performance for decades—the body doesn't know the difference between a vividly imagined experience and a real one. We're simply extending that logic to everything that matters: finishing your thesis, having that difficult conversation, organizing your neighborhood, breaking through on a creative project, showing up for your training run.
-            </p>
-            <p>
-                Your baseline consciousness is like your credit score for the universe: it starts wherever it starts, but it compounds with intention. Each wish runs 1000 quantum collapse simulations, measuring how your focused attention influences probability distributions. The more you practice, the stronger your signal gets.
-            </p>
-            <p>
-                We're not saying it's magic. We're saying intention is measurable, consciousness affects outcomes, and we're measuring it. The quantum observer effect is real physics—your attention literally changes what's being observed. Whether you're manifesting a research breakthrough, building the courage for a difficult conversation, or organizing a community action, the mechanism is the same: focused consciousness influencing probabilistic outcomes.
-            </p>
-            <p>
-                In an era of infinite digital noise, we're curating something else: deliberate, meaningful intention. One wish at a time. Start at your baseline. Build from there. Most worthwhile things are absurd until they're not.
-            </p>
+        <!-- Special Wish Card -->
+        <div class="special-wish-container">
+            <div class="special-wish-card">
+                <div class="special-wish-emoji">✨</div>
+                <h3 class="special-wish-title">Just One More Wish</h3>
+                <p class="special-wish-subtitle">
+                    Not ready to commit to a monthly practice? Try one more wish for a quarter. No subscription, no signup—just pure intention.
+                </p>
+                <div class="special-wish-price">$0.25</div>
+                <a href="/buy-single-wish-guest" class="special-wish-cta">Make One More Wish</a>
+            </div>
         </div>
 
         <footer>
@@ -1219,6 +1445,9 @@
     </div>
 
     <script>
+        // Global flag to ensure modal only shows once per session
+        let modalHasBeenShown = false;
+
         // Create floating particles
         function createParticles() {
             const particlesContainer = document.getElementById('particles');
@@ -1429,6 +1658,12 @@
 
         // Modal functions
         function showModal() {
+            // Only show modal once per session
+            if (modalHasBeenShown) {
+                return;
+            }
+            modalHasBeenShown = true;
+
             const modal = document.getElementById('upsellModal');
             modal.classList.add('show');
             document.body.style.overflow = 'hidden';  // Prevent scrolling
@@ -1454,7 +1689,51 @@
             }
         });
 
-        // Email subscription function
+        // Email subscription function for main signup bar
+        async function handleEmailSignup(event) {
+            event.preventDefault();
+
+            const emailInput = document.getElementById('main-email-input');
+            const messageDiv = document.getElementById('main-email-message');
+            const email = emailInput.value.trim();
+
+            if (!email) {
+                messageDiv.style.display = 'block';
+                messageDiv.style.color = 'rgba(245, 87, 108, 0.9)';
+                messageDiv.textContent = 'Please enter your email';
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/subscribe-email', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        email: email,
+                        source: 'main_email_bar'
+                    })
+                });
+
+                const data = await response.json();
+
+                messageDiv.style.display = 'block';
+                if (response.ok) {
+                    messageDiv.style.color = 'rgba(144, 238, 144, 0.9)';
+                    messageDiv.textContent = data.message || 'Success! Check your inbox soon.';
+                    emailInput.value = '';
+                } else {
+                    messageDiv.style.color = 'rgba(245, 87, 108, 0.9)';
+                    messageDiv.textContent = data.error || 'Something went wrong. Please try again.';
+                }
+            } catch (error) {
+                console.error('Error subscribing email:', error);
+                messageDiv.style.display = 'block';
+                messageDiv.style.color = 'rgba(245, 87, 108, 0.9)';
+                messageDiv.textContent = 'Network error. Please try again.';
+            }
+        }
+
+        // Email subscription function for modal
         async function subscribeEmail() {
             const emailInput = document.getElementById('email-subscribe-input');
             const messageDiv = document.getElementById('email-subscribe-message');
