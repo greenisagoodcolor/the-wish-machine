@@ -12,6 +12,7 @@ from flask_login import LoginManager, login_required, current_user
 from flask_migrate import Migrate
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
+from flask_wtf.csrf import CSRFProtect
 from dotenv import load_dotenv
 import numpy as np
 
@@ -46,6 +47,9 @@ app.config['PERMANENT_SESSION_LIFETIME'] = 3600  # 1 hour
 db.init_app(app)
 bcrypt.init_app(app)
 migrate = Migrate(app, db)
+
+# CSRF Protection
+csrf = CSRFProtect(app)
 
 # Rate limiting
 limiter = Limiter(
@@ -181,6 +185,7 @@ def pricing():
 
 
 @app.route('/make_wish', methods=['POST'])
+@csrf.exempt  # AJAX endpoint - protected by rate limiting
 @limiter.limit("30 per hour")
 def make_wish():
     """Process a wish and return quantum collapse results. Allows one free anonymous wish."""
@@ -320,6 +325,7 @@ def recent_wishes():
 
 
 @app.route('/api/subscribe-email', methods=['POST'])
+@csrf.exempt  # AJAX endpoint - protected by rate limiting
 @limiter.limit("10 per hour")
 def subscribe_email():
     """Subscribe an email for wish mates, tips, and consciousness education."""

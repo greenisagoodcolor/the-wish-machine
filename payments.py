@@ -9,6 +9,7 @@ import stripe
 from flask import Blueprint, request, jsonify, redirect, url_for, flash, current_app, session
 from flask_login import login_required, current_user, login_user
 from models import db, User, Payment
+from flask_wtf.csrf import csrf
 from email_service import email_service
 
 # Initialize Stripe
@@ -521,6 +522,7 @@ def manage_subscription():
 
 
 @payments_bp.route('/webhook', methods=['POST'])
+@csrf.exempt  # Webhook from Stripe - uses signature verification instead
 def stripe_webhook():
     """Handle Stripe webhook events."""
     payload = request.get_data()
