@@ -5,6 +5,7 @@ Connected to PostgreSQL database.
 """
 
 import os
+import secrets
 from datetime import datetime
 from flask import Flask, render_template, request, jsonify, session
 from flask_login import LoginManager, login_required, current_user
@@ -16,7 +17,7 @@ import numpy as np
 
 from quantum_state import UniverseState, WaveFunction, SpinUp, SpinDown
 from choicemaker import ChoiceMaker, Observer
-from models import db, bcrypt, User, Wish
+from models import db, bcrypt, User, Wish, EmailSubscriber
 from auth import auth_bp
 from payments import payments_bp
 
@@ -224,26 +225,27 @@ def make_wish():
         # Run simulation
         results = run_wish_simulation(wish_text, intensity)
 
-        if is_authenticated:
-            # Save to database and increment counter for authenticated users
-            current_user.increment_wish_count()
+        # Save wish to database for both authenticated and anonymous users
+        wish_record = Wish(
+            user_id=current_user.id if is_authenticated else None,  # NULL for anonymous
+            wish_text=wish_text,
+            intensity=intensity,
+            manifested_percent=results['manifested_percent'],
+            not_manifested_percent=results['not_manifested_percent'],
+            difference_from_baseline=results['difference_from_baseline'],
+            manifested_count=results['manifested_count'],
+            not_manifested_count=results['not_manifested_count'],
+            num_trials=results['num_trials'],
+            consciousness_level=results['consciousness_level'],
+            preference_strength=results['preference_strength'],
+            ip_address=request.remote_addr
+        )
+        db.session.add(wish_record)
+        db.session.commit()
 
-            wish_record = Wish(
-                user_id=current_user.id,
-                wish_text=wish_text,
-                intensity=intensity,
-                manifested_percent=results['manifested_percent'],
-                not_manifested_percent=results['not_manifested_percent'],
-                difference_from_baseline=results['difference_from_baseline'],
-                manifested_count=results['manifested_count'],
-                not_manifested_count=results['not_manifested_count'],
-                num_trials=results['num_trials'],
-                consciousness_level=results['consciousness_level'],
-                preference_strength=results['preference_strength'],
-                ip_address=request.remote_addr
-            )
-            db.session.add(wish_record)
-            db.session.commit()
+        if is_authenticated:
+            # Increment counter for authenticated users
+            current_user.increment_wish_count()
 
             # Add usage info to response
             results['wishes_remaining'] = current_user.get_wish_limit() - current_user.wishes_this_month
@@ -252,7 +254,7 @@ def make_wish():
             results['subscription_tier'] = current_user.subscription_tier
             results['anonymous'] = False
         else:
-            # Anonymous user - increment session counter, don't save to DB
+            # Anonymous user - increment session counter
             session['anonymous_wish_count'] = anonymous_wishes + 1
             results['anonymous'] = True
             results['show_modal'] = True  # Trigger modal on frontend
@@ -261,8 +263,7 @@ def make_wish():
 
     except Exception as e:
         app.logger.error(f'Error making wish: {str(e)}')
-        if is_authenticated:
-            db.session.rollback()
+        db.session.rollback()
         return jsonify({"error": "An error occurred processing your wish"}), 500
 
 
@@ -316,6 +317,66 @@ def recent_wishes():
     except Exception as e:
         app.logger.error(f'Error fetching recent wishes: {str(e)}')
         return jsonify([]), 200  # Return empty array on error
+
+
+@app.route('/api/subscribe-email', methods=['POST'])
+@limiter.limit("10 per hour")
+def subscribe_email():
+    """Subscribe an email for wish mates, tips, and consciousness education."""
+    try:
+        data = request.get_json()
+        email = data.get('email', '').strip().lower()
+
+        # Validate email
+        if not email:
+            return jsonify({"error": "Email is required"}), 400
+
+        # Basic email format validation
+        if '@' not in email or '.' not in email.split('@')[1]:
+            return jsonify({"error": "Please enter a valid email address"}), 400
+
+        # Check if already subscribed
+        existing = EmailSubscriber.query.filter_by(email=email).first()
+        if existing:
+            if existing.status == 'active':
+                return jsonify({
+                    "message": "You're already subscribed! Check your inbox for updates.",
+                    "already_subscribed": True
+                }), 200
+            elif existing.status == 'unsubscribed':
+                # Resubscribe
+                existing.status = 'active'
+                existing.unsubscribed_at = None
+                existing.confirmation_token = secrets.token_urlsafe(32)
+                db.session.commit()
+                return jsonify({
+                    "message": "Welcome back! You've been resubscribed.",
+                    "success": True
+                }), 200
+
+        # Create new subscriber
+        subscriber = EmailSubscriber(
+            email=email,
+            wants_wish_mates=data.get('wants_wish_mates', True),
+            wants_tips=data.get('wants_tips', True),
+            wants_education=data.get('wants_education', True),
+            confirmation_token=secrets.token_urlsafe(32),
+            source=data.get('source', 'post_wish_modal'),
+            ip_address=request.remote_addr
+        )
+
+        db.session.add(subscriber)
+        db.session.commit()
+
+        return jsonify({
+            "message": "Thank you! You'll hear from us soon with wish mate matches and consciousness insights.",
+            "success": True
+        }), 201
+
+    except Exception as e:
+        app.logger.error(f'Error subscribing email: {str(e)}')
+        db.session.rollback()
+        return jsonify({"error": "An error occurred. Please try again."}), 500
 
 
 # Database initialization

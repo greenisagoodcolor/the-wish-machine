@@ -120,7 +120,7 @@ class Wish(db.Model):
     __tablename__ = 'wishes'
 
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False, index=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=True, index=True)  # Nullable to support anonymous wishes
 
     # Wish details
     wish_text = db.Column(db.Text, nullable=False)
@@ -175,3 +175,31 @@ class Payment(db.Model):
 
     def __repr__(self) -> str:
         return f'<Payment {self.id} - ${self.amount/100:.2f}>'
+
+
+class EmailSubscriber(db.Model):
+    """Email subscribers for wish mates, tips, and consciousness education."""
+    __tablename__ = 'email_subscribers'
+
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(255), unique=True, nullable=False, index=True)
+
+    # Preferences
+    wants_wish_mates = db.Column(db.Boolean, default=True, nullable=False)  # Match with similar wishers
+    wants_tips = db.Column(db.Boolean, default=True, nullable=False)  # Tips on intentions, consciousness
+    wants_education = db.Column(db.Boolean, default=True, nullable=False)  # Wave-particle duality, quantum mechanics
+
+    # Status tracking
+    status = db.Column(db.String(50), default='active', nullable=False)  # active, unsubscribed, bounced
+    confirmed = db.Column(db.Boolean, default=False, nullable=False)  # Email confirmed via double opt-in
+    confirmation_token = db.Column(db.String(100), nullable=True, unique=True)
+    confirmed_at = db.Column(db.DateTime, nullable=True)
+    unsubscribed_at = db.Column(db.DateTime, nullable=True)
+
+    # Metadata
+    created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
+    source = db.Column(db.String(100), nullable=True)  # post_wish_modal, pricing_page, etc.
+    ip_address = db.Column(db.String(45), nullable=True)  # IPv6 compatible
+
+    def __repr__(self) -> str:
+        return f'<EmailSubscriber {self.email}>'

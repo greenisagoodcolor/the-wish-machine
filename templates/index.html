@@ -166,42 +166,44 @@
 
         h1 {
             font-family: 'Space Grotesk', sans-serif;
-            font-size: 56px;
+            font-size: 64px;
             font-weight: 700;
             background: linear-gradient(135deg, #ffffff 0%, #f093fb 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            margin-bottom: 20px;
-            letter-spacing: -1px;
+            margin-bottom: 24px;
+            letter-spacing: -1.5px;
             line-height: 1.1;
         }
 
         .tagline {
-            font-size: 20px;
-            color: rgba(255, 255, 255, 0.85);
-            font-weight: 300;
-            letter-spacing: 0.5px;
-            max-width: 600px;
+            font-size: 22px;
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 400;
+            letter-spacing: 0.3px;
+            max-width: 650px;
             margin: 0 auto;
+            line-height: 1.5;
         }
 
         /* Card */
         .card {
             background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(20px);
-            border-radius: 24px;
-            padding: 40px;
-            margin-bottom: 30px;
+            border-radius: 28px;
+            padding: 48px;
+            margin-bottom: 40px;
             border: 1px solid rgba(255, 255, 255, 0.2);
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
             animation: fadeInUp 0.8s ease-out;
-            transition: all 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.4);
+            transform: translateY(-8px);
+            box-shadow: 0 32px 90px rgba(0, 0, 0, 0.4);
+            border-color: rgba(255, 255, 255, 0.3);
         }
 
         @keyframes fadeInUp {
@@ -221,24 +223,26 @@
 
         .wish-input {
             width: 100%;
-            padding: 20px;
+            padding: 24px;
             font-size: 18px;
             border: 2px solid rgba(255, 255, 255, 0.2);
-            border-radius: 16px;
+            border-radius: 20px;
             background: rgba(255, 255, 255, 0.08);
             color: white;
             font-family: 'Inter', sans-serif;
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             resize: vertical;
-            min-height: 120px;
-            margin-bottom: 30px;
+            min-height: 140px;
+            margin-bottom: 36px;
+            line-height: 1.6;
         }
 
         .wish-input:focus {
             outline: none;
-            border-color: rgba(255, 255, 255, 0.5);
+            border-color: rgba(255, 255, 255, 0.6);
             background: rgba(255, 255, 255, 0.12);
-            box-shadow: 0 0 30px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.2), 0 0 30px rgba(102, 126, 234, 0.3);
+            transform: translateY(-2px);
         }
 
         .wish-input::placeholder {
@@ -299,32 +303,55 @@
 
         .make-wish-btn {
             width: 100%;
-            padding: 24px;
+            padding: 26px;
             font-size: 20px;
             font-weight: 600;
             color: white;
             background: linear-gradient(135deg, var(--accent) 0%, var(--accent2) 100%);
             border: none;
-            border-radius: 16px;
+            border-radius: 18px;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             font-family: 'Space Grotesk', sans-serif;
             letter-spacing: 0.5px;
-            box-shadow: 0 10px 30px rgba(240, 147, 251, 0.3);
+            box-shadow: 0 12px 35px rgba(240, 147, 251, 0.35);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .make-wish-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .make-wish-btn:hover::before {
+            left: 100%;
         }
 
         .make-wish-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 40px rgba(240, 147, 251, 0.5);
+            transform: translateY(-4px);
+            box-shadow: 0 18px 45px rgba(240, 147, 251, 0.5);
+        }
+
+        .make-wish-btn:focus {
+            outline: none;
+            box-shadow: 0 0 0 4px rgba(240, 147, 251, 0.4), 0 18px 45px rgba(240, 147, 251, 0.5);
         }
 
         .make-wish-btn:active {
-            transform: translateY(0);
+            transform: translateY(-1px);
         }
 
         .make-wish-btn:disabled {
             opacity: 0.6;
             cursor: not-allowed;
+            transform: none;
         }
 
         .loading-spinner {
@@ -578,24 +605,30 @@
         .pricing-card {
             background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(20px);
-            border-radius: 24px;
-            padding: 40px 30px;
+            border-radius: 28px;
+            padding: 48px 36px;
             border: 2px solid rgba(255, 255, 255, 0.2);
-            transition: all 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
             display: flex;
             flex-direction: column;
         }
 
         .pricing-card:hover {
-            transform: translateY(-10px);
+            transform: translateY(-12px);
             border-color: rgba(255, 255, 255, 0.4);
+            box-shadow: 0 24px 70px rgba(0, 0, 0, 0.3);
         }
 
         .pricing-card.featured {
             border-color: var(--accent);
-            box-shadow: 0 20px 60px rgba(240, 147, 251, 0.3);
-            transform: scale(1.02);
+            box-shadow: 0 24px 70px rgba(240, 147, 251, 0.35);
+            transform: scale(1.03);
+        }
+
+        .pricing-card.featured:hover {
+            transform: scale(1.03) translateY(-12px);
+            box-shadow: 0 28px 80px rgba(240, 147, 251, 0.45);
         }
 
         .pricing-card.special {
@@ -665,15 +698,15 @@
 
         .cta-button {
             width: 100%;
-            padding: 16px;
+            padding: 18px;
             background: white;
             color: var(--primary);
             border: none;
-            border-radius: 12px;
+            border-radius: 14px;
             font-size: 16px;
             font-weight: 700;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             text-decoration: none;
             display: block;
             text-align: center;
@@ -681,42 +714,66 @@
         }
 
         .cta-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.3);
+            background: rgba(255, 255, 255, 0.95);
+        }
+
+        .cta-button:focus {
+            outline: none;
+            box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.3), 0 12px 35px rgba(0, 0, 0, 0.3);
         }
 
         .cta-button.secondary {
             background: transparent;
-            border: 2px solid white;
+            border: 2px solid rgba(255, 255, 255, 0.8);
             color: white;
+        }
+
+        .cta-button.secondary:hover {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: white;
         }
 
         .cta-button:disabled {
             opacity: 0.5;
             cursor: not-allowed;
+            transform: none;
         }
 
         /* Info Section */
         .info-section {
-            font-size: 15px;
+            font-size: 16px;
             line-height: 1.8;
-            color: rgba(255, 255, 255, 0.85);
-            padding: 40px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            margin-top: 60px;
+            color: rgba(255, 255, 255, 0.9);
+            padding: 52px 48px;
+            background: rgba(255, 255, 255, 0.06);
+            border-radius: 28px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            margin-top: 80px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .info-section:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.2);
         }
 
         .info-section h3 {
             color: white;
-            margin-bottom: 15px;
-            font-size: 22px;
+            margin-bottom: 24px;
+            font-size: 28px;
             font-weight: 600;
+            font-family: 'Space Grotesk', sans-serif;
+            letter-spacing: -0.5px;
         }
 
         .info-section p {
-            margin-bottom: 15px;
+            margin-bottom: 20px;
+        }
+
+        .info-section p:last-child {
+            margin-bottom: 0;
         }
 
         /* Modal */
@@ -878,12 +935,50 @@
 
         /* Responsive */
         @media (max-width: 768px) {
-            h1 { font-size: 36px; }
-            .logo { font-size: 60px; }
-            .tagline { font-size: 16px; }
-            .card { padding: 30px 20px; }
-            .pricing-grid { grid-template-columns: 1fr; }
+            h1 {
+                font-size: 42px;
+                letter-spacing: -1px;
+                margin-bottom: 20px;
+            }
+            .logo { font-size: 64px; }
+            .tagline {
+                font-size: 18px;
+                line-height: 1.6;
+            }
+            .card {
+                padding: 36px 24px;
+                border-radius: 24px;
+            }
+            .pricing-grid {
+                grid-template-columns: 1fr;
+                gap: 24px;
+            }
+            .pricing-card {
+                padding: 40px 28px;
+            }
+            .pricing-card.featured {
+                transform: scale(1);
+            }
+            .pricing-card.featured:hover {
+                transform: translateY(-8px);
+            }
             .nav-links { gap: 15px; font-size: 13px; }
+
+            .wish-input {
+                padding: 20px;
+                min-height: 120px;
+                font-size: 16px;
+            }
+
+            .make-wish-btn {
+                padding: 22px;
+                font-size: 18px;
+            }
+
+            .cta-button {
+                padding: 16px;
+                min-height: 56px;
+            }
 
             .modal-overlay {
                 align-items: flex-end;  /* Bottom sheet style on mobile */
@@ -989,8 +1084,8 @@
 
         <!-- Recent Wishes Feed -->
         <div class="recent-wishes-section">
-            <h2>Last 5 Wishes Cast Into The Universe</h2>
-            <p class="recent-wishes-subtitle">Anonymous glimpses into the collective manifestation</p>
+            <h2>Last 5 Wishes</h2>
+            <p class="recent-wishes-subtitle">A curated glimpse into collective intention</p>
             <div class="wish-feed" id="wish-feed">
                 <div class="wish-feed-loading">Loading recent wishes...</div>
             </div>
@@ -998,8 +1093,8 @@
 
         <!-- Pricing Section -->
         <div class="pricing-section" id="pricing">
-            <h2>Choose Your Plan</h2>
-            <p class="pricing-subtitle">Select the perfect tier to manifest your reality</p>
+            <h2>Choose Your Practice</h2>
+            <p class="pricing-subtitle">Intentional focus over infinite noise</p>
 
             <div class="pricing-grid">
                 <div class="pricing-card">
@@ -1030,7 +1125,7 @@
                     <div class="price">$9.99</div>
                     <div class="price-period">per month</div>
                     <p style="font-size: 13px; line-height: 1.6; margin-bottom: 20px; color: rgba(255,255,255,0.85);">
-                        Join the conspiracy of manifestation. Get matched with users manifesting similar outcomes. Share strategies, compare consciousness metrics, learn what's working. Because while your intention is uniquely yours, you're not the first person to wish for confidence before a pitch meeting.
+                        In an age of infinite content and ambient noise, we're curating meaningful connections. Get matched with others pursuing similar intentions—whether that's finishing a marathon, navigating difficult family conversations, organizing your community, or finally writing that book. Share what actually works. Compare consciousness metrics. Learn from those who've walked your path. Your intention is unique, but the patterns are universal.
                     </p>
                     <ul class="features">
                         <li>100 wishes per month</li>
@@ -1057,7 +1152,7 @@
                     <div class="price">$29.99</div>
                     <div class="price-period">per month</div>
                     <p style="font-size: 13px; line-height: 1.6; margin-bottom: 20px; color: rgba(255,255,255,0.85);">
-                        When you're serious about bending reality. Strategic introductions to others manifesting complementary goals. Need funding? Meet someone wishing for investment opportunities. Building something? Connect with collaborators who've wished themselves into your path. It's networking, but we're calling it 'quantum entanglement facilitation' because that's more fun and possibly more accurate.
+                        For those committed to the practice. Curated introductions to people manifesting complementary intentions—writers seeking accountability partners, researchers looking for collaboration, artists building communities, activists organizing movements. Less noise, more signal. We facilitate the connections that matter, introduce you to people who strengthen your practice, and help you build the support structures that turn wishes into reality. Call it quantum entanglement if you want. We call it intentional curation.
                     </p>
                     <ul class="features">
                         <li>Unlimited wishes</li>
@@ -1084,16 +1179,16 @@
         <div class="info-section">
             <h3>How It Works</h3>
             <p>
-                Yes, this sounds ridiculous. Olympic athletes have been visualizing their performance for decades—the body doesn't know the difference between a vividly imagined experience and a real one. We're simply extending that logic to, well, everything.
+                Yes, this sounds ridiculous. Olympic athletes have been visualizing their performance for decades—the body doesn't know the difference between a vividly imagined experience and a real one. We're simply extending that logic to everything that matters: finishing your thesis, having that difficult conversation, organizing your neighborhood, breaking through on a creative project, showing up for your training run.
             </p>
             <p>
                 Your baseline consciousness is like your credit score for the universe: it starts wherever it starts, but it compounds with intention. Each wish runs 1000 quantum collapse simulations, measuring how your focused attention influences probability distributions. The more you practice, the stronger your signal gets.
             </p>
             <p>
-                We're not saying it's magic. We're saying intention is measurable, consciousness affects outcomes, and we're measuring it. The quantum observer effect is real physics—your attention literally changes what's being observed. Whether you're manifesting a job offer or just better luck at traffic lights, the mechanism is the same: focused consciousness influencing probabilistic outcomes.
+                We're not saying it's magic. We're saying intention is measurable, consciousness affects outcomes, and we're measuring it. The quantum observer effect is real physics—your attention literally changes what's being observed. Whether you're manifesting a research breakthrough, building the courage for a difficult conversation, or organizing a community action, the mechanism is the same: focused consciousness influencing probabilistic outcomes.
             </p>
             <p>
-                Start at your baseline. Build from there. Most worthwhile things are absurd until they're not.
+                In an era of infinite digital noise, we're curating something else: deliberate, meaningful intention. One wish at a time. Start at your baseline. Build from there. Most worthwhile things are absurd until they're not.
             </p>
         </div>
 
@@ -1107,12 +1202,19 @@
         <div class="modal">
             <button class="modal-close" onclick="closeModal()">&times;</button>
             <div class="modal-emoji">✨</div>
-            <h3 class="modal-title">Loved it?</h3>
-            <p class="modal-subtitle">Love it? Get one more wish for just a quarter — no commitment, no subscription. Try it before you decide.</p>
+            <h3 class="modal-title">Continue the Practice?</h3>
+            <p class="modal-subtitle">Each wish matters. No infinite scrolling, no ambient noise—just intentional focus. Try one more for a quarter, or join the practice with 10 curated wishes per month.</p>
             <div class="modal-price">$0.25</div>
-            <div class="modal-price-label">one-time, no subscription</div>
-            <a href="/buy-single-wish-guest" class="modal-cta-primary">Yes! Get One More Wish ($0.25)</a>
-            <a href="/auth/signup" class="modal-cta-secondary">Or Sign Up for 10 Free Wishes/Month</a>
+            <div class="modal-price-label">one wish, no subscription</div>
+            <a href="/buy-single-wish-guest" class="modal-cta-primary">One More Wish ($0.25)</a>
+            <a href="/auth/signup" class="modal-cta-secondary">Join for 10 Free Wishes/Month</a>
+
+            <div style="margin-top: 30px; padding-top: 25px; border-top: 1px solid rgba(255,255,255,0.2);">
+                <p style="font-size: 14px; color: rgba(255,255,255,0.8); margin-bottom: 15px;">Stay connected: Get matched with wish mates, receive consciousness insights, explore wave-particle duality.</p>
+                <input type="email" id="email-subscribe-input" placeholder="your@email.com" style="width: 100%; padding: 14px; font-size: 14px; border: 2px solid rgba(255,255,255,0.3); border-radius: 10px; background: rgba(255,255,255,0.1); color: white; font-family: 'Inter', sans-serif; margin-bottom: 12px;">
+                <button onclick="subscribeEmail()" class="modal-cta-secondary" style="margin: 0; padding: 14px;">Keep Me in the Loop</button>
+                <div id="email-subscribe-message" style="margin-top: 12px; font-size: 13px; display: none;"></div>
+            </div>
         </div>
     </div>
 
@@ -1216,6 +1318,9 @@
 
                 displayResults(data, wish, intensity);
 
+                // Refresh the recent wishes feed to show the new wish
+                setTimeout(() => fetchRecentWishes(), 1000);
+
                 // Mark as used and show modal for anonymous users after first wish
                 if (data.show_modal && data.anonymous) {
                     markWishAsUsed();
@@ -1227,7 +1332,7 @@
                             // Fallback: scroll to pricing
                             window.location.href = '#pricing';
                         }
-                    }, 2000);  // Show modal 2s after results for dramatic effect
+                    }, 8000);  // Show modal 8s after results so user can absorb their results
                 }
 
             } catch (error) {
@@ -1271,7 +1376,7 @@
                 </div>
                 <div class="stat-card">
                     <div class="stat-label">Intention Power</div>
-                    <div class="stat-value">${intensity}%</div>
+                    <div class="stat-value">${data.intensity}%</div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-label">Baseline Shift</div>
@@ -1348,6 +1453,48 @@
                 closeModal();
             }
         });
+
+        // Email subscription function
+        async function subscribeEmail() {
+            const emailInput = document.getElementById('email-subscribe-input');
+            const messageDiv = document.getElementById('email-subscribe-message');
+            const email = emailInput.value.trim();
+
+            if (!email) {
+                messageDiv.style.display = 'block';
+                messageDiv.style.color = 'rgba(245, 87, 108, 0.9)';
+                messageDiv.textContent = 'Please enter your email';
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/subscribe-email', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        email: email,
+                        source: 'post_wish_modal'
+                    })
+                });
+
+                const data = await response.json();
+
+                messageDiv.style.display = 'block';
+                if (response.ok) {
+                    messageDiv.style.color = 'rgba(144, 238, 144, 0.9)';
+                    messageDiv.textContent = data.message || 'Success! Check your inbox soon.';
+                    emailInput.value = '';
+                } else {
+                    messageDiv.style.color = 'rgba(245, 87, 108, 0.9)';
+                    messageDiv.textContent = data.error || 'Something went wrong. Please try again.';
+                }
+            } catch (error) {
+                console.error('Error subscribing email:', error);
+                messageDiv.style.display = 'block';
+                messageDiv.style.color = 'rgba(245, 87, 108, 0.9)';
+                messageDiv.textContent = 'Network error. Please try again.';
+            }
+        }
 
         // Scroll detection to show modal for anonymous users who used their free wish
         let modalShownByScroll = false;
