@@ -380,6 +380,7 @@ def subscribe(tier: str):
     # Handle anonymous users - store intent and redirect to signup
     if not current_user.is_authenticated:
         session['pending_subscription'] = tier
+        session.modified = True  # Explicitly mark session as modified
         flash(f'Please sign up to subscribe to the {tier} plan', 'info')
         return redirect(url_for('auth.signup'))
 
