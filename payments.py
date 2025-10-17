@@ -19,13 +19,16 @@ class StripeService:
 
     def _ensure_api_key(self) -> None:
         """Ensure Stripe API key is set (lazy initialization)."""
-        if not stripe.api_key:
-            api_key = os.getenv('STRIPE_SECRET_KEY')
-            if api_key:
-                stripe.api_key = api_key
-                current_app.logger.info('Stripe API key initialized')
-            else:
-                current_app.logger.error('STRIPE_SECRET_KEY not found in environment')
+        # Always load from environment to ensure it's set correctly
+        api_key = os.getenv('STRIPE_SECRET_KEY')
+        current_app.logger.info(f'Loading Stripe API key... Found: {bool(api_key)}')
+
+        if api_key:
+            stripe.api_key = api_key
+            current_app.logger.info(f'Stripe API key set: {api_key[:10]}...{api_key[-4:]}')
+        else:
+            current_app.logger.error('STRIPE_SECRET_KEY not found in environment!')
+            raise ValueError('STRIPE_SECRET_KEY environment variable not set')
 
     @property
     def public_key(self) -> Optional[str]:
