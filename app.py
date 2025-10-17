@@ -401,6 +401,45 @@ def create_admin():
     print(f"Admin user created: {email}")
 
 
+@app.cli.command()
+def migrate_phase_1_4():
+    """Run Phase 1-4 database migrations."""
+    from sqlalchemy import inspect, text
+
+    print("="*60)
+    print("Phase 1-4 Database Migrations")
+    print("="*60)
+
+    inspector = inspect(db.engine)
+    tables = inspector.get_table_names()
+    print(f'\n✓ Found {len(tables)} existing tables')
+
+    # 1. Create email_subscribers table if needed
+    if 'email_subscribers' not in tables:
+        print('\n→ Creating email_subscribers table...')
+        EmailSubscriber.__table__.create(db.engine)
+        print('✓ email_subscribers table created')
+    else:
+        print('\n✓ email_subscribers table exists')
+
+    # 2. Make wishes.user_id nullable if needed
+    if 'wishes' in tables:
+        columns = inspector.get_columns('wishes')
+        user_id_col = next((c for c in columns if c['name'] == 'user_id'), None)
+
+        if user_id_col and not user_id_col.get('nullable', False):
+            print('\n→ Making wishes.user_id nullable...')
+            with db.engine.connect() as conn:
+                conn.execute(text('ALTER TABLE wishes ALTER COLUMN user_id DROP NOT NULL'))
+                conn.commit()
+            print('✓ wishes.user_id is now nullable')
+        else:
+            print('\n✓ wishes.user_id is already nullable')
+
+    print('\n✅ All migrations completed!')
+    print("="*60)
+
+
 if __name__ == '__main__':
     print("\n" + "="*60)
     print("✨ THE WISH MACHINE ✨")
