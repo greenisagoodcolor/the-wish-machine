@@ -78,7 +78,8 @@ Talisman(
     strict_transport_security=True,
     strict_transport_security_max_age=31536000,  # 1 year
     content_security_policy=csp,
-    content_security_policy_nonce_in=['script-src'],
+    # NOTE: nonce removed to allow inline scripts (required for MVP)
+    # TODO: Add nonces to all inline scripts for production hardening
     x_content_type_options=True,
     frame_options='SAMEORIGIN',
 )
