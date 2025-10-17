@@ -462,6 +462,91 @@
             border-color: rgba(128, 128, 128, 0.5);
         }
 
+        /* Recent Wishes Feed */
+        .recent-wishes-section {
+            margin-top: 60px;
+            margin-bottom: 60px;
+        }
+
+        .recent-wishes-section h2 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 32px;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .recent-wishes-subtitle {
+            text-align: center;
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 40px;
+            font-style: italic;
+        }
+
+        .wish-feed {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .wish-feed-item {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 20px 25px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            transition: all 0.3s ease;
+            animation: slideInFeed 0.5s ease-out;
+        }
+
+        @keyframes slideInFeed {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .wish-feed-item:hover {
+            background: rgba(255, 255, 255, 0.12);
+            border-color: rgba(255, 255, 255, 0.25);
+            transform: translateX(5px);
+        }
+
+        .wish-feed-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .wish-feed-time {
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.5);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .wish-feed-percent {
+            font-size: 16px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent2) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .wish-feed-text {
+            font-size: 14px;
+            line-height: 1.5;
+            color: rgba(255, 255, 255, 0.85);
+            font-style: italic;
+        }
+
+        .wish-feed-loading {
+            text-align: center;
+            padding: 40px;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 14px;
+        }
+
         /* Pricing Section */
         .pricing-section {
             margin-top: 100px;
@@ -902,6 +987,15 @@
             </div>
         </div>
 
+        <!-- Recent Wishes Feed -->
+        <div class="recent-wishes-section">
+            <h2>Last 5 Wishes Cast Into The Universe</h2>
+            <p class="recent-wishes-subtitle">Anonymous glimpses into the collective manifestation</p>
+            <div class="wish-feed" id="wish-feed">
+                <div class="wish-feed-loading">Loading recent wishes...</div>
+            </div>
+        </div>
+
         <!-- Pricing Section -->
         <div class="pricing-section" id="pricing">
             <h2>Choose Your Plan</h2>
@@ -932,14 +1026,19 @@
                 <div class="pricing-card featured">
                     <div class="badge">Most Popular</div>
                     <div class="tier-name">Premium</div>
+                    <div class="tier-subtitle" style="font-size: 13px; color: rgba(255,255,255,0.7); margin-bottom: 15px; font-style: italic;">"The Collective"</div>
                     <div class="price">$9.99</div>
                     <div class="price-period">per month</div>
+                    <p style="font-size: 13px; line-height: 1.6; margin-bottom: 20px; color: rgba(255,255,255,0.85);">
+                        Join the conspiracy of manifestation. Get matched with users manifesting similar outcomes. Share strategies, compare consciousness metrics, learn what's working. Because while your intention is uniquely yours, you're not the first person to wish for confidence before a pitch meeting.
+                    </p>
                     <ul class="features">
                         <li>100 wishes per month</li>
-                        <li>Priority quantum processing</li>
+                        <li>Match with similar wish-makers (anonymized)</li>
+                        <li>Consciousness improvement strategies</li>
+                        <li>Weekly intention-strengthening exercises</li>
+                        <li>Pattern analysis across cohorts</li>
                         <li>Advanced analytics & insights</li>
-                        <li>Wish history & tracking</li>
-                        <li>Email support</li>
                     </ul>
                     {% if user and user.is_authenticated %}
                         {% if user.subscription_tier == 'premium' and user.subscription_status == 'active' %}
@@ -954,16 +1053,20 @@
 
                 <div class="pricing-card">
                     <div class="tier-name">Unlimited</div>
+                    <div class="tier-subtitle" style="font-size: 13px; color: rgba(255,255,255,0.7); margin-bottom: 15px; font-style: italic;">"The Actualization Lab"</div>
                     <div class="price">$29.99</div>
                     <div class="price-period">per month</div>
+                    <p style="font-size: 13px; line-height: 1.6; margin-bottom: 20px; color: rgba(255,255,255,0.85);">
+                        When you're serious about bending reality. Strategic introductions to others manifesting complementary goals. Need funding? Meet someone wishing for investment opportunities. Building something? Connect with collaborators who've wished themselves into your path. It's networking, but we're calling it 'quantum entanglement facilitation' because that's more fun and possibly more accurate.
+                    </p>
                     <ul class="features">
                         <li>Unlimited wishes</li>
-                        <li>Highest priority processing</li>
-                        <li>Premium analytics dashboard</li>
-                        <li>Unlimited wish history</li>
-                        <li>Priority email & chat support</li>
+                        <li>Curated introductions (opt-in, privacy-first)</li>
+                        <li>Actualization coaching & accountability</li>
+                        <li>Intent-to-reality workshops</li>
+                        <li>Priority matching for complementary goals</li>
+                        <li>Advanced manifestation analytics</li>
                         <li>Early access to new features</li>
-                        <li>API access (coming soon)</li>
                     </ul>
                     {% if user and user.is_authenticated %}
                         {% if user.subscription_tier == 'unlimited' and user.subscription_status == 'active' %}
@@ -981,13 +1084,16 @@
         <div class="info-section">
             <h3>How It Works</h3>
             <p>
-                The Wish Machine uses quantum consciousness theory to influence reality collapse.
-                Your intention acts as an observer preference, creating a bias in the quantum field.
-                The stronger your intention, the more likely your desired outcome manifests.
+                Yes, this sounds ridiculous. Olympic athletes have been visualizing their performance for decades—the body doesn't know the difference between a vividly imagined experience and a real one. We're simply extending that logic to, well, everything.
             </p>
             <p>
-                Each wish runs 1000 quantum collapse simulations, measuring how your consciousness
-                influences probability distributions. Experience the same technology behind the Choice-Maker system.
+                Your baseline consciousness is like your credit score for the universe: it starts wherever it starts, but it compounds with intention. Each wish runs 1000 quantum collapse simulations, measuring how your focused attention influences probability distributions. The more you practice, the stronger your signal gets.
+            </p>
+            <p>
+                We're not saying it's magic. We're saying intention is measurable, consciousness affects outcomes, and we're measuring it. The quantum observer effect is real physics—your attention literally changes what's being observed. Whether you're manifesting a job offer or just better luck at traffic lights, the mechanism is the same: focused consciousness influencing probabilistic outcomes.
+            </p>
+            <p>
+                Start at your baseline. Build from there. Most worthwhile things are absurd until they're not.
             </p>
         </div>
 
@@ -1264,6 +1370,41 @@
                 showModal();
             }
         });
+
+        // Recent Wishes Feed
+        async function fetchRecentWishes() {
+            try {
+                const response = await fetch('/api/recent-wishes');
+                const wishes = await response.json();
+
+                const feedContainer = document.getElementById('wish-feed');
+
+                if (!wishes || wishes.length === 0) {
+                    feedContainer.innerHTML = '<div class="wish-feed-loading">No recent wishes yet. Be the first!</div>';
+                    return;
+                }
+
+                feedContainer.innerHTML = wishes.map(wish => `
+                    <div class="wish-feed-item">
+                        <div class="wish-feed-header">
+                            <span class="wish-feed-time">${wish.time_ago}</span>
+                            <span class="wish-feed-percent">${wish.manifested_percent}% manifested</span>
+                        </div>
+                        <div class="wish-feed-text">"${wish.wish}"</div>
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error('Error fetching recent wishes:', error);
+                document.getElementById('wish-feed').innerHTML =
+                    '<div class="wish-feed-loading">Unable to load recent wishes</div>';
+            }
+        }
+
+        // Load recent wishes on page load
+        fetchRecentWishes();
+
+        // Auto-refresh every 30 seconds
+        setInterval(fetchRecentWishes, 30000);
     </script>
 </body>
 </html>

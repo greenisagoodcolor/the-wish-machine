@@ -278,6 +278,46 @@ def my_wishes():
     return render_template('wishes_history.html', wishes=wishes)
 
 
+@app.route('/api/recent-wishes')
+def recent_wishes():
+    """Get the last 5 wishes (anonymized) for the community feed."""
+    try:
+        recent = Wish.query.order_by(Wish.created_at.desc()).limit(5).all()
+
+        wishes_data = []
+        for wish in recent:
+            # Truncate wish text to 60 characters for privacy and brevity
+            wish_preview = wish.wish_text[:60] + '...' if len(wish.wish_text) > 60 else wish.wish_text
+
+            # Calculate time ago
+            now = datetime.utcnow()
+            delta = now - wish.created_at
+            if delta.seconds < 60:
+                time_ago = "just now"
+            elif delta.seconds < 3600:
+                mins = delta.seconds // 60
+                time_ago = f"{mins}m ago"
+            elif delta.seconds < 86400:
+                hours = delta.seconds // 3600
+                time_ago = f"{hours}h ago"
+            else:
+                days = delta.days
+                time_ago = f"{days}d ago"
+
+            wishes_data.append({
+                'wish': wish_preview,
+                'manifested_percent': round(wish.manifested_percent, 1),
+                'time_ago': time_ago,
+                'intensity': wish.intensity
+            })
+
+        return jsonify(wishes_data)
+
+    except Exception as e:
+        app.logger.error(f'Error fetching recent wishes: {str(e)}')
+        return jsonify([]), 200  # Return empty array on error
+
+
 # Database initialization
 @app.cli.command()
 def init_db():
