@@ -13,7 +13,7 @@ Flask-Bcrypt==1.0.1
 email-validator==2.1.0
 
 # Payment processing
-stripe==7.8.0
+stripe==11.1.1  # Updated from 7.8.0 to fix module initialization bugs
 
 # Email services
 sendgrid==6.11.0
