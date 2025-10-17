@@ -371,12 +371,17 @@ stripe_service = StripeService()
 
 
 @payments_bp.route('/subscribe/<tier>')
-@login_required
 def subscribe(tier: str):
     """Create a checkout session for subscription."""
     if tier not in ['premium', 'unlimited']:
         flash('Invalid subscription tier', 'error')
         return redirect(url_for('index'))
+
+    # Handle anonymous users - store intent and redirect to signup
+    if not current_user.is_authenticated:
+        session['pending_subscription'] = tier
+        flash(f'Please sign up to subscribe to the {tier} plan', 'info')
+        return redirect(url_for('auth.signup'))
 
     # Check if already subscribed to this tier
     if current_user.subscription_tier == tier and current_user.subscription_status == 'active':

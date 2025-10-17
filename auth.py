@@ -3,7 +3,7 @@ Authentication routes and forms for The Wish Machine
 """
 
 from datetime import datetime
-from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify
+from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify, session
 from flask_login import login_user, logout_user, login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from email_validator import validate_email, EmailNotValidError
@@ -64,6 +64,12 @@ def signup():
 
             # Log the user in
             login_user(new_user, remember=True)
+
+            # Check if user has a pending subscription intent
+            if 'pending_subscription' in session:
+                tier = session.pop('pending_subscription')
+                flash('Account created successfully! Redirecting to checkout...', 'success')
+                return redirect(url_for('payments.subscribe', tier=tier))
 
             flash('Account created successfully! Welcome to The Wish Machine.', 'success')
             return redirect(url_for('index'))
