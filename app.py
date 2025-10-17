@@ -13,6 +13,7 @@ from flask_migrate import Migrate
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 from flask_wtf.csrf import CSRFProtect
+from flask_talisman import Talisman
 from dotenv import load_dotenv
 import numpy as np
 
@@ -50,6 +51,30 @@ migrate = Migrate(app, db)
 
 # CSRF Protection
 csrf = CSRFProtect(app)
+
+# Security Headers with Flask-Talisman
+csp = {
+    'default-src': ["'self'"],
+    'script-src': ["'self'", "'unsafe-inline'"],  # unsafe-inline needed for inline scripts
+    'style-src': ["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com'],
+    'font-src': ["'self'", 'https://fonts.gstatic.com'],
+    'img-src': ["'self'", 'data:', 'https:'],
+    'connect-src': ["'self'", 'https://api.stripe.com'],
+}
+
+# Initialize Talisman with security headers
+# Only enforce HTTPS in production (Railway sets RAILWAY_ENVIRONMENT)
+force_https = os.getenv('RAILWAY_ENVIRONMENT') == 'production'
+Talisman(
+    app,
+    force_https=force_https,
+    strict_transport_security=True,
+    strict_transport_security_max_age=31536000,  # 1 year
+    content_security_policy=csp,
+    content_security_policy_nonce_in=['script-src'],
+    x_content_type_options=True,
+    x_frame_options='SAMEORIGIN',
+)
 
 # Rate limiting
 limiter = Limiter(
