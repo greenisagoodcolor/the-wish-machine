@@ -450,6 +450,18 @@
             border-color: rgba(255, 255, 255, 0.5);
         }
 
+        .wish-again-btn.disabled {
+            opacity: 0.4;
+            cursor: pointer;
+            background: rgba(128, 128, 128, 0.2);
+            border-color: rgba(128, 128, 128, 0.4);
+        }
+
+        .wish-again-btn.disabled:hover {
+            background: rgba(128, 128, 128, 0.3);
+            border-color: rgba(128, 128, 128, 0.5);
+        }
+
         /* Pricing Section */
         .pricing-section {
             margin-top: 100px;
@@ -1036,12 +1048,27 @@
         const wishText = document.getElementById('wish-text');
         const resultsContainer = document.getElementById('results-container');
 
+        // Check if user has already used their free wish (for anonymous users)
+        function hasUsedFreeWish() {
+            return sessionStorage.getItem('anonymousWishUsed') === 'true';
+        }
+
+        function markWishAsUsed() {
+            sessionStorage.setItem('anonymousWishUsed', 'true');
+        }
+
         makeWishBtn.addEventListener('click', async () => {
             const wish = wishText.value.trim();
             const intensity = parseInt(intensitySlider.value);
 
             if (!wish) {
                 alert('Please enter a wish first!');
+                return;
+            }
+
+            // Check if anonymous user already used their free wish
+            if (hasUsedFreeWish()) {
+                showModal();
                 return;
             }
 
@@ -1060,12 +1087,18 @@
 
                 // Check for limit reached
                 if (data.limit_reached) {
-                    alert(data.error + '\n\nClick OK to view pricing plans.');
-                    window.location.href = '#pricing';
-                    setTimeout(() => window.scrollTo({
-                        top: document.getElementById('pricing').offsetTop - 100,
-                        behavior: 'smooth'
-                    }), 100);
+                    if (data.show_upsell || data.anonymous) {
+                        // For anonymous users, mark wish as used and show modal
+                        markWishAsUsed();
+                        showModal();
+                    } else {
+                        alert(data.error + '\n\nClick OK to view pricing plans.');
+                        window.location.href = '#pricing';
+                        setTimeout(() => window.scrollTo({
+                            top: document.getElementById('pricing').offsetTop - 100,
+                            behavior: 'smooth'
+                        }), 100);
+                    }
                     return;
                 }
 
@@ -1077,8 +1110,9 @@
 
                 displayResults(data, wish, intensity);
 
-                // Show modal for anonymous users after first wish
+                // Mark as used and show modal for anonymous users after first wish
                 if (data.show_modal && data.anonymous) {
+                    markWishAsUsed();
                     setTimeout(() => {
                         try {
                             showModal();
@@ -1138,14 +1172,37 @@
                     <div class="stat-value">${data.difference_from_baseline > 0 ? '+' : ''}${data.difference_from_baseline.toFixed(1)}%</div>
                 </div>
             `;
+
+            // Update the "Make Another Wish" button state
+            checkAndUpdateButtonState();
         }
 
         function resetWish() {
+            // Check if anonymous user has used their free wish
+            if (hasUsedFreeWish()) {
+                showModal();
+                return;
+            }
+
             resultsContainer.classList.remove('show');
             wishText.value = '';
             intensitySlider.value = 50;
             intensityValue.textContent = '50%';
             window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Update "Make Another Wish" button appearance based on usage
+        function updateMakeAnotherWishButton() {
+            const wishAgainBtn = document.querySelector('.wish-again-btn');
+            if (wishAgainBtn && hasUsedFreeWish()) {
+                wishAgainBtn.classList.add('disabled');
+                wishAgainBtn.textContent = 'Get More Wishes';
+            }
+        }
+
+        // Call this when results are displayed
+        function checkAndUpdateButtonState() {
+            updateMakeAnotherWishButton();
         }
 
         // Smooth scroll for anchor links
@@ -1183,6 +1240,28 @@
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') {
                 closeModal();
+            }
+        });
+
+        // Scroll detection to show modal for anonymous users who used their free wish
+        let modalShownByScroll = false;
+        window.addEventListener('scroll', function() {
+            // Only trigger for anonymous users who have used their free wish
+            if (!hasUsedFreeWish() || modalShownByScroll) {
+                return;
+            }
+
+            // Check if scrolled past the "How It Works" section
+            const infoSection = document.querySelector('.info-section');
+            if (!infoSection) return;
+
+            const infoSectionTop = infoSection.offsetTop;
+            const scrollPosition = window.scrollY + window.innerHeight;
+
+            // If user has scrolled past the top of the info section
+            if (scrollPosition > infoSectionTop + 100) {
+                modalShownByScroll = true;
+                showModal();
             }
         });
     </script>
