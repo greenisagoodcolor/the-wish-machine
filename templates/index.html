@@ -1445,8 +1445,9 @@
     </div>
 
     <script>
-        // Global flag to ensure modal only shows once per session
-        let modalHasBeenShown = false;
+        // Separate flags to track different modal triggers
+        let modalShownAfterWish = false;
+        let modalShownByScroll = false;
 
         // Create floating particles
         function createParticles() {
@@ -1571,7 +1572,7 @@
                     markWishAsUsed();
                     setTimeout(() => {
                         try {
-                            showModal();
+                            showModal('afterWish');
                         } catch (e) {
                             console.error('Error showing modal:', e);
                             // Fallback: scroll to pricing
@@ -1673,12 +1674,21 @@
         });
 
         // Modal functions
-        function showModal() {
-            // Only show modal once per session
-            if (modalHasBeenShown) {
+        function showModal(trigger = 'default') {
+            // Allow modal to show once after wish AND once by scroll
+            if (trigger === 'afterWish' && modalShownAfterWish) {
                 return;
             }
-            modalHasBeenShown = true;
+            if (trigger === 'scroll' && modalShownByScroll) {
+                return;
+            }
+
+            // Mark the appropriate flag
+            if (trigger === 'afterWish') {
+                modalShownAfterWish = true;
+            } else if (trigger === 'scroll') {
+                modalShownByScroll = true;
+            }
 
             const modal = document.getElementById('upsellModal');
             modal.classList.add('show');
@@ -1792,7 +1802,6 @@
         }
 
         // Scroll detection to show modal for anonymous users who used their free wish
-        let modalShownByScroll = false;
         window.addEventListener('scroll', function() {
             // Only trigger for anonymous users who have used their free wish
             if (!hasUsedFreeWish() || modalShownByScroll) {
@@ -1808,8 +1817,7 @@
 
             // If user has scrolled past the top of the info section
             if (scrollPosition > infoSectionTop + 100) {
-                modalShownByScroll = true;
-                showModal();
+                showModal('scroll');
             }
         });
 

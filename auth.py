@@ -130,7 +130,8 @@ def logout():
     keys_to_remove = [k for k in list(session.keys()) if k not in ['_flashes', '_csrf_token']]
     for key in keys_to_remove:
         session.pop(key, None)
-    return redirect(url_for('auth.login'))
+    # Redirect to homepage instead of login to avoid redirect loop
+    return redirect(url_for('index'))
 
 
 @auth_bp.route('/waitlist', methods=['GET', 'POST'])

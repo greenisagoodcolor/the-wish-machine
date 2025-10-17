@@ -80,6 +80,9 @@ class StripeService:
             Checkout session URL or None
         """
         try:
+            # Ensure Stripe API key is set for this worker
+            stripe.api_key = self.secret_key
+
             import os
             worker_pid = os.getpid()
             current_app.logger.info(f'[Worker {worker_pid}] Creating checkout for user {user.id}, tier={tier}')
@@ -145,6 +148,9 @@ class StripeService:
             Checkout session URL or None
         """
         try:
+            # Ensure Stripe API key is set for this worker
+            stripe.api_key = self.secret_key
+
             if not self.price_id_single:
                 current_app.logger.error('No price ID configured for single wish')
                 return None
@@ -186,6 +192,9 @@ class StripeService:
             Checkout session URL or None
         """
         try:
+            # Ensure Stripe API key is set for this worker
+            stripe.api_key = self.secret_key
+
             if not self.price_id_single:
                 current_app.logger.error('No price ID configured for single wish')
                 return None
@@ -234,6 +243,9 @@ class StripeService:
             Portal session URL or None
         """
         try:
+            # Ensure Stripe API key is set for this worker
+            stripe.api_key = self.secret_key
+
             if not user.stripe_customer_id:
                 current_app.logger.error(f'User {user.id} has no Stripe customer ID')
                 return None
