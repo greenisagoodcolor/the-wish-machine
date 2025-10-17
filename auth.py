@@ -123,22 +123,30 @@ def login():
 @login_required
 def logout():
     """User logout."""
-    # Call Flask-Login's logout_user() first
+    from datetime import datetime, timezone
+
+    # Call Flask-Login's logout_user() to remove user from session
     logout_user()
 
-    # Store flash message before clearing session
+    # Store flash message
     flash('You have been logged out.', 'info')
 
-    # AGGRESSIVE session clear - clear everything except flash messages
-    # This ensures the user is truly logged out
-    session.permanent = False
+    # Clear the entire session except flash messages
+    # This is necessary because Flask-Login might leave data behind
+    flashes = session.get('_flashes', [])
+    session.clear()
+    session['_flashes'] = flashes
+
+    # Mark session as modified so Flask saves it
     session.modified = True
 
-    # Create response with redirect
+    # Create response
     response = redirect(url_for('index'))
 
-    # Force delete the session cookie
-    response.set_cookie('session', '', expires=0, max_age=0, path='/')
+    # Delete Flask-Login's "remember me" cookie (the persistent login cookie)
+    # This cookie name is 'remember_token' by default in Flask-Login
+    response.set_cookie('remember_token', '', expires=0, max_age=0, path='/',
+                       domain=None, secure=True, httponly=True, samesite='Lax')
 
     return response
 
