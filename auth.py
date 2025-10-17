@@ -123,15 +123,24 @@ def login():
 @login_required
 def logout():
     """User logout."""
+    # Call Flask-Login's logout_user() first
     logout_user()
-    # Flash message BEFORE clearing session (flash messages are stored in session)
+
+    # Store flash message before clearing session
     flash('You have been logged out.', 'info')
-    # Clear custom session keys but preserve flash messages and CSRF token
-    keys_to_remove = [k for k in list(session.keys()) if k not in ['_flashes', '_csrf_token']]
-    for key in keys_to_remove:
-        session.pop(key, None)
-    # Redirect to homepage instead of login to avoid redirect loop
-    return redirect(url_for('index'))
+
+    # AGGRESSIVE session clear - clear everything except flash messages
+    # This ensures the user is truly logged out
+    session.permanent = False
+    session.modified = True
+
+    # Create response with redirect
+    response = redirect(url_for('index'))
+
+    # Force delete the session cookie
+    response.set_cookie('session', '', expires=0, max_age=0, path='/')
+
+    return response
 
 
 @auth_bp.route('/waitlist', methods=['GET', 'POST'])
