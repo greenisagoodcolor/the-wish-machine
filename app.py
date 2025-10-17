@@ -101,6 +101,9 @@ def load_user(user_id):
 app.register_blueprint(auth_bp, url_prefix='/auth')
 app.register_blueprint(payments_bp)
 
+# Exempt Stripe webhook from CSRF (uses signature verification instead)
+csrf.exempt(app.view_functions['payments.stripe_webhook'])
+
 
 class WishState:
     """Represents a wish outcome - manifested or not manifested."""
