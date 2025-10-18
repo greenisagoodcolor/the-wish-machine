@@ -1813,12 +1813,6 @@
                 return;
             }
 
-            // Check if anonymous user already used their free wish
-            if (hasUsedFreeWish()) {
-                showModal();
-                return;
-            }
-
             // Disable button and show sacred geometry loading
             makeWishBtn.disabled = true;
             makeWishBtn.innerHTML = `
@@ -1838,6 +1832,7 @@
 
             // Show sacred geometry backdrop during loading
             const sacredBackdrop = document.getElementById('sacredBackdrop');
+            const backdropStartTime = Date.now(); // Track when backdrop was shown
             if (sacredBackdrop) {
                 sacredBackdrop.classList.add('show');
             }
@@ -1886,26 +1881,57 @@
                 console.error('Error:', error);
                 alert('Something went wrong with the quantum field...');
             } finally {
-                // Always hide backdrop and reset button
+                // Ensure minimum 1.5 second backdrop display for user engagement
                 const sacredBackdrop = document.getElementById('sacredBackdrop');
                 if (sacredBackdrop) {
-                    sacredBackdrop.classList.remove('show');
+                    const elapsed = Date.now() - backdropStartTime;
+                    const remainingTime = Math.max(0, 1500 - elapsed); // Minimum 1.5s display
+
+                    setTimeout(() => {
+                        sacredBackdrop.classList.remove('show');
+                    }, remainingTime);
                 }
-                makeWishBtn.disabled = false;
-                makeWishBtn.innerHTML = 'Make Your Wish';
+
+                // Reset button after backdrop minimum display
+                const elapsed = Date.now() - backdropStartTime;
+                const remainingTime = Math.max(0, 1500 - elapsed);
+                setTimeout(() => {
+                    makeWishBtn.disabled = false;
+                    makeWishBtn.innerHTML = 'Make Your Wish';
+                }, remainingTime);
             }
         });
 
         function renderProbabilityGraph(histogram, baseline, userScore) {
             const svg = document.getElementById('prob-graph');
 
+            // Validate inputs
+            if (!Array.isArray(histogram) || !Array.isArray(baseline)) {
+                console.error('renderProbabilityGraph: histogram and baseline must be arrays');
+                return;
+            }
+
+            if (histogram.length === 0 || baseline.length === 0) {
+                console.error('renderProbabilityGraph: arrays cannot be empty');
+                return;
+            }
+
+            if (isNaN(userScore) || userScore < 0 || userScore > 100) {
+                console.error('renderProbabilityGraph: invalid userScore', userScore);
+                return;
+            }
+
             // Clear existing content (except defs)
             const defs = svg.querySelector('defs');
             svg.innerHTML = '';
             svg.appendChild(defs);
 
-            // Find max value for scaling
+            // Find max value for scaling - handle edge cases
             const maxValue = Math.max(...histogram, ...baseline);
+            if (maxValue === 0 || isNaN(maxValue) || !isFinite(maxValue)) {
+                console.error('renderProbabilityGraph: invalid maxValue', maxValue);
+                return;
+            }
 
             // 1. Sacred geometry background layer
             const sacredBackground = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
@@ -2137,9 +2163,21 @@
                 </div>
             `;
 
-            // Render probability distribution graph
-            if (data.trial_histogram && data.baseline_histogram) {
-                renderProbabilityGraph(data.trial_histogram, data.baseline_histogram, data.manifested_percent);
+            // Render probability distribution graph with error handling
+            if (data.trial_histogram && data.baseline_histogram &&
+                Array.isArray(data.trial_histogram) && data.trial_histogram.length === 100 &&
+                Array.isArray(data.baseline_histogram) && data.baseline_histogram.length === 100) {
+                try {
+                    renderProbabilityGraph(data.trial_histogram, data.baseline_histogram, data.manifested_percent);
+                } catch (error) {
+                    console.error('Error rendering probability graph:', error);
+                    // Graph fails gracefully - other results still show
+                }
+            } else {
+                console.error('Invalid histogram data:', {
+                    trial_histogram: data.trial_histogram ? `array of ${data.trial_histogram.length}` : 'missing',
+                    baseline_histogram: data.baseline_histogram ? `array of ${data.baseline_histogram.length}` : 'missing'
+                });
             }
 
             // Update the "Make Another Wish" button state
