@@ -187,6 +187,27 @@
             line-height: 1.5;
         }
 
+        .hero-description {
+            font-size: 17px;
+            line-height: 1.7;
+            color: rgba(255, 255, 255, 0.85);
+            max-width: 680px;
+            margin: 24px auto;
+        }
+
+        .hero-tagline-secondary {
+            font-size: 18px;
+            line-height: 1.6;
+            color: rgba(255, 255, 255, 0.9);
+            max-width: 650px;
+            margin: 20px auto 0;
+        }
+
+        .hero-tagline-secondary strong {
+            color: white;
+            font-weight: 600;
+        }
+
         /* Card */
         .card {
             background: rgba(255, 255, 255, 0.1);
@@ -422,6 +443,7 @@
             background: rgba(255, 255, 255, 0.05);
             border-radius: 16px;
             border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
         }
 
         .graph-title {
@@ -429,10 +451,17 @@
             font-size: 16px;
             font-weight: 600;
             color: rgba(255, 255, 255, 0.9);
-            margin-bottom: 15px;
+            margin-bottom: 5px;
             display: flex;
             align-items: center;
             gap: 8px;
+        }
+
+        .graph-subtitle {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.6);
+            margin-bottom: 20px;
+            font-style: italic;
         }
 
         .info-icon {
@@ -446,14 +475,56 @@
             font-weight: 700;
             text-align: center;
             line-height: 18px;
-            cursor: help;
+            cursor: pointer;
             transition: all 0.3s ease;
+            position: relative;
         }
 
         .info-icon:hover {
             background: rgba(255, 255, 255, 0.25);
             color: white;
             transform: scale(1.1);
+        }
+
+        /* Custom Tooltip */
+        .graph-tooltip {
+            position: absolute;
+            bottom: calc(100% + 10px);
+            left: 50%;
+            transform: translateX(-50%) translateY(-10px);
+            max-width: 280px;
+            padding: 15px 18px;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.95) 0%, rgba(118, 75, 162, 0.95) 100%);
+            backdrop-filter: blur(12px);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+            font-size: 13px;
+            line-height: 1.6;
+            color: rgba(255, 255, 255, 0.95);
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.2s ease-out;
+            z-index: 1000;
+        }
+
+        .graph-tooltip::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-style: solid;
+            border-width: 8px 8px 0 8px;
+            border-color: rgba(102, 126, 234, 0.95) transparent transparent transparent;
+        }
+
+        .graph-tooltip.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+            pointer-events: auto;
         }
 
         .probability-graph {
@@ -479,6 +550,51 @@
         @keyframes growBar {
             from { height: 0; y: 70; }
             to { height: var(--bar-height); y: var(--bar-y); }
+        }
+
+        @keyframes pulseHighlight {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 0.9; }
+        }
+
+        /* Sacred Geometry Loading Backdrop */
+        .sacred-backdrop {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(102, 126, 234, 0.85);
+            backdrop-filter: blur(10px);
+            z-index: 9998;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .sacred-backdrop.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .sacred-geometry-large {
+            width: 300px;
+            height: 300px;
+            opacity: 0.15;
+            filter: blur(2px);
+            animation: rotate-slow 20s linear infinite;
+        }
+
+        .sacred-geometry-large circle {
+            fill: none;
+            stroke: white;
+            stroke-width: 1;
+            opacity: 0.7;
+        }
+
+        @keyframes rotate-slow {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
         }
 
         /* Results */
@@ -1349,12 +1465,14 @@
             <div class="logo">✨</div>
             <h1>The Wish Machine</h1>
             <p class="tagline">Where consciousness shapes quantum reality</p>
-            <p><h3> We're not saying it's magic. We're saying intention is honable and consciousness affects outcomes. The quantum observer effect is real physics: your attention literally changes what's being observed.
+
+            <p class="hero-description">
+                We're not saying it's magic. We're saying intention is measurable and consciousness affects outcomes. The quantum observer effect is real physics: your attention literally changes what's being observed.
             </p>
-            <p>
-            <b>Call it quantum entanglement if you want. We call it intentional curation. </b>
-            <p>
-            </h3>  
+
+            <p class="hero-tagline-secondary">
+                <strong>Call it quantum entanglement if you want. We call it intentional curation.</strong>
+            </p>
         </div>
 
         <div class="card">
@@ -1396,10 +1514,17 @@
                 <div class="probability-graph-container">
                     <h4 class="graph-title">
                         Quantum Collapse Distribution
-                        <span class="info-icon" title="Each bar represents quantum collapse simulations. Your focused intention shifted the distribution toward manifestation.">ⓘ</span>
+                        <span class="info-icon" id="info-icon">ⓘ</span>
                     </h4>
+                    <p class="graph-subtitle">Your Result vs. 1000 Simulations</p>
+
+                    <!-- Custom Tooltip -->
+                    <div class="graph-tooltip" id="graph-tooltip">
+                        This graph shows all 1000 quantum collapse simulations we ran for your wish. The white curve is what happens by chance. Your focused intention shifted the distribution higher. The higher your score appears, the stronger your manifestation potential.
+                    </div>
+
                     <svg class="probability-graph" viewBox="0 0 240 80" id="prob-graph" preserveAspectRatio="xMidYMid meet">
-                        <!-- Gradient definition -->
+                        <!-- Gradient definitions -->
                         <defs>
                             <linearGradient id="barGradient" x1="0%" y1="0%" x2="0%" y2="100%">
                                 <stop offset="0%" style="stop-color:#f093fb;stop-opacity:0.9" />
@@ -1409,8 +1534,16 @@
                                 <stop offset="0%" style="stop-color:#ffffff;stop-opacity:0.3" />
                                 <stop offset="100%" style="stop-color:#ffffff;stop-opacity:0.15" />
                             </linearGradient>
+                            <linearGradient id="highlightGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                                <stop offset="0%" style="stop-color:#f5576c;stop-opacity:0.6" />
+                                <stop offset="100%" style="stop-color:#f093fb;stop-opacity:0.2" />
+                            </linearGradient>
+                            <!-- Sacred Geometry Pattern -->
+                            <pattern id="sacredPattern" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
+                                <circle cx="20" cy="20" r="8" fill="none" stroke="white" stroke-width="0.3" opacity="0.03"/>
+                            </pattern>
                         </defs>
-                        <!-- Bars and markers will be rendered by JavaScript -->
+                        <!-- Bars, grids, and markers will be rendered by JavaScript -->
                     </svg>
                     <div class="graph-labels">
                         <span>0%</span>
@@ -1434,7 +1567,7 @@
 
         <!-- How It Works Section -->
         <div class="info-section">
-            <h3></h3>
+            <h3>How It Works</h3>
             <p>
                 Yes, this sounds ridiculous. Olympic athletes have been visualizing their performance for decades. The body doesn't know the difference between a vividly imagined experience and a real one. We're simply extending that logic to everything that matters. Whether you're building relationships, making art, or growing a business, the mechanism is the same: focused consciousness influences how your reality unfolds.
             </p>
@@ -1461,6 +1594,9 @@
                 <button type="submit" class="email-signup-button">Join the Practice</button>
             </form>
             <div id="main-email-message" class="email-signup-message"></div>
+            <p style="margin-top: 20px; font-size: 14px; color: rgba(255,255,255,0.7);">
+                Want unlimited wishes? <a href="/#pricing" style="color: var(--accent); text-decoration: underline; font-weight: 600;">Explore Premium</a>
+            </p>
         </div>
 
         <!-- Pricing Section -->
@@ -1474,10 +1610,10 @@
                     <div class="price">$0</div>
                     <div class="price-period">forever</div>
                     <p style="font-size: 13px; line-height: 1.6; margin-bottom: 20px; color: rgba(255,255,255,0.85);">
-                        For those interested in exploring. Spend time exploring what Consciousness means and how to build it: your own underestanding of yourself and the cosmos. No commitments, just pure curiosity and delight.
+                        For those interested in exploring. Spend time exploring what Consciousness means and how to build it: your own understanding of yourself and the cosmos. No commitments, just pure curiosity and delight.
                     </p>
                     <ul class="features">
-                        <li>1 wishes per month</li>
+                        <li>1 wish per month</li>
                         <li>Accountability Tactics</li>
                         <li>Basic analytics</li>
                     </ul>
@@ -1563,6 +1699,21 @@
         <footer>
             <p>Building Consciousness since &copy; 2025 The Wish Machine.  All rights reserved. <br> <br> Your intention is unique, but the patterns are universal. </p>
         </footer>
+    </div>
+
+    <!-- Sacred Geometry Loading Backdrop -->
+    <div class="sacred-backdrop" id="sacredBackdrop">
+        <svg class="sacred-geometry-large" viewBox="0 0 200 200">
+            <g>
+                <circle cx="100" cy="100" r="50" />
+                <circle cx="143.3" cy="125" r="50" />
+                <circle cx="143.3" cy="75" r="50" />
+                <circle cx="100" cy="50" r="50" />
+                <circle cx="56.7" cy="75" r="50" />
+                <circle cx="56.7" cy="125" r="50" />
+                <circle cx="100" cy="150" r="50" />
+            </g>
+        </svg>
     </div>
 
     <!-- Upsell Modal -->
@@ -1685,6 +1836,12 @@
                 <span class="loading-text">Collapsing 1000 quantum states...</span>
             `;
 
+            // Show sacred geometry backdrop during loading
+            const sacredBackdrop = document.getElementById('sacredBackdrop');
+            if (sacredBackdrop) {
+                sacredBackdrop.classList.add('show');
+            }
+
             try {
                 const response = await fetch('/make_wish', {
                     method: 'POST',
@@ -1722,24 +1879,18 @@
                 // Refresh the recent wishes feed to show the new wish
                 setTimeout(() => fetchRecentWishes(), 1000);
 
-                // Mark as used and show modal for anonymous users after first wish
-                if (data.show_modal && data.anonymous) {
-                    markWishAsUsed();
-                    setTimeout(() => {
-                        try {
-                            showModal('afterWish');
-                        } catch (e) {
-                            console.error('Error showing modal:', e);
-                            // Fallback: scroll to pricing
-                            window.location.href = '#pricing';
-                        }
-                    }, 8000);  // Show modal 8s after results so user can absorb their results
-                }
+                // Removed auto-popup modal trigger per team consensus
+                // Modal now only shows when user clicks "Make Another Wish" after limit
 
             } catch (error) {
                 console.error('Error:', error);
                 alert('Something went wrong with the quantum field...');
             } finally {
+                // Always hide backdrop and reset button
+                const sacredBackdrop = document.getElementById('sacredBackdrop');
+                if (sacredBackdrop) {
+                    sacredBackdrop.classList.remove('show');
+                }
                 makeWishBtn.disabled = false;
                 makeWishBtn.innerHTML = 'Make Your Wish';
             }
@@ -1756,7 +1907,66 @@
             // Find max value for scaling
             const maxValue = Math.max(...histogram, ...baseline);
 
-            // Render baseline curve first (background)
+            // 1. Sacred geometry background layer
+            const sacredBackground = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+            sacredBackground.setAttribute('x', '0');
+            sacredBackground.setAttribute('y', '0');
+            sacredBackground.setAttribute('width', '240');
+            sacredBackground.setAttribute('height', '70');
+            sacredBackground.setAttribute('fill', 'url(#sacredPattern)');
+            sacredBackground.setAttribute('opacity', '1');
+            svg.appendChild(sacredBackground);
+
+            // 2. Horizontal gridlines at quartiles (ggplot-style)
+            const gridY = [0, 25, 50, 75, 100];
+            gridY.forEach(percent => {
+                const y = 70 - (percent / 100) * 60;
+                const gridline = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                gridline.setAttribute('x1', '0');
+                gridline.setAttribute('y1', y);
+                gridline.setAttribute('x2', '240');
+                gridline.setAttribute('y2', y);
+                gridline.setAttribute('stroke', 'white');
+                gridline.setAttribute('stroke-width', '0.3');
+                gridline.setAttribute('opacity', '0.1');
+                svg.appendChild(gridline);
+            });
+
+            // 3. Y-axis labels (left side)
+            const yLabels = [
+                { value: maxValue, y: 10 },
+                { value: Math.round(maxValue / 2), y: 40 },
+                { value: 0, y: 70 }
+            ];
+            yLabels.forEach(label => {
+                const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                text.setAttribute('x', '-2');
+                text.setAttribute('y', label.y);
+                text.setAttribute('text-anchor', 'end');
+                text.setAttribute('font-size', '7');
+                text.setAttribute('fill', 'rgba(255,255,255,0.5)');
+                text.textContent = label.value;
+                svg.appendChild(text);
+            });
+
+            // 4. X-axis percentage markers (bottom)
+            const xMarkers = [
+                { percent: '0%', x: 0 },
+                { percent: '50%', x: 120 },
+                { percent: '100%', x: 240 }
+            ];
+            xMarkers.forEach(marker => {
+                const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                text.setAttribute('x', marker.x);
+                text.setAttribute('y', '78');
+                text.setAttribute('text-anchor', 'middle');
+                text.setAttribute('font-size', '7');
+                text.setAttribute('fill', 'rgba(255,255,255,0.5)');
+                text.textContent = marker.percent;
+                svg.appendChild(text);
+            });
+
+            // 5. Smooth Bézier baseline curve (not linear)
             const baselinePath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
             let baselineD = '';
             baseline.forEach((value, i) => {
@@ -1765,8 +1975,17 @@
                 const y = 70 - height;
                 if (i === 0) {
                     baselineD = `M ${x} ${y}`;
-                } else {
+                } else if (i === 1) {
+                    // Start with a line for the first segment
                     baselineD += ` L ${x} ${y}`;
+                } else {
+                    // Use quadratic Bézier curve for smoothness
+                    const prevX = (i - 1) * 2.4;
+                    const prevHeight = (baseline[i - 1] / maxValue) * 60;
+                    const prevY = 70 - prevHeight;
+                    const controlX = (prevX + x) / 2;
+                    const controlY = (prevY + y) / 2;
+                    baselineD += ` Q ${controlX} ${controlY}, ${x} ${y}`;
                 }
             });
             baselinePath.setAttribute('d', baselineD);
@@ -1776,7 +1995,7 @@
             baselinePath.setAttribute('opacity', '0.6');
             svg.appendChild(baselinePath);
 
-            // Render histogram bars
+            // 6. Render histogram bars
             histogram.forEach((count, i) => {
                 const height = (count / maxValue) * 60;
                 const y = 70 - height;
@@ -1798,26 +2017,26 @@
                 svg.appendChild(bar);
             });
 
-            // Render vertical marker at user's score
+            // 7. Gradient highlight zone (5% width) instead of red line
             const markerX = (userScore / 100) * 240;
-            const marker = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-            marker.setAttribute('x1', markerX);
-            marker.setAttribute('y1', 0);
-            marker.setAttribute('x2', markerX);
-            marker.setAttribute('y2', 70);
-            marker.setAttribute('stroke', '#f5576c');
-            marker.setAttribute('stroke-width', '2');
-            marker.setAttribute('opacity', '0');
-            marker.setAttribute('stroke-dasharray', '4,2');
-            svg.appendChild(marker);
+            const highlightWidth = 240 * 0.05; // 5% of total width
+            const highlightZone = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+            highlightZone.setAttribute('x', markerX - highlightWidth / 2);
+            highlightZone.setAttribute('y', '0');
+            highlightZone.setAttribute('width', highlightWidth);
+            highlightZone.setAttribute('height', '70');
+            highlightZone.setAttribute('fill', 'url(#highlightGradient)');
+            highlightZone.setAttribute('opacity', '0');
+            highlightZone.style.animation = 'pulseHighlight 2s ease-in-out infinite';
+            svg.appendChild(highlightZone);
 
-            // Fade in marker after bars animate
+            // Fade in highlight zone after bars animate
             setTimeout(() => {
-                marker.style.transition = 'opacity 0.5s ease-in';
-                marker.setAttribute('opacity', '0.9');
+                highlightZone.style.transition = 'opacity 0.5s ease-in';
+                highlightZone.setAttribute('opacity', '0.6');
             }, 500);
 
-            // Add marker label
+            // 8. Add marker label
             const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
             label.setAttribute('x', markerX);
             label.setAttribute('y', -2);
@@ -1835,7 +2054,50 @@
             }, 500);
         }
 
+        // Custom tooltip functionality for graph info icon
+        const infoIcon = document.getElementById('info-icon');
+        const graphTooltip = document.getElementById('graph-tooltip');
+
+        if (infoIcon && graphTooltip) {
+            // Click to toggle tooltip (works on mobile and desktop)
+            infoIcon.addEventListener('click', function(e) {
+                e.stopPropagation();
+                graphTooltip.classList.toggle('show');
+            });
+
+            // Hover to show on desktop (optional enhancement)
+            infoIcon.addEventListener('mouseenter', function() {
+                if (window.innerWidth > 768) { // Only on desktop
+                    graphTooltip.classList.add('show');
+                }
+            });
+
+            infoIcon.addEventListener('mouseleave', function() {
+                if (window.innerWidth > 768) { // Only on desktop
+                    // Delay hiding to allow user to read
+                    setTimeout(() => {
+                        if (!graphTooltip.matches(':hover')) {
+                            graphTooltip.classList.remove('show');
+                        }
+                    }, 300);
+                }
+            });
+
+            // Close tooltip when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!infoIcon.contains(e.target) && !graphTooltip.contains(e.target)) {
+                    graphTooltip.classList.remove('show');
+                }
+            });
+        }
+
         function displayResults(data, wish, intensity) {
+            // Hide sacred geometry backdrop
+            const sacredBackdrop = document.getElementById('sacredBackdrop');
+            if (sacredBackdrop) {
+                sacredBackdrop.classList.remove('show');
+            }
+
             // Show results container
             resultsContainer.classList.add('show');
             resultsContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -2051,25 +2313,9 @@
             }
         }
 
-        // Scroll detection to show modal for anonymous users who used their free wish
-        window.addEventListener('scroll', function() {
-            // Only trigger for anonymous users who have used their free wish
-            if (!hasUsedFreeWish() || modalShownByScroll) {
-                return;
-            }
-
-            // Check if scrolled past the "How It Works" section
-            const infoSection = document.querySelector('.info-section');
-            if (!infoSection) return;
-
-            const infoSectionTop = infoSection.offsetTop;
-            const scrollPosition = window.scrollY + window.innerHeight;
-
-            // If user has scrolled past the top of the info section
-            if (scrollPosition > infoSectionTop + 100) {
-                showModal('scroll');
-            }
-        });
+        // Removed scroll-triggered modal per team consensus
+        // It was interrupting users while reading "How It Works" section
+        // Modal now only shows when user clicks "Make Another Wish" after limit
 
         // Recent Wishes Feed
         async function fetchRecentWishes() {
