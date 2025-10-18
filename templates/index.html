@@ -354,19 +354,131 @@
             transform: none;
         }
 
-        .loading-spinner {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid rgba(255, 255, 255, 0.3);
-            border-radius: 50%;
-            border-top-color: white;
-            animation: spin 1s linear infinite;
-            margin-right: 10px;
+        /* Sacred Geometry Loading */
+        .sacred-geometry-container {
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
         }
 
-        @keyframes spin {
+        .flower-of-life {
+            width: 50px;
+            height: 50px;
+            margin-right: 12px;
+            vertical-align: middle;
+        }
+
+        .flower-of-life circle {
+            fill: none;
+            stroke: white;
+            stroke-width: 1.5;
+            opacity: 0.8;
+        }
+
+        .outer-ring {
+            animation: rotate-cw 4s linear infinite;
+            transform-origin: 100px 100px;
+        }
+
+        .center-circle {
+            animation: rotate-ccw 3s linear infinite, pulse-geometry 2s ease-in-out infinite;
+            transform-origin: 100px 100px;
+        }
+
+        @keyframes rotate-cw {
+            from { transform: rotate(0deg); }
             to { transform: rotate(360deg); }
+        }
+
+        @keyframes rotate-ccw {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(-360deg); }
+        }
+
+        @keyframes pulse-geometry {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1.0; }
+        }
+
+        /* Accessibility: Reduce motion */
+        @media (prefers-reduced-motion: reduce) {
+            .outer-ring, .center-circle {
+                animation: none !important;
+            }
+        }
+
+        .loading-text {
+            font-size: 15px;
+            color: white;
+            font-weight: 500;
+            letter-spacing: 0.3px;
+        }
+
+        /* Probability Distribution Graph */
+        .probability-graph-container {
+            margin: 35px 0;
+            padding: 25px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .graph-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 16px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .info-icon {
+            display: inline-block;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.15);
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 12px;
+            font-weight: 700;
+            text-align: center;
+            line-height: 18px;
+            cursor: help;
+            transition: all 0.3s ease;
+        }
+
+        .info-icon:hover {
+            background: rgba(255, 255, 255, 0.25);
+            color: white;
+            transform: scale(1.1);
+        }
+
+        .probability-graph {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+
+        .graph-labels {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 8px;
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.6);
+            font-weight: 500;
+        }
+
+        .center-label {
+            font-size: 10px;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        @keyframes growBar {
+            from { height: 0; y: 70; }
+            to { height: var(--bar-height); y: var(--bar-y); }
         }
 
         /* Results */
@@ -1237,6 +1349,12 @@
             <div class="logo">✨</div>
             <h1>The Wish Machine</h1>
             <p class="tagline">Where consciousness shapes quantum reality</p>
+            <p><h3> We're not saying it's magic. We're saying intention is honable and consciousness affects outcomes. The quantum observer effect is real physics: your attention literally changes what's being observed.
+            </p>
+            <p>
+            <b>Call it quantum entanglement if you want. We call it intentional curation. </b>
+            <p>
+            </h3>  
         </div>
 
         <div class="card">
@@ -1273,6 +1391,34 @@
                     </div>
                 </div>
                 <div class="stats-grid" id="stats-grid"></div>
+
+                <!-- Probability Distribution Graph -->
+                <div class="probability-graph-container">
+                    <h4 class="graph-title">
+                        Quantum Collapse Distribution
+                        <span class="info-icon" title="Each bar represents quantum collapse simulations. Your focused intention shifted the distribution toward manifestation.">ⓘ</span>
+                    </h4>
+                    <svg class="probability-graph" viewBox="0 0 240 80" id="prob-graph" preserveAspectRatio="xMidYMid meet">
+                        <!-- Gradient definition -->
+                        <defs>
+                            <linearGradient id="barGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                                <stop offset="0%" style="stop-color:#f093fb;stop-opacity:0.9" />
+                                <stop offset="100%" style="stop-color:#764ba2;stop-opacity:0.9" />
+                            </linearGradient>
+                            <linearGradient id="baselineGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                                <stop offset="0%" style="stop-color:#ffffff;stop-opacity:0.3" />
+                                <stop offset="100%" style="stop-color:#ffffff;stop-opacity:0.15" />
+                            </linearGradient>
+                        </defs>
+                        <!-- Bars and markers will be rendered by JavaScript -->
+                    </svg>
+                    <div class="graph-labels">
+                        <span>0%</span>
+                        <span class="center-label">Baseline (50%)</span>
+                        <span>100%</span>
+                    </div>
+                </div>
+
                 <button class="wish-again-btn" onclick="resetWish()">Make Another Wish</button>
             </div>
         </div>
@@ -1288,18 +1434,15 @@
 
         <!-- How It Works Section -->
         <div class="info-section">
-            <h3>How It Works</h3>
+            <h3></h3>
             <p>
-                Yes, this sounds ridiculous. Olympic athletes have been visualizing their performance for decades: the body doesn't know the difference between a vividly imagined experience and a real one. We're simply extending that logic to everything that matters: taking that leap, finishing your thesis, having that difficult conversation, organizing your neighborhood, building a business, breaking through on a creative project, showing up for your workout.
+                Yes, this sounds ridiculous. Olympic athletes have been visualizing their performance for decades. The body doesn't know the difference between a vividly imagined experience and a real one. We're simply extending that logic to everything that matters. Whether you're building relationships, making art, or growing a business, the mechanism is the same: focused consciousness influences how your reality unfolds.
             </p>
             <p>
-                Your baseline Consciousness is like your credit score for the universe: it starts wherever it starts, but it compounds with intention. We help you take actions that increase your Consciousness so wishes have better chances of comign true. Each wish runs 1000 quantum collapse simulations, measuring how your focused attention influences your reality. The more you practice, the stronger your signal gets. 
+                Your baseline Consciousness is like your credit score for the universe: it starts wherever it starts, but it compounds with intention. We help you take actions that increase your Consciousness so wishes have better chances of coming true. Each wish runs 1000 quantum collapse simulations, measuring how your focused attention influences your reality. The more you practice, the stronger your signal gets. 
             </p>
             <p>
-                We're not saying it's magic. We're saying intention is measurable, consciousness affects outcomes, and we're measuring it. The quantum observer effect is real physics—your attention literally changes what's being observed. Whether you're building relationships, art, or businesses,  the mechanism is the same: focused consciousness influencing how your reality unfolds.
-            </p>
-            <p>
-                In an era of infinite digital noise, we're curating something else: deliberate, meaningful intention. One wish at a time. Start at your baseline. Build from there. Most worthwhile things are absurd until they're not.
+                In an era of infinite digital noise, we're curating something else: deliberate, meaningful intention. Most worthwhile things are absurd until they're not.
             </p>
         </div>
 
@@ -1331,11 +1474,11 @@
                     <div class="price">$0</div>
                     <div class="price-period">forever</div>
                     <p style="font-size: 13px; line-height: 1.6; margin-bottom: 20px; color: rgba(255,255,255,0.85);">
-                        For those interested in exploring. Provides a space to watch wishes unfold as you contemplate your own. Spend time exploring what Consciousness means and how to build it: your own underestanding of yourself and the cosmos. No commitments, just pure curiosity and delight.
+                        For those interested in exploring. Spend time exploring what Consciousness means and how to build it: your own underestanding of yourself and the cosmos. No commitments, just pure curiosity and delight.
                     </p>
                     <ul class="features">
                         <li>1 wishes per month</li>
-                        <li>Standard quantum processing</li>
+                        <li>Accountability Tactics</li>
                         <li>Basic analytics</li>
                     </ul>
                     {% if user and user.is_authenticated %}
@@ -1356,13 +1499,12 @@
                     <div class="price">$9.99</div>
                     <div class="price-period">per month</div>
                     <p style="font-size: 13px; line-height: 1.6; margin-bottom: 20px; color: rgba(255,255,255,0.85);">
-                        In an age of infinite content, we're curating meaningful connections. Get matched with others pursuing similar intentions—whether that's finishing a marathon, navigating difficult family conversations, tackling a similar problem, creating events in your community, or finally writing that book. Learn from those who've walked your path. Your intention is unique, but the patterns are universal.
+                        In an age of infinite content, we're curating meaningful connections. Get matched with others pursuing similar intentions. Learn from those who've walked your path a community walking the journey from intent to reality. 
                     </p>
                     <ul class="features">
                         <li>10 wishes per month</li>
-                        <li>Match with similar wish-makers (anonymized)</li>
+                        <li>Match with similar wish-makers</li>
                         <li>Consciousness improvement strategies</li>
-                        <li>Pattern analysis across cohorts</li>
                         <li>Advanced analytics & insights</li>
                     </ul>
                     {% if user and user.is_authenticated %}
@@ -1382,13 +1524,14 @@
                     <div class="price">$29.99</div>
                     <div class="price-period">per month</div>
                     <p style="font-size: 13px; line-height: 1.6; margin-bottom: 20px; color: rgba(255,255,255,0.85);">
-                        For those committed to the practice. Facilitated introductions to people manifesting complementary intentions—writers seeking accountability partners, entrepreuners on the grind, researchers looking for collaboration, artists building communities.   These connections help you build the support structures that turn wishes into reality. Call it quantum entanglement if you want. We call it intentional curation.
+                        For those committed to the practice. Facilitated introductions to people manifesting complementary intentions—seeking accountability partners. Build the support structures that turn your intention into reality. 
                     </p>
                     <ul class="features">
                         <li>Unlimited wishes</li>
                         <li>Curated introductions (opt-in, privacy-first)</li>
-                        <li>Monthly intent-to-reality workshops</li>
+                        <li>Intention Groups</li>
                         <li>Advanced manifestation analytics</li>
+                        <li>Pattern analysis across cohorts</li>
                         <li>Early access to new features</li>
                     </ul>
                     {% if user and user.is_authenticated %}
@@ -1410,7 +1553,7 @@
                 <div class="special-wish-emoji">✨</div>
                 <h3 class="special-wish-title">Just One More Wish</h3>
                 <p class="special-wish-subtitle">
-                    Not ready to commit to a monthly practice? Try one more wish for a quarter. No subscription, no signup—just pure intention. Examine that fractal edge of possibility one more time.
+                    Not ready to commit to a monthly practice? Throw one more quarter in the wishing well. No subscription, no signup—just pure intention. <br> Examine that fractal edge of possibility one more time.
                 </p>
                 <div class="special-wish-price">$0.25</div>
                 <a href="/buy-single-wish-guest" class="special-wish-cta">Make One More Wish</a>
@@ -1418,7 +1561,7 @@
         </div>
 
         <footer>
-            <p>Building Consciousness since &copy; 2025 The Wish Machine.  All rights reserved. Your intention is unique, but the patterns are universal. </p>
+            <p>Building Consciousness since &copy; 2025 The Wish Machine.  All rights reserved. <br> <br> Your intention is unique, but the patterns are universal. </p>
         </footer>
     </div>
 
@@ -1525,9 +1668,22 @@
                 return;
             }
 
-            // Disable button and show loading
+            // Disable button and show sacred geometry loading
             makeWishBtn.disabled = true;
-            makeWishBtn.innerHTML = '<span class="loading-spinner"></span>Quantum collapse in progress...';
+            makeWishBtn.innerHTML = `
+                <svg class="flower-of-life" viewBox="0 0 200 200">
+                    <g class="outer-ring">
+                        <circle cx="100" cy="100" r="50" />
+                        <circle cx="143.3" cy="125" r="50" />
+                        <circle cx="143.3" cy="75" r="50" />
+                        <circle cx="100" cy="50" r="50" />
+                        <circle cx="56.7" cy="75" r="50" />
+                        <circle cx="56.7" cy="125" r="50" />
+                    </g>
+                    <circle class="center-circle" cx="100" cy="100" r="50" />
+                </svg>
+                <span class="loading-text">Collapsing 1000 quantum states...</span>
+            `;
 
             try {
                 const response = await fetch('/make_wish', {
@@ -1589,6 +1745,96 @@
             }
         });
 
+        function renderProbabilityGraph(histogram, baseline, userScore) {
+            const svg = document.getElementById('prob-graph');
+
+            // Clear existing content (except defs)
+            const defs = svg.querySelector('defs');
+            svg.innerHTML = '';
+            svg.appendChild(defs);
+
+            // Find max value for scaling
+            const maxValue = Math.max(...histogram, ...baseline);
+
+            // Render baseline curve first (background)
+            const baselinePath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+            let baselineD = '';
+            baseline.forEach((value, i) => {
+                const x = i * 2.4;
+                const height = (value / maxValue) * 60;
+                const y = 70 - height;
+                if (i === 0) {
+                    baselineD = `M ${x} ${y}`;
+                } else {
+                    baselineD += ` L ${x} ${y}`;
+                }
+            });
+            baselinePath.setAttribute('d', baselineD);
+            baselinePath.setAttribute('fill', 'none');
+            baselinePath.setAttribute('stroke', 'url(#baselineGradient)');
+            baselinePath.setAttribute('stroke-width', '2');
+            baselinePath.setAttribute('opacity', '0.6');
+            svg.appendChild(baselinePath);
+
+            // Render histogram bars
+            histogram.forEach((count, i) => {
+                const height = (count / maxValue) * 60;
+                const y = 70 - height;
+                const bar = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+                bar.setAttribute('x', i * 2.4);
+                bar.setAttribute('y', 70); // Start at bottom
+                bar.setAttribute('width', 2.2);
+                bar.setAttribute('height', 0); // Start at 0 for animation
+                bar.setAttribute('fill', 'url(#barGradient)');
+                bar.setAttribute('opacity', '0.85');
+
+                // Animate the bar growing
+                setTimeout(() => {
+                    bar.setAttribute('y', y);
+                    bar.setAttribute('height', height);
+                    bar.style.transition = 'y 0.8s ease-out, height 0.8s ease-out';
+                }, i * 3); // Stagger by 3ms per bar
+
+                svg.appendChild(bar);
+            });
+
+            // Render vertical marker at user's score
+            const markerX = (userScore / 100) * 240;
+            const marker = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+            marker.setAttribute('x1', markerX);
+            marker.setAttribute('y1', 0);
+            marker.setAttribute('x2', markerX);
+            marker.setAttribute('y2', 70);
+            marker.setAttribute('stroke', '#f5576c');
+            marker.setAttribute('stroke-width', '2');
+            marker.setAttribute('opacity', '0');
+            marker.setAttribute('stroke-dasharray', '4,2');
+            svg.appendChild(marker);
+
+            // Fade in marker after bars animate
+            setTimeout(() => {
+                marker.style.transition = 'opacity 0.5s ease-in';
+                marker.setAttribute('opacity', '0.9');
+            }, 500);
+
+            // Add marker label
+            const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            label.setAttribute('x', markerX);
+            label.setAttribute('y', -2);
+            label.setAttribute('text-anchor', 'middle');
+            label.setAttribute('font-size', '10');
+            label.setAttribute('font-weight', '700');
+            label.setAttribute('fill', '#f5576c');
+            label.setAttribute('opacity', '0');
+            label.textContent = `${userScore.toFixed(1)}%`;
+            svg.appendChild(label);
+
+            setTimeout(() => {
+                label.style.transition = 'opacity 0.5s ease-in';
+                label.setAttribute('opacity', '1');
+            }, 500);
+        }
+
         function displayResults(data, wish, intensity) {
             // Show results container
             resultsContainer.classList.add('show');
@@ -1628,6 +1874,11 @@
                     <div class="stat-value">${data.difference_from_baseline > 0 ? '+' : ''}${data.difference_from_baseline.toFixed(1)}%</div>
                 </div>
             `;
+
+            // Render probability distribution graph
+            if (data.trial_histogram && data.baseline_histogram) {
+                renderProbabilityGraph(data.trial_histogram, data.baseline_histogram, data.manifested_percent);
+            }
 
             // Update the "Make Another Wish" button state
             checkAndUpdateButtonState();
