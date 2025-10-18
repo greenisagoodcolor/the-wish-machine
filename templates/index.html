@@ -565,9 +565,9 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(102, 126, 234, 0.85);
+            background: rgba(102, 126, 234, 0.95);  /* More opaque */
             backdrop-filter: blur(10px);
-            z-index: 9998;
+            z-index: 10000;  /* Above everything */
             animation: fadeIn 0.3s ease-out;
         }
 
@@ -575,26 +575,49 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            flex-direction: column;
+            gap: 30px;
         }
 
         .sacred-geometry-large {
-            width: 300px;
-            height: 300px;
-            opacity: 0.15;
-            filter: blur(2px);
-            animation: rotate-slow 20s linear infinite;
+            width: 400px;  /* Larger */
+            height: 400px;
+            opacity: 0.8;  /* Much more visible */
+            filter: none;  /* Remove blur for crisp geometry */
+            animation: rotate-slow 20s linear infinite, pulse-sacred 3s ease-in-out infinite;
         }
 
         .sacred-geometry-large circle {
             fill: none;
             stroke: white;
-            stroke-width: 1;
-            opacity: 0.7;
+            stroke-width: 1.5;  /* Thicker strokes */
+            opacity: 0.9;
         }
 
         @keyframes rotate-slow {
             from { transform: rotate(0deg); }
             to { transform: rotate(360deg); }
+        }
+
+        @keyframes pulse-sacred {
+            0%, 100% { transform: scale(1) rotate(0deg); opacity: 0.7; }
+            50% { transform: scale(1.05) rotate(180deg); opacity: 1.0; }
+        }
+
+        /* Sacred geometry loading text */
+        .sacred-backdrop-text {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 24px;
+            font-weight: 600;
+            color: white;
+            text-align: center;
+            animation: pulse-text 2s ease-in-out infinite;
+            letter-spacing: 1px;
+        }
+
+        @keyframes pulse-text {
+            0%, 100% { opacity: 0.8; }
+            50% { opacity: 1.0; }
         }
 
         /* Results */
@@ -1714,6 +1737,7 @@
                 <circle cx="100" cy="150" r="50" />
             </g>
         </svg>
+        <div class="sacred-backdrop-text">Collapsing 1000 quantum states...</div>
     </div>
 
     <!-- Upsell Modal -->

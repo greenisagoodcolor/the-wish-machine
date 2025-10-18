@@ -191,13 +191,18 @@ def run_wish_simulation(wish_text, intensity):
     # Create choice maker
     choice_maker = ChoiceMaker(universe_state)
 
-    # Run simulation and build histogram
+    # Run simulation and build histogram from REAL trial outcomes
     results = {"manifested": 0, "not_manifested": 0}
     num_trials = 1000
+
+    # Store each trial outcome as 0% or 100% (binary quantum collapse)
+    trial_outcomes = []
 
     for _ in range(num_trials):
         outcome = choice_maker.collapse(location=(0, 0, 0), time=1.0)
         results[outcome.name] += 1
+        # Each trial is binary: 100% if manifested, 0% if not
+        trial_outcomes.append(100.0 if outcome.name == "manifested" else 0.0)
 
     # Calculate statistics
     manifested_count = results["manifested"]
@@ -206,23 +211,32 @@ def run_wish_simulation(wish_text, intensity):
     not_manifested_percent = (not_manifested_count / num_trials) * 100
     difference_from_baseline = manifested_percent - 50.0
 
-    # === BUILD PROBABILITY DISTRIBUTION ===
-    # Create histogram (100 buckets for 0-100%)
+    # === BUILD REAL PROBABILITY DISTRIBUTION (Gelman-style) ===
+    # Create histogram from ACTUAL trial outcomes (100 buckets for 0-100%)
     trial_histogram = [0] * 100
 
-    # Distribute trials around the manifested_percent with realistic variance
-    # Using normal distribution to simulate quantum measurement uncertainty
-    for _ in range(num_trials):
-        # Add gaussian noise to create realistic probability cloud
-        sample_value = manifested_percent + np.random.normal(0, 3.5)
-        bucket_index = int(min(99, max(0, sample_value)))
+    for outcome_value in trial_outcomes:
+        bucket_index = int(min(99, max(0, outcome_value)))
         trial_histogram[bucket_index] += 1
 
-    # Create baseline distribution (centered at 50% with narrow gaussian)
+    # Add jitter to visualize binary outcomes across range
+    # This creates a bimodal distribution showing the quantum superposition collapse
+    jittered_histogram = [0] * 100
+    for outcome_value in trial_outcomes:
+        # Add small random jitter (±5%) to spread out the binary outcomes for visualization
+        jittered_value = outcome_value + np.random.normal(0, 5)
+        bucket_index = int(min(99, max(0, jittered_value)))
+        jittered_histogram[bucket_index] += 1
+
+    # Create baseline distribution (centered at 50% with variance from trials)
+    # This represents the expected distribution under null hypothesis
     baseline_histogram = []
     for i in range(100):
-        # Gaussian centered at 50% with std dev of 5%
-        baseline_value = int(1000 * np.exp(-((i - 50) ** 2) / (2 * 25)))
+        # Binomial distribution approximated as gaussian
+        # Centered at 50% with appropriate variance for 1000 trials
+        variance = (num_trials * 0.5 * 0.5)  # np(1-p) for binomial
+        std_dev = np.sqrt(variance) / num_trials * 100  # Convert to percentage
+        baseline_value = int(1000 * np.exp(-((i - 50) ** 2) / (2 * std_dev ** 2)))
         baseline_histogram.append(baseline_value)
 
     return {
@@ -236,7 +250,7 @@ def run_wish_simulation(wish_text, intensity):
         "difference_from_baseline": difference_from_baseline,
         "consciousness_level": consciousness_level,
         "preference_strength": preference_strength,
-        "trial_histogram": trial_histogram,
+        "trial_histogram": jittered_histogram,  # Use jittered for better visualization
         "baseline_histogram": baseline_histogram
     }
 
