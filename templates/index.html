@@ -1861,6 +1861,8 @@
                 sacredBackdrop.classList.add('show');
             }
 
+            let apiData = null;  // Store data to display after backdrop
+
             try {
                 const response = await fetch('/make_wish', {
                     method: 'POST',
@@ -1893,10 +1895,8 @@
                     return;
                 }
 
-                displayResults(data, wish, intensity);
-
-                // Refresh the recent wishes feed to show the new wish
-                setTimeout(() => fetchRecentWishes(), 1000);
+                // Store data to display AFTER backdrop hiding
+                apiData = data;
 
                 // Removed auto-popup modal trigger per team consensus
                 // Modal now only shows when user clicks "Make Another Wish" after limit
@@ -1905,24 +1905,37 @@
                 console.error('Error:', error);
                 alert('Something went wrong with the quantum field...');
             } finally {
-                // Ensure minimum 1.5 second backdrop display for user engagement
+                // Ensure minimum 3.5 second backdrop display for better UX
                 const sacredBackdrop = document.getElementById('sacredBackdrop');
                 if (sacredBackdrop) {
                     const elapsed = Date.now() - backdropStartTime;
-                    const remainingTime = Math.max(0, 1500 - elapsed); // Minimum 1.5s display
+                    const remainingTime = Math.max(0, 3500 - elapsed); // Minimum 3.5s display (slower!)
 
                     setTimeout(() => {
+                        // Hide backdrop first
                         sacredBackdrop.classList.remove('show');
-                    }, remainingTime);
-                }
 
-                // Reset button after backdrop minimum display
-                const elapsed = Date.now() - backdropStartTime;
-                const remainingTime = Math.max(0, 1500 - elapsed);
-                setTimeout(() => {
+                        // Then display results if we have data
+                        if (apiData) {
+                            displayResults(apiData, wish, intensity);
+
+                            // Refresh the recent wishes feed to show the new wish
+                            setTimeout(() => fetchRecentWishes(), 1000);
+                        }
+
+                        // Reset button
+                        makeWishBtn.disabled = false;
+                        makeWishBtn.innerHTML = 'Make Your Wish';
+                    }, remainingTime);
+                } else {
+                    // Fallback if backdrop element not found
                     makeWishBtn.disabled = false;
                     makeWishBtn.innerHTML = 'Make Your Wish';
-                }, remainingTime);
+                    if (apiData) {
+                        displayResults(apiData, wish, intensity);
+                        setTimeout(() => fetchRecentWishes(), 1000);
+                    }
+                }
             }
         });
 
