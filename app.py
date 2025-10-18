@@ -22,6 +22,7 @@ from choicemaker import ChoiceMaker, Observer
 from models import db, bcrypt, User, Wish, EmailSubscriber
 from auth import auth_bp
 from payments import payments_bp
+from admin_routes import admin_bp
 
 # Load environment variables
 load_dotenv()
@@ -108,6 +109,7 @@ def load_user(user_id):
 # Register blueprints
 app.register_blueprint(auth_bp, url_prefix='/auth')
 app.register_blueprint(payments_bp)
+app.register_blueprint(admin_bp)
 
 # Exempt Stripe webhook from CSRF (uses signature verification instead)
 csrf.exempt(app.view_functions['payments.stripe_webhook'])
