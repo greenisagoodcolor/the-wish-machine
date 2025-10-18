@@ -1845,7 +1845,7 @@
 
                     <!-- Custom Tooltip -->
                     <div class="graph-tooltip" id="graph-tooltip">
-                        This Gelman-style visualization shows multiple potential futures from 1000 quantum simulations. The shaded white area represents random chance (50% baseline). The colorful lines show different possible outcome trajectories. Your bold pink line is the actual result from your focused intention. The vertical marker shows where your consciousness influenced the collapse.
+                        This distribution shows the frequency of outcomes from 1000 quantum simulations. The gray line represents random chance (50% baseline). Your pink line shows the actual result from your focused intention. The red vertical marker indicates your final outcome percentage.
                     </div>
 
                     <svg class="probability-graph" viewBox="0 0 240 80" id="prob-graph" preserveAspectRatio="xMidYMid meet">
@@ -2366,144 +2366,132 @@
             svg.innerHTML = '';
             svg.appendChild(defs);
 
-            // Find max value for scaling across all series
+            // TUFTE PRINCIPLE: Maximize data-ink ratio
+            // Calculate proper scaling to show BOTH peaks of bimodal distribution
             const maxValue = Math.max(...histogram, ...baseline);
             if (maxValue === 0 || isNaN(maxValue) || !isFinite(maxValue)) {
                 console.error('renderProbabilityGraph: invalid maxValue', maxValue);
                 return;
             }
 
-            // Generate 5 alternative futures to show quantum uncertainty
-            const alternativeFutures = generateAlternativeFutures(histogram, 5);
+            // Graph dimensions with proper margins
+            const margin = { left: 35, right: 15, top: 20, bottom: 25 };
+            const width = 240 - margin.left - margin.right;
+            const height = 80 - margin.top - margin.bottom;
+            const graphLeft = margin.left;
+            const graphTop = margin.top;
+            const graphBottom = margin.top + height;
 
-            // 1. Sacred geometry background layer (subtle)
-            const sacredBackground = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-            sacredBackground.setAttribute('x', '0');
-            sacredBackground.setAttribute('y', '0');
-            sacredBackground.setAttribute('width', '240');
-            sacredBackground.setAttribute('height', '80');
-            sacredBackground.setAttribute('fill', 'url(#sacredPattern)');
-            sacredBackground.setAttribute('opacity', '1');
-            svg.appendChild(sacredBackground);
+            // REMOVED: Sacred geometry background (chartjunk)
+            // REMOVED: 5 alternative futures (visual clutter)
+            // REMOVED: Confidence interval shading (adds noise without information)
+            // REMOVED: Separate legend (replaced with direct labels)
 
-            // 2. Horizontal gridlines (Gelman-style minimal grid)
-            const gridY = [0, 25, 50, 75, 100];
-            gridY.forEach(percent => {
-                const y = 70 - (percent / 100) * 60;
-                const gridline = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-                gridline.setAttribute('x1', '10');
-                gridline.setAttribute('y1', y);
-                gridline.setAttribute('x2', '240');
-                gridline.setAttribute('y2', y);
-                gridline.setAttribute('stroke', 'white');
-                gridline.setAttribute('stroke-width', '0.5');
-                gridline.setAttribute('opacity', '0.15');
-                svg.appendChild(gridline);
+            // 1. MINIMAL GRID (Tufte: use only when necessary for reading values)
+            // Only show baseline at 50% for reference
+            const baselineY = graphBottom - (height / 2);
+            const baselineGrid = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+            baselineGrid.setAttribute('x1', graphLeft);
+            baselineGrid.setAttribute('y1', baselineY);
+            baselineGrid.setAttribute('x2', graphLeft + width);
+            baselineGrid.setAttribute('y2', baselineY);
+            baselineGrid.setAttribute('stroke', 'rgba(255,255,255,0.15)');
+            baselineGrid.setAttribute('stroke-width', '0.5');
+            baselineGrid.setAttribute('stroke-dasharray', '2,2');
+            svg.appendChild(baselineGrid);
+
+            // 2. AXES (minimal, clean)
+            // X-axis
+            const xAxis = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+            xAxis.setAttribute('x1', graphLeft);
+            xAxis.setAttribute('y1', graphBottom);
+            xAxis.setAttribute('x2', graphLeft + width);
+            xAxis.setAttribute('y2', graphBottom);
+            xAxis.setAttribute('stroke', 'rgba(255,255,255,0.3)');
+            xAxis.setAttribute('stroke-width', '1');
+            svg.appendChild(xAxis);
+
+            // Y-axis
+            const yAxis = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+            yAxis.setAttribute('x1', graphLeft);
+            yAxis.setAttribute('y1', graphTop);
+            yAxis.setAttribute('x2', graphLeft);
+            yAxis.setAttribute('y2', graphBottom);
+            yAxis.setAttribute('stroke', 'rgba(255,255,255,0.3)');
+            yAxis.setAttribute('stroke-width', '1');
+            svg.appendChild(yAxis);
+
+            // 3. AXIS LABELS (larger, readable fonts - 10-12pt minimum)
+            // X-axis label
+            const xLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            xLabel.setAttribute('x', graphLeft + width / 2);
+            xLabel.setAttribute('y', graphBottom + 18);
+            xLabel.setAttribute('text-anchor', 'middle');
+            xLabel.setAttribute('font-size', '10');
+            xLabel.setAttribute('fill', 'rgba(255,255,255,0.7)');
+            xLabel.textContent = 'Outcome (%)';
+            svg.appendChild(xLabel);
+
+            // Y-axis label
+            const yLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            yLabel.setAttribute('x', graphLeft - 5);
+            yLabel.setAttribute('y', graphTop - 5);
+            yLabel.setAttribute('text-anchor', 'start');
+            yLabel.setAttribute('font-size', '10');
+            yLabel.setAttribute('fill', 'rgba(255,255,255,0.7)');
+            yLabel.textContent = 'Frequency';
+            svg.appendChild(yLabel);
+
+            // X-axis tick labels (0%, 50%, 100% only - Tufte: minimal ticks)
+            const xTicks = [
+                { label: '0', x: graphLeft, value: 0 },
+                { label: '50', x: graphLeft + width / 2, value: 50 },
+                { label: '100', x: graphLeft + width, value: 100 }
+            ];
+            xTicks.forEach(tick => {
+                const tickMark = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                tickMark.setAttribute('x1', tick.x);
+                tickMark.setAttribute('y1', graphBottom);
+                tickMark.setAttribute('x2', tick.x);
+                tickMark.setAttribute('y2', graphBottom + 3);
+                tickMark.setAttribute('stroke', 'rgba(255,255,255,0.3)');
+                tickMark.setAttribute('stroke-width', '1');
+                svg.appendChild(tickMark);
+
+                const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                text.setAttribute('x', tick.x);
+                text.setAttribute('y', graphBottom + 12);
+                text.setAttribute('text-anchor', 'middle');
+                text.setAttribute('font-size', '9');
+                text.setAttribute('fill', 'rgba(255,255,255,0.6)');
+                text.textContent = tick.label;
+                svg.appendChild(text);
             });
-
-            // 3. Y-axis label (left side - scientific notation)
-            const yAxisLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-            yAxisLabel.setAttribute('x', '5');
-            yAxisLabel.setAttribute('y', '5');
-            yAxisLabel.setAttribute('text-anchor', 'start');
-            yAxisLabel.setAttribute('font-size', '6');
-            yAxisLabel.setAttribute('fill', 'rgba(255,255,255,0.6)');
-            yAxisLabel.setAttribute('font-weight', '600');
-            yAxisLabel.textContent = 'Frequency';
-            svg.appendChild(yAxisLabel);
 
             // Y-axis tick labels
-            const yLabels = [
-                { value: maxValue, y: 10 },
-                { value: Math.round(maxValue / 2), y: 40 },
-                { value: 0, y: 70 }
+            const yTicks = [
+                { label: String(maxValue), y: graphTop },
+                { label: String(Math.round(maxValue / 2)), y: graphTop + height / 2 },
+                { label: '0', y: graphBottom }
             ];
-            yLabels.forEach(label => {
+            yTicks.forEach(tick => {
                 const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-                text.setAttribute('x', '8');
-                text.setAttribute('y', label.y);
+                text.setAttribute('x', graphLeft - 5);
+                text.setAttribute('y', tick.y + 3);
                 text.setAttribute('text-anchor', 'end');
-                text.setAttribute('font-size', '6');
-                text.setAttribute('fill', 'rgba(255,255,255,0.5)');
-                text.textContent = label.value;
+                text.setAttribute('font-size', '9');
+                text.setAttribute('fill', 'rgba(255,255,255,0.6)');
+                text.textContent = tick.label;
                 svg.appendChild(text);
             });
 
-            // 4. X-axis label (bottom)
-            const xAxisLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-            xAxisLabel.setAttribute('x', '125');
-            xAxisLabel.setAttribute('y', '78');
-            xAxisLabel.setAttribute('text-anchor', 'middle');
-            xAxisLabel.setAttribute('font-size', '6');
-            xAxisLabel.setAttribute('fill', 'rgba(255,255,255,0.6)');
-            xAxisLabel.setAttribute('font-weight', '600');
-            xAxisLabel.textContent = 'Manifestation Percentage';
-            svg.appendChild(xAxisLabel);
-
-            // X-axis tick labels
-            const xMarkers = [
-                { percent: '0%', x: 10 },
-                { percent: '25%', x: 70 },
-                { percent: '50%', x: 125 },
-                { percent: '75%', x: 180 },
-                { percent: '100%', x: 240 }
-            ];
-            xMarkers.forEach(marker => {
-                const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-                text.setAttribute('x', marker.x);
-                text.setAttribute('y', '73');
-                text.setAttribute('text-anchor', 'middle');
-                text.setAttribute('font-size', '5.5');
-                text.setAttribute('fill', 'rgba(255,255,255,0.5)');
-                text.textContent = marker.percent;
-                svg.appendChild(text);
-            });
-
-            // 5. Render BASELINE as shaded area (not a line)
-            // Create confidence interval for baseline
-            const baselineArea = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-            let areaD = '';
-
-            // Top path
-            baseline.forEach((value, i) => {
-                const x = 10 + i * 2.3;
-                const upperHeight = (value * 1.15 / maxValue) * 60; // +15% upper bound
-                const upperY = 70 - upperHeight;
-                if (i === 0) {
-                    areaD = `M ${x} ${upperY}`;
-                } else {
-                    areaD += ` L ${x} ${upperY}`;
-                }
-            });
-
-            // Bottom path (reversed)
-            for (let i = baseline.length - 1; i >= 0; i--) {
-                const x = 10 + i * 2.3;
-                const lowerHeight = (baseline[i] * 0.85 / maxValue) * 60; // -15% lower bound
-                const lowerY = 70 - lowerHeight;
-                areaD += ` L ${x} ${lowerY}`;
-            }
-            areaD += ' Z'; // Close path
-
-            baselineArea.setAttribute('d', areaD);
-            baselineArea.setAttribute('fill', 'rgba(255, 255, 255, 0.15)');
-            baselineArea.setAttribute('stroke', 'none');
-            baselineArea.setAttribute('opacity', '0');
-            svg.appendChild(baselineArea);
-
-            // Fade in baseline area
-            setTimeout(() => {
-                baselineArea.style.transition = 'opacity 0.6s ease-in';
-                baselineArea.setAttribute('opacity', '0.8');
-            }, 200);
-
-            // Baseline median line
+            // 4. DATA: BASELINE DISTRIBUTION (gray, receded)
+            // Use clean line, not area - Tufte: don't add visual weight unnecessarily
             const baselinePath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
             let baselineD = '';
             baseline.forEach((value, i) => {
-                const x = 10 + i * 2.3;
-                const height = (value / maxValue) * 60;
-                const y = 70 - height;
+                const x = graphLeft + (i / (baseline.length - 1)) * width;
+                const y = graphBottom - (value / maxValue) * height;
                 if (i === 0) {
                     baselineD = `M ${x} ${y}`;
                 } else {
@@ -2512,63 +2500,36 @@
             });
             baselinePath.setAttribute('d', baselineD);
             baselinePath.setAttribute('fill', 'none');
-            baselinePath.setAttribute('stroke', 'rgba(255, 255, 255, 0.7)');
+            baselinePath.setAttribute('stroke', 'rgba(255,255,255,0.4)');
             baselinePath.setAttribute('stroke-width', '1.5');
-            baselinePath.setAttribute('stroke-dasharray', '2,2');
             baselinePath.setAttribute('opacity', '0');
             svg.appendChild(baselinePath);
 
+            // Direct label for baseline (Tufte: label data directly, not in legend)
+            const baselineLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            baselineLabel.setAttribute('x', graphLeft + width / 2);
+            baselineLabel.setAttribute('y', graphTop + 8);
+            baselineLabel.setAttribute('text-anchor', 'middle');
+            baselineLabel.setAttribute('font-size', '10');
+            baselineLabel.setAttribute('fill', 'rgba(255,255,255,0.5)');
+            baselineLabel.setAttribute('opacity', '0');
+            baselineLabel.textContent = 'Random Chance';
+            svg.appendChild(baselineLabel);
+
             setTimeout(() => {
-                baselinePath.style.transition = 'opacity 0.6s ease-in';
+                baselinePath.style.transition = 'opacity 0.4s ease-in';
+                baselineLabel.style.transition = 'opacity 0.4s ease-in';
                 baselinePath.setAttribute('opacity', '1');
-            }, 300);
+                baselineLabel.setAttribute('opacity', '1');
+            }, 100);
 
-            // 6. Render MULTIPLE ALTERNATIVE FUTURES (semi-transparent lines)
-            // This shows the "potential futures" / quantum uncertainty
-            const futureColors = [
-                'rgba(144, 191, 255, 0.4)', // Light blue
-                'rgba(255, 182, 193, 0.4)', // Light pink
-                'rgba(221, 160, 221, 0.4)', // Light purple
-                'rgba(152, 251, 152, 0.4)', // Light green
-                'rgba(255, 218, 185, 0.4)'  // Light peach
-            ];
-
-            alternativeFutures.forEach((future, futureIdx) => {
-                const futurePath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-                let futureD = '';
-
-                future.forEach((value, i) => {
-                    const x = 10 + i * 2.3;
-                    const height = (value / maxValue) * 60;
-                    const y = 70 - height;
-                    if (i === 0) {
-                        futureD = `M ${x} ${y}`;
-                    } else {
-                        futureD += ` L ${x} ${y}`;
-                    }
-                });
-
-                futurePath.setAttribute('d', futureD);
-                futurePath.setAttribute('fill', 'none');
-                futurePath.setAttribute('stroke', futureColors[futureIdx]);
-                futurePath.setAttribute('stroke-width', '1');
-                futurePath.setAttribute('opacity', '0');
-                svg.appendChild(futurePath);
-
-                // Stagger animation for dramatic effect
-                setTimeout(() => {
-                    futurePath.style.transition = 'opacity 0.5s ease-in';
-                    futurePath.setAttribute('opacity', '1');
-                }, 400 + futureIdx * 100);
-            });
-
-            // 7. Render YOUR ACTUAL TRIAL (emphasized bold line)
+            // 5. DATA: YOUR TRIAL (emphasized with color)
+            // Tufte: use color sparingly, only for emphasis
             const trialPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
             let trialD = '';
             histogram.forEach((value, i) => {
-                const x = 10 + i * 2.3;
-                const height = (value / maxValue) * 60;
-                const y = 70 - height;
+                const x = graphLeft + (i / (histogram.length - 1)) * width;
+                const y = graphBottom - (value / maxValue) * height;
                 if (i === 0) {
                     trialD = `M ${x} ${y}`;
                 } else {
@@ -2578,91 +2539,71 @@
             trialPath.setAttribute('d', trialD);
             trialPath.setAttribute('fill', 'none');
             trialPath.setAttribute('stroke', '#f093fb');
-            trialPath.setAttribute('stroke-width', '2.5');
+            trialPath.setAttribute('stroke-width', '2');
             trialPath.setAttribute('opacity', '0');
             svg.appendChild(trialPath);
 
-            setTimeout(() => {
-                trialPath.style.transition = 'opacity 0.8s ease-in';
-                trialPath.setAttribute('opacity', '1');
-            }, 900);
+            // Direct label for trial (positioned near data)
+            const trialLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            trialLabel.setAttribute('x', graphLeft + width / 2);
+            trialLabel.setAttribute('y', graphTop - 2);
+            trialLabel.setAttribute('text-anchor', 'middle');
+            trialLabel.setAttribute('font-size', '11');
+            trialLabel.setAttribute('font-weight', '600');
+            trialLabel.setAttribute('fill', '#f093fb');
+            trialLabel.setAttribute('opacity', '0');
+            trialLabel.textContent = 'Your Trial';
+            svg.appendChild(trialLabel);
 
-            // 8. Vertical line marker for YOUR RESULT
-            const markerX = 10 + (userScore / 100) * 230;
+            setTimeout(() => {
+                trialPath.style.transition = 'opacity 0.5s ease-in';
+                trialLabel.style.transition = 'opacity 0.5s ease-in';
+                trialPath.setAttribute('opacity', '1');
+                trialLabel.setAttribute('opacity', '1');
+            }, 300);
+
+            // 6. RESULT MARKER (vertical line at user's score)
+            // Tufte: annotations should be clear and minimal
+            const markerX = graphLeft + (userScore / 100) * width;
             const resultLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
             resultLine.setAttribute('x1', markerX);
-            resultLine.setAttribute('y1', '5');
+            resultLine.setAttribute('y1', graphTop);
             resultLine.setAttribute('x2', markerX);
-            resultLine.setAttribute('y2', '70');
+            resultLine.setAttribute('y2', graphBottom);
             resultLine.setAttribute('stroke', '#f5576c');
-            resultLine.setAttribute('stroke-width', '2');
-            resultLine.setAttribute('stroke-dasharray', '4,2');
+            resultLine.setAttribute('stroke-width', '1.5');
+            resultLine.setAttribute('stroke-dasharray', '3,2');
             resultLine.setAttribute('opacity', '0');
             svg.appendChild(resultLine);
 
-            setTimeout(() => {
-                resultLine.style.transition = 'opacity 0.5s ease-in';
-                resultLine.setAttribute('opacity', '0.9');
-            }, 1200);
-
-            // 9. Result label with beautiful typography
-            const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-            label.setAttribute('x', markerX);
-            label.setAttribute('y', '2');
-            label.setAttribute('text-anchor', 'middle');
-            label.setAttribute('font-size', '8');
-            label.setAttribute('font-weight', '700');
-            label.setAttribute('fill', '#f5576c');
-            label.setAttribute('opacity', '0');
-            label.textContent = `${userScore.toFixed(1)}%`;
-            svg.appendChild(label);
+            // Result value label (clear, readable)
+            const resultLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            resultLabel.setAttribute('x', markerX);
+            resultLabel.setAttribute('y', graphBottom + 18);
+            resultLabel.setAttribute('text-anchor', 'middle');
+            resultLabel.setAttribute('font-size', '11');
+            resultLabel.setAttribute('font-weight', '700');
+            resultLabel.setAttribute('fill', '#f5576c');
+            resultLabel.setAttribute('opacity', '0');
+            resultLabel.textContent = `${userScore.toFixed(1)}%`;
+            svg.appendChild(resultLabel);
 
             setTimeout(() => {
-                label.style.transition = 'opacity 0.5s ease-in';
-                label.setAttribute('opacity', '1');
-            }, 1300);
+                resultLine.style.transition = 'opacity 0.4s ease-in';
+                resultLabel.style.transition = 'opacity 0.4s ease-in';
+                resultLine.setAttribute('opacity', '0.8');
+                resultLabel.setAttribute('opacity', '1');
+            }, 500);
 
-            // 10. Legend in top-right corner (Gelman-style)
-            const legendData = [
-                { label: 'Your Trial', color: '#f093fb', dasharray: 'none', y: 10 },
-                { label: 'Random Chance', color: 'rgba(255, 255, 255, 0.7)', dasharray: '2,2', y: 17 },
-                { label: 'Possible Outcomes', color: 'rgba(152, 251, 152, 0.6)', dasharray: 'none', y: 24 }
-            ];
-
-            legendData.forEach(item => {
-                // Legend line
-                const legendLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-                legendLine.setAttribute('x1', '170');
-                legendLine.setAttribute('y1', item.y);
-                legendLine.setAttribute('x2', '183');
-                legendLine.setAttribute('y2', item.y);
-                legendLine.setAttribute('stroke', item.color);
-                legendLine.setAttribute('stroke-width', item.label === 'Your Trial' ? '2' : '1.5');
-                if (item.dasharray !== 'none') {
-                    legendLine.setAttribute('stroke-dasharray', item.dasharray);
-                }
-                legendLine.setAttribute('opacity', '0');
-                svg.appendChild(legendLine);
-
-                // Legend text
-                const legendText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-                legendText.setAttribute('x', '186');
-                legendText.setAttribute('y', item.y + 1);
-                legendText.setAttribute('text-anchor', 'start');
-                legendText.setAttribute('font-size', '5.5');
-                legendText.setAttribute('fill', 'rgba(255,255,255,0.8)');
-                legendText.textContent = item.label;
-                legendText.setAttribute('opacity', '0');
-                svg.appendChild(legendText);
-
-                // Fade in legend
-                setTimeout(() => {
-                    legendLine.style.transition = 'opacity 0.4s ease-in';
-                    legendText.style.transition = 'opacity 0.4s ease-in';
-                    legendLine.setAttribute('opacity', '1');
-                    legendText.setAttribute('opacity', '1');
-                }, 1400);
-            });
+            // SUMMARY: Removed all chartjunk
+            // - Sacred geometry background (opacity 1 -> removed)
+            // - 5 alternative futures (visual clutter -> removed)
+            // - Confidence interval shading (low information -> removed)
+            // - Excessive gridlines (5 lines -> 1 reference line)
+            // - Tiny fonts (5.5-8pt -> 9-11pt)
+            // - Separate legend (-> direct labels)
+            // Result: Clean, professional, scientifically rigorous visualization
+            // Data-ink ratio maximized, focus on YOUR trial vs baseline
         }
 
 
