@@ -13,46 +13,21 @@
         }
 
         :root {
-            --primary: #667eea;
-            --secondary: #764ba2;
-            --accent: #f093fb;
-            --accent2: #f5576c;
+            --primary: #8B5CF6;
+            --secondary: #EC4899;
+            --accent: #F093FB;
+            --accent2: #F5576C;
+            --dark: #0F0F23;
+            --light: #F8F9FA;
         }
 
         body {
-            font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Space Grotesk', sans-serif;
+            background: linear-gradient(135deg, #0F0F23 0%, #1a1a3e 50%, #0F0F23 100%);
             min-height: 100vh;
             color: white;
             overflow-x: hidden;
-        }
-
-        /* Animated background particles */
-        .particles {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            z-index: 0;
-            pointer-events: none;
-        }
-
-        .particle {
-            position: absolute;
-            width: 4px;
-            height: 4px;
-            background: rgba(255, 255, 255, 0.6);
-            border-radius: 50%;
-            animation: float 15s infinite ease-in-out;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0) translateX(0); opacity: 0; }
-            10% { opacity: 1; }
-            90% { opacity: 1; }
-            100% { transform: translateY(-100vh) translateX(50px); opacity: 0; }
+            position: relative;
         }
 
         /* Navigation */
@@ -154,58 +129,56 @@
         }
 
         .logo {
-            font-size: 80px;
-            margin-bottom: 20px;
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.08); }
+            font-size: var(--text-4xl);
+            margin-bottom: var(--space-3);
+            /* No animation - minimal design */
         }
 
         h1 {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 64px;
-            font-weight: 700;
-            background: linear-gradient(135deg, #ffffff 0%, #f093fb 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 24px;
-            letter-spacing: -1.5px;
-            line-height: 1.1;
+            font-family: var(--font-sans);
+            font-size: var(--text-3xl);
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: var(--space-3);
+            letter-spacing: var(--tracking-tight);
+            line-height: var(--leading-tight);
         }
 
         .tagline {
-            font-size: 22px;
-            color: rgba(255, 255, 255, 0.9);
+            font-size: var(--text-lg);
+            color: var(--text-secondary);
             font-weight: 400;
-            letter-spacing: 0.3px;
+            letter-spacing: var(--tracking-normal);
             max-width: 650px;
             margin: 0 auto;
-            line-height: 1.5;
+            line-height: var(--leading-normal);
         }
 
         .hero-description {
-            font-size: 17px;
-            line-height: 1.7;
-            color: rgba(255, 255, 255, 0.85);
+            font-size: var(--text-base);
+            line-height: var(--leading-relaxed);
+            color: var(--text-secondary);
             max-width: 680px;
-            margin: 24px auto;
+            margin: var(--space-3) auto;
         }
 
         .hero-tagline-secondary {
-            font-size: 18px;
-            line-height: 1.6;
-            color: rgba(255, 255, 255, 0.9);
+            font-size: var(--text-base);
+            line-height: var(--leading-relaxed);
+            color: var(--text-secondary);
             max-width: 650px;
-            margin: 20px auto 0;
+            margin: var(--space-3) auto 0;
         }
 
         .hero-tagline-secondary strong {
-            color: white;
+            color: var(--text-primary);
             font-weight: 600;
+        }
+
+        p {
+            font-size: var(--text-base);
+            line-height: var(--leading-relaxed);
+            color: var(--text-secondary);
         }
 
         /* Hero enhancements */
@@ -735,12 +708,31 @@
             border-radius: 8px;
         }
 
-        .graph-labels {
+        .graph-legend {
             display: flex;
-            justify-content: space-between;
-            margin-top: 8px;
-            font-size: 11px;
-            color: rgba(255, 255, 255, 0.6);
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-top: 16px;
+            padding-top: 12px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            justify-content: center;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 10px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .legend-marker {
+            display: inline-block;
+            flex-shrink: 0;
+        }
+
+        .legend-text {
+            white-space: nowrap;
             font-weight: 500;
         }
 
@@ -2003,11 +1995,6 @@
                 font-size: 28px;
             }
 
-            /* Reduce hero particles on mobile for performance */
-            .hero-particles .quantum-particle:nth-child(n+16) {
-                display: none;
-            }
-
             /* Consciousness meter mobile */
             .consciousness-influence-meter {
                 padding: 16px;
@@ -2414,10 +2401,28 @@
                         </defs>
                         <!-- Bars, grids, and markers will be rendered by JavaScript -->
                     </svg>
-                    <div class="graph-labels">
-                        <span>0%</span>
-                        <span class="center-label">Baseline (50%)</span>
-                        <span>100%</span>
+                    <!-- Graph Legend -->
+                    <div class="graph-legend">
+                        <div class="legend-item">
+                            <span class="legend-marker" style="background: #f093fb; border-radius: 50%; width: 8px; height: 8px;"></span>
+                            <span class="legend-text">Your trials</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-marker" style="background: rgba(255,255,255,0.4); border-radius: 50%; width: 8px; height: 8px;"></span>
+                            <span class="legend-text">Baseline</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-marker" style="background: linear-gradient(90deg, #8B5CF6, #EC4899); width: 12px; height: 6px; opacity: 0.3;"></span>
+                            <span class="legend-text">95% zone</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-marker" style="border-top: 2px dashed rgba(255,255,255,0.4); width: 12px;"></span>
+                            <span class="legend-text">Random chance</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-marker" style="border-left: 2px solid #f5576c; height: 12px;"></span>
+                            <span class="legend-text">Your result</span>
+                        </div>
                     </div>
                 </div>
 
@@ -2652,10 +2657,45 @@
         let modalShownAfterWish = false;
         let modalShownByScroll = false;
 
-        // Create floating particles
+        // === LAZY LOADING OPTIMIZATION ===
+        // Defer non-critical initializations to improve perceived performance
+        let particlesInitialized = false;
+        let heroParticlesInitialized = false;
+
+        // Intersection Observer for lazy loading sections
+        const lazyLoadObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    // Add 'loaded' class to trigger any deferred animations/content
+                    entry.target.classList.add('loaded');
+                    lazyLoadObserver.unobserve(entry.target);
+                }
+            });
+        }, {
+            rootMargin: '50px' // Start loading 50px before element enters viewport
+        });
+
+        // Observe results container and recent wishes for lazy loading
+        document.addEventListener('DOMContentLoaded', () => {
+            const resultsContainer = document.querySelector('.results-container');
+            const recentWishesSection = document.querySelector('.recent-wishes-section');
+
+            if (resultsContainer) lazyLoadObserver.observe(resultsContainer);
+            if (recentWishesSection) lazyLoadObserver.observe(recentWishesSection);
+        });
+
+        // Create floating particles (adaptive count based on device)
         function createParticles() {
+            if (particlesInitialized) return;
+            particlesInitialized = true;
+
             const particlesContainer = document.getElementById('particles');
-            for (let i = 0; i < 50; i++) {
+            if (!particlesContainer) return;
+
+            // Adaptive particle count: desktop 50, tablet 35, mobile 15
+            const particleCount = window.innerWidth > 1024 ? 50 : window.innerWidth > 768 ? 35 : 15;
+
+            for (let i = 0; i < particleCount; i++) {
                 const particle = document.createElement('div');
                 particle.className = 'particle';
                 particle.style.left = Math.random() * 100 + '%';
@@ -2664,14 +2704,26 @@
                 particlesContainer.appendChild(particle);
             }
         }
-        createParticles();
 
-        // Create quantum particle field in hero background
+        // Defer particle creation to idle time for better initial load
+        if ('requestIdleCallback' in window) {
+            requestIdleCallback(() => createParticles(), { timeout: 1000 });
+        } else {
+            setTimeout(createParticles, 100);
+        }
+
+        // Create quantum particle field in hero background (adaptive)
         function createHeroParticles() {
+            if (heroParticlesInitialized) return;
+            heroParticlesInitialized = true;
+
             const container = document.getElementById('hero-particles');
             if (!container) return;
 
-            for (let i = 0; i < 30; i++) {
+            // Adaptive count: desktop 30, tablet 20, mobile 10
+            const heroParticleCount = window.innerWidth > 1024 ? 30 : window.innerWidth > 768 ? 20 : 10;
+
+            for (let i = 0; i < heroParticleCount; i++) {
                 const particle = document.createElement('div');
                 particle.className = 'quantum-particle';
                 particle.style.cssText = `
@@ -2702,10 +2754,14 @@
         `;
         document.head.appendChild(heroParticleStyle);
 
-        // Initialize hero particles
-        createHeroParticles();
+        // Initialize hero particles (deferred for better performance)
+        if ('requestIdleCallback' in window) {
+            requestIdleCallback(() => createHeroParticles(), { timeout: 500 });
+        } else {
+            setTimeout(createHeroParticles, 50);
+        }
 
-        // Create quantum particles emanating from center during collapse
+        // Create quantum particles emanating from center during collapse (adaptive)
         function createQuantumParticles() {
             const quantumField = document.getElementById('quantumField');
             if (!quantumField) return;
@@ -2713,13 +2769,16 @@
             // Clear any existing particles
             quantumField.innerHTML = '';
 
-            // Create 200 particles emanating from center
-            for (let i = 0; i < 200; i++) {
+            // Adaptive count: desktop 200, tablet 120, mobile 60
+            const quantumParticleCount = window.innerWidth > 1024 ? 200 : window.innerWidth > 768 ? 120 : 60;
+
+            // Create particles emanating from center
+            for (let i = 0; i < quantumParticleCount; i++) {
                 const particle = document.createElement('div');
                 particle.className = 'quantum-particle';
 
                 // Random angle for particle trajectory
-                const angle = (Math.PI * 2 * i) / 200 + (Math.random() * 0.1);
+                const angle = (Math.PI * 2 * i) / quantumParticleCount + (Math.random() * 0.1);
 
                 // Random distance (some particles go further)
                 const distance = 100 + Math.random() * 400;
@@ -3068,6 +3127,44 @@
                 svg.appendChild(text);
             });
 
+            // 2.5. MANIFESTATION ZONE HIGHLIGHT (85-100% region)
+            // Subtle purple zone showing where consciousness influence peaks
+            const manifestZoneStart = 85; // 85%
+            const manifestZoneEnd = 100; // 100%
+            const zoneX = graphLeft + (manifestZoneStart / 100) * width;
+            const zoneWidth = ((manifestZoneEnd - manifestZoneStart) / 100) * width;
+
+            const manifestZone = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+            manifestZone.setAttribute('x', zoneX);
+            manifestZone.setAttribute('y', graphTop);
+            manifestZone.setAttribute('width', zoneWidth);
+            manifestZone.setAttribute('height', height);
+            manifestZone.setAttribute('fill', 'url(#manifestGradient)');
+            manifestZone.setAttribute('opacity', '0.15');
+            svg.appendChild(manifestZone);
+
+            // Add gradient definition for manifest zone if not exists
+            if (!defs.querySelector('#manifestGradient')) {
+                const gradient = document.createElementNS('http://www.w3.org/2000/svg', 'linearGradient');
+                gradient.setAttribute('id', 'manifestGradient');
+                gradient.setAttribute('x1', '0%');
+                gradient.setAttribute('y1', '0%');
+                gradient.setAttribute('x2', '100%');
+                gradient.setAttribute('y2', '0%');
+
+                const stop1 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
+                stop1.setAttribute('offset', '0%');
+                stop1.setAttribute('stop-color', '#8B5CF6');
+
+                const stop2 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
+                stop2.setAttribute('offset', '100%');
+                stop2.setAttribute('stop-color', '#EC4899');
+
+                gradient.appendChild(stop1);
+                gradient.appendChild(stop2);
+                defs.appendChild(gradient);
+            }
+
             // 3. RENDER INDIVIDUAL TRIAL DOTS
             // Convert histogram to individual dot positions
             const dotRadius = 1.2;
@@ -3275,15 +3372,47 @@
             resultsContainer.classList.add('show');
             resultsContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
 
-            // Display outcome message
+            // === 4-TIER DYNAMIC RESULT MESSAGING ===
+            // Uses distribution metrics to provide personalized feedback
             const outcomeMsg = document.getElementById('outcome-message');
-            if (data.manifested_percent > 70) {
-                outcomeMsg.innerHTML = `🌟 Strong manifestation detected! Your wish is resonating with the quantum field.`;
-            } else if (data.manifested_percent > 50) {
-                outcomeMsg.innerHTML = `✨ Your wish is influencing reality. Keep focusing your intention!`;
+            const manifestPercent = data.manifested_percent;
+            const peakShift = data.peak_shift || 0;
+            const separationScore = data.separation_score || 0;
+            const coherenceLabel = data.coherence_label || 'Medium';
+
+            let message = '';
+            let icon = '';
+
+            if (manifestPercent >= 80) {
+                // Tier 4: Exceptional consciousness influence (>80%)
+                icon = '✨🌟✨';
+                const peakType = peakShift > 30 ? 'a dominant 95% peak' : 'strong bimodal distribution';
+                message = `<strong>Exceptional consciousness coherence!</strong> Your intention created ${peakType}. ` +
+                         `Quantum coherence: <span style="color: #a855f7;">${coherenceLabel}</span>. ` +
+                         `This result is ${(manifestPercent - 50).toFixed(1)}% above random chance.`;
+            } else if (manifestPercent >= 60) {
+                // Tier 3: Measurable influence (60-80%)
+                icon = '🌟';
+                message = `<strong>Measurable consciousness influence detected.</strong> ` +
+                         `Your intention shifted the distribution ${peakShift.toFixed(0)}% from baseline. ` +
+                         `Coherence: <span style="color: #ec4899;">${coherenceLabel}</span>. ` +
+                         `Continue practicing to strengthen your signal.`;
+            } else if (manifestPercent >= 45 && manifestPercent <= 55) {
+                // Tier 2: Baseline quantum randomness (45-55%)
+                icon = '⚛️';
+                message = `<strong>Baseline quantum behavior observed.</strong> ` +
+                         `Your results match random chance (50%). ` +
+                         `Try increasing your intention intensity or practicing focused meditation before wishing.`;
             } else {
-                outcomeMsg.innerHTML = `🌙 The quantum field heard you. Manifestation takes time and focus.`;
+                // Tier 1: Below baseline (<45% or 55-60%)
+                icon = '🌙';
+                message = `<strong>Subtle consciousness pattern detected.</strong> ` +
+                         `The quantum field registered your intention. ` +
+                         `Coherence: <span style="color: #6b7280;">${coherenceLabel}</span>. ` +
+                         `Manifestation is a practice—consistency builds quantum resonance.`;
             }
+
+            outcomeMsg.innerHTML = `${icon} ${message}`;
 
             // Display probabilities
             document.getElementById('success-prob').textContent = data.manifested_percent.toFixed(1) + '%';

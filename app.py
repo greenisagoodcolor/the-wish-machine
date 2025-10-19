@@ -191,56 +191,45 @@ def run_wish_simulation(wish_text, intensity):
     # Create choice maker
     choice_maker = ChoiceMaker(universe_state)
 
-    # === ENHANCED QUANTUM SIMULATION WITH BIMODAL DISTRIBUTION ===
-    # Uses stratified sampling + Beta distributions for publication-quality results
+    # === IMPROVED BIMODAL DISTRIBUTION ===
+    # Natural Beta distributions create clear separation between baseline and consciousness-influenced peaks
     results = {"manifested": 0, "not_manifested": 0}
     num_trials = 1000
 
     # Normalize consciousness for collapse probability (0 to ~1)
+    # Higher consciousness = more trials collapse to consciousness-influenced distribution
     consciousness_weight = min(0.95, consciousness_level / (10**15 * 2))
-
-    # Stratified sampling configuration for better coverage
-    # Focus samples around critical regions: baseline (50%) and consciousness peak (95%)
-    strata_config = [
-        # (min%, max%, n_samples, description)
-        (0, 40, 150, 'low'),           # Low probability region
-        (40, 60, 200, 'baseline'),     # Baseline quantum (50%)
-        (60, 85, 250, 'transition'),   # Transition zone
-        (85, 98, 350, 'consciousness'),# Consciousness-influenced peak (95%)
-        (98, 100, 50, 'peak')          # Extreme high region
-    ]
 
     trial_outcomes = []
 
-    for min_val, max_val, n_samples, stratum_name in strata_config:
-        for _ in range(n_samples):
-            # Quantum collapse decision: consciousness-influenced vs baseline
-            collapse_to_consciousness = np.random.random() < consciousness_weight
+    for _ in range(num_trials):
+        # Quantum collapse decision: does this trial show consciousness influence?
+        collapse_to_consciousness = np.random.random() < consciousness_weight
 
-            if collapse_to_consciousness:
-                # Consciousness-influenced: Beta(α=20, β=2)
-                # Mean = α/(α+β) = 20/22 ≈ 0.91, peaks around 0.95
-                outcome = np.random.beta(20, 2) * 100
-            else:
-                # Baseline quantum: Beta(α=2, β=2)
-                # Mean = 2/4 = 0.5, symmetric around 50%
-                outcome = np.random.beta(2, 2) * 100
+        if collapse_to_consciousness:
+            # Consciousness-influenced distribution: Beta(α=18+boost, β=2)
+            # Higher consciousness = tighter clustering around 95%
+            alpha = 18 + (consciousness_weight * 5)  # 18 to 23
+            beta = 2
+            # Mean = α/(α+β) ≈ 0.91-0.92, mode peaks at ~95%
+            outcome = np.random.beta(alpha, beta) * 100
+        else:
+            # Baseline quantum distribution: Beta(α=5, β=5)
+            # Symmetric distribution centered at 50%
+            alpha = 5
+            beta = 5
+            # Mean = 0.5, mode at 50%
+            outcome = np.random.beta(alpha, beta) * 100
 
-            # Constrain to stratum range for stratified sampling
-            # This ensures good coverage across the full distribution
-            stratum_width = max_val - min_val
-            outcome = min_val + (outcome / 100) * stratum_width
+        # Clip to valid range [0, 100]
+        outcome = max(0, min(100, outcome))
+        trial_outcomes.append(outcome)
 
-            # Clip to valid range
-            outcome = max(0, min(100, outcome))
-
-            trial_outcomes.append(outcome)
-
-            # Count as manifested if > 50%
-            if outcome > 50:
-                results["manifested"] += 1
-            else:
-                results["not_manifested"] += 1
+        # Count as manifested if > 50%
+        if outcome > 50:
+            results["manifested"] += 1
+        else:
+            results["not_manifested"] += 1
 
     # Calculate statistics
     manifested_count = results["manifested"]
@@ -273,6 +262,40 @@ def run_wish_simulation(wish_text, intensity):
     quantum_coherence = consciousness_weight
     coherence_label = "High" if quantum_coherence > 0.7 else "Medium" if quantum_coherence > 0.4 else "Low"
 
+    # === DISTRIBUTION COMPARISON METRICS ===
+    # Detect actual peaks in the trial histogram
+    detected_peaks = []
+    for i in range(1, 99):  # Skip edges
+        if trial_histogram[i] > trial_histogram[i-1] and trial_histogram[i] > trial_histogram[i+1]:
+            # Local maximum found
+            if trial_histogram[i] > 10:  # Significant peak (>1% of trials)
+                detected_peaks.append({
+                    'position': i,
+                    'height': trial_histogram[i],
+                    'type': 'consciousness' if i > 75 else 'baseline' if 40 <= i <= 60 else 'transition'
+                })
+
+    # Sort by height to find dominant peak
+    detected_peaks.sort(key=lambda p: p['height'], reverse=True)
+    dominant_peak = detected_peaks[0]['position'] if detected_peaks else 50
+
+    # Calculate peak shift from baseline
+    baseline_expected = 50.0
+    peak_shift = dominant_peak - baseline_expected
+
+    # Calculate variance comparison
+    trial_variance = np.var(trial_outcomes)
+    baseline_variance = np.var([np.random.beta(5, 5) * 100 for _ in range(1000)])
+    variance_ratio = trial_variance / baseline_variance if baseline_variance > 0 else 1.0
+
+    # Distribution separation score (how well-separated are the two modes?)
+    # High score = clear bimodal pattern visible
+    if len(detected_peaks) >= 2:
+        peak_separation = abs(detected_peaks[0]['position'] - detected_peaks[1]['position'])
+        separation_score = min(1.0, peak_separation / 50.0)  # 0-1 score
+    else:
+        separation_score = 0.0
+
     return {
         "wish": wish_text,
         "intensity": intensity,
@@ -284,11 +307,19 @@ def run_wish_simulation(wish_text, intensity):
         "difference_from_baseline": difference_from_baseline,
         "consciousness_level": consciousness_level,
         "preference_strength": preference_strength,
-        "trial_histogram": trial_histogram,  # Now shows true bimodal distribution
+        "trial_histogram": trial_histogram,  # Shows true bimodal distribution
         "baseline_histogram": baseline_histogram,
-        "quantum_coherence": quantum_coherence,  # NEW: Measure of collapse strength (0-1)
-        "coherence_label": coherence_label,  # NEW: Human-readable coherence level
-        "bimodal_peaks": [50.0, 95.0]  # NEW: Expected distribution peaks
+        "quantum_coherence": quantum_coherence,  # Measure of collapse strength (0-1)
+        "coherence_label": coherence_label,  # Human-readable coherence level
+        "bimodal_peaks": [50.0, 95.0],  # Expected distribution peaks
+        # NEW: Distribution comparison metrics
+        "detected_peaks": detected_peaks,  # All detected peaks with position/height/type
+        "dominant_peak": dominant_peak,  # Position of highest peak
+        "peak_shift": peak_shift,  # How far dominant peak shifted from baseline (50)
+        "trial_variance": trial_variance,  # Variance of trial outcomes
+        "baseline_variance": baseline_variance,  # Expected variance under null hypothesis
+        "variance_ratio": variance_ratio,  # trial_variance / baseline_variance
+        "separation_score": separation_score  # 0-1 score for bimodal separation clarity
     }
 
 
