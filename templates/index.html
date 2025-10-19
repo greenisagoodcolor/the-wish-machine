@@ -870,14 +870,14 @@
                 opacity: 1;
             }
             35% {
-                width: max(150vw, 150vh);
-                height: max(150vw, 150vh);
+                width: min(800px, 150vw);
+                height: min(800px, 150vh);
                 transform: rotate(540deg) scale(1.2);
                 filter: drop-shadow(0 0 100px rgba(240, 147, 251, 1));
             }
             65% {
-                width: max(150vw, 150vh);
-                height: max(150vw, 150vh);
+                width: min(800px, 150vw);
+                height: min(800px, 150vh);
                 transform: rotate(900deg) scale(1.15);
                 opacity: 1;
             }
@@ -2271,9 +2271,49 @@
                 gap: 12px;
             }
 
-            /* Sacred geometry - faster animation on mobile */
+            /* Sacred geometry - faster animation on mobile + constrained size */
             .sacred-geometry-large {
                 animation-duration: 2.5s;
+            }
+
+            /* Mobile-specific sacred geometry sizing */
+            @keyframes quantumCollapse {
+                0% {
+                    width: 0px;
+                    height: 0px;
+                    opacity: 0;
+                    transform: rotate(0deg) scale(0);
+                    filter: drop-shadow(0 0 0px rgba(255, 255, 255, 0));
+                }
+                5% {
+                    opacity: 1;
+                }
+                35% {
+                    width: min(500px, 120vw);
+                    height: min(500px, 120vh);
+                    transform: rotate(540deg) scale(1.1);
+                    filter: drop-shadow(0 0 80px rgba(240, 147, 251, 1));
+                }
+                65% {
+                    width: min(500px, 120vw);
+                    height: min(500px, 120vh);
+                    transform: rotate(900deg) scale(1.05);
+                    opacity: 1;
+                }
+                95% {
+                    width: 0px;
+                    height: 0px;
+                    transform: rotate(1440deg) scale(0);
+                    opacity: 0.3;
+                    filter: drop-shadow(0 0 100px rgba(245, 87, 108, 1));
+                }
+                100% {
+                    width: 0px;
+                    height: 0px;
+                    opacity: 0;
+                    transform: rotate(1440deg) scale(0);
+                    filter: drop-shadow(0 0 0px rgba(255, 255, 255, 0));
+                }
             }
 
             /* Navigation mobile */
