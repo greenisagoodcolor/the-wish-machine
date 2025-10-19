@@ -8,7 +8,8 @@ import os
 import secrets
 import hashlib
 import time
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
+from functools import wraps
 from flask import Flask, render_template, request, jsonify, session
 from flask_login import LoginManager, login_required, current_user
 from flask_migrate import Migrate
@@ -16,6 +17,7 @@ from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 from flask_wtf.csrf import CSRFProtect
 from flask_talisman import Talisman
+from flask_compress import Compress
 from dotenv import load_dotenv
 import numpy as np
 
@@ -29,8 +31,42 @@ from admin_routes import admin_bp
 # Load environment variables
 load_dotenv()
 
+# Simple in-memory cache for performance optimization (MVP)
+# TODO: Replace with Redis for production scaling
+_cache = {}
+
+def cache_with_ttl(ttl_seconds=300):
+    """Simple time-based cache decorator (5 min default TTL)."""
+    def decorator(func):
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            cache_key = f"{func.__name__}:{str(args)}:{str(kwargs)}"
+            now = time.time()
+
+            # Check if cached and not expired
+            if cache_key in _cache:
+                cached_time, cached_value = _cache[cache_key]
+                if now - cached_time < ttl_seconds:
+                    return cached_value
+
+            # Compute and cache
+            result = func(*args, **kwargs)
+            _cache[cache_key] = (now, result)
+
+            # Simple cache eviction: remove entries older than TTL
+            expired_keys = [k for k, (t, _) in _cache.items() if now - t >= ttl_seconds]
+            for k in expired_keys:
+                del _cache[k]
+
+            return result
+        return wrapper
+    return decorator
+
 # Initialize Flask app
 app = Flask(__name__)
+
+# Initialize Compress for gzip compression (performance optimization)
+Compress(app)
 
 # Configuration
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'dev-secret-key-change-in-production')
@@ -345,11 +381,13 @@ def pricing():
 
 
 @app.route('/api/stats')
+@cache_with_ttl(300)  # Cache for 5 minutes (performance optimization)
 def get_stats():
     """Return wish counter for social proof."""
     try:
         # Count wishes from last 7 days
-        from datetime import timedelta
+        # NOTE: Add database index on created_at for better performance:
+        # CREATE INDEX idx_wish_created_at ON wishes(created_at DESC);
         seven_days_ago = datetime.now(timezone.utc) - timedelta(days=7)
         weekly_wishes = Wish.query.filter(Wish.created_at >= seven_days_ago).count()
 

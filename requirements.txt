@@ -34,6 +34,9 @@ WTForms==3.2.1  # Updated from 3.1.1
 Flask-Limiter==4.0.0  # Updated from 3.5.0 (major version, API compatible)
 Flask-Talisman==1.1.0  # Current
 
+# Performance
+Flask-Compress==1.15  # Gzip compression for responses
+
 # Date/time
 python-dateutil==2.9.0.post0  # Updated from 2.8.2
 

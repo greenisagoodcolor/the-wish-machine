@@ -674,76 +674,6 @@
             gap: 8px;
         }
 
-        .graph-subtitle {
-            font-size: 12px;
-            color: rgba(255, 255, 255, 0.6);
-            margin-bottom: 20px;
-            font-style: italic;
-        }
-
-        .info-icon {
-            display: inline-block;
-            width: 18px;
-            height: 18px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.15);
-            color: rgba(255, 255, 255, 0.7);
-            font-size: 12px;
-            font-weight: 700;
-            text-align: center;
-            line-height: 18px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            position: relative;
-        }
-
-        .info-icon:hover {
-            background: rgba(255, 255, 255, 0.25);
-            color: white;
-            transform: scale(1.1);
-        }
-
-        /* Custom Tooltip */
-        .graph-tooltip {
-            position: absolute;
-            bottom: calc(100% + 10px);
-            left: 50%;
-            transform: translateX(-50%) translateY(-10px);
-            max-width: 280px;
-            padding: 15px 18px;
-            background: linear-gradient(135deg, rgba(102, 126, 234, 0.95) 0%, rgba(118, 75, 162, 0.95) 100%);
-            backdrop-filter: blur(12px);
-            border-radius: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
-            font-size: 13px;
-            line-height: 1.6;
-            color: rgba(255, 255, 255, 0.95);
-            opacity: 0;
-            pointer-events: none;
-            transition: all 0.2s ease-out;
-            z-index: 1000;
-        }
-
-        .graph-tooltip::after {
-            content: '';
-            position: absolute;
-            top: 100%;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 0;
-            height: 0;
-            border-style: solid;
-            border-width: 8px 8px 0 8px;
-            border-color: rgba(102, 126, 234, 0.95) transparent transparent transparent;
-        }
-
-        .graph-tooltip.show {
-            opacity: 1;
-            transform: translateX(-50%) translateY(0);
-            pointer-events: auto;
-        }
-
         .probability-graph {
             width: 100%;
             height: auto;
@@ -1647,6 +1577,121 @@
             }
         }
 
+        /* Result Explanation Panel (4-Tier System) */
+        .explanation-panel {
+            margin-top: 24px;
+            padding: 24px;
+            background: rgba(255, 255, 255, 0.05);
+            border-left: 4px solid var(--primary);
+            border-radius: 12px;
+            animation: slideInExplanation 0.5s ease-out;
+        }
+
+        @keyframes slideInExplanation {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .explanation-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .explanation-icon {
+            font-size: 28px;
+            line-height: 1;
+        }
+
+        .explanation-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin: 0;
+            color: white;
+        }
+
+        .explanation-description {
+            font-size: 15px;
+            line-height: 1.6;
+            color: rgba(255, 255, 255, 0.85);
+            margin: 12px 0 16px 0;
+        }
+
+        .explanation-metrics {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin: 16px 0;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+        }
+
+        .metric {
+            text-align: center;
+        }
+
+        .metric-label {
+            display: block;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.6);
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .metric-value {
+            display: block;
+            font-size: 24px;
+            font-weight: 700;
+            color: white;
+        }
+
+        .explanation-action {
+            padding: 16px;
+            background: rgba(139, 92, 246, 0.15);
+            border-radius: 10px;
+            font-size: 15px;
+            line-height: 1.5;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .explanation-action strong {
+            color: var(--primary);
+        }
+
+        @media (max-width: 768px) {
+            .explanation-panel {
+                padding: 20px;
+                margin-top: 20px;
+            }
+
+            .explanation-title {
+                font-size: 18px;
+            }
+
+            .explanation-metrics {
+                gap: 12px;
+                padding: 16px;
+            }
+
+            .metric-value {
+                font-size: 20px;
+            }
+
+            .explanation-action {
+                padding: 14px;
+                font-size: 14px;
+            }
+        }
+
         .email-signup-bar {
             margin-top: 80px;
             padding: 40px 48px;
@@ -2432,12 +2477,12 @@
 
             <div class="hero-content">
                 <div class="logo">✨</div>
-                <h1>See if the universe is listening</h1>
-                <p class="tagline">Make a wish. Run 1000 simulations. Watch probability shift.</p>
+                <h1>Does your intention shape reality?</h1>
+                <p class="tagline">Make a wish. We'll run 1000 quantum trials. You'll see if consciousness moves the probability needle.</p>
 
                 <p class="hero-description">
-                    Based on visualization research used by Olympic athletes and Fortune 500 executives.
-                    <strong>Test your first wish free.</strong>
+                    The quantum observer effect isn't mysticism—it's physics. Test it yourself in 60 seconds.
+                    <strong>Your first wish is free.</strong>
                 </p>
 
                 <!-- Live social proof -->
@@ -2529,16 +2574,7 @@
 
                 <!-- Probability Distribution Graph -->
                 <div class="probability-graph-container">
-                    <h4 class="graph-title">
-                        Distribution of Possible Outcomes
-                        <span class="info-icon" id="info-icon">ⓘ</span>
-                    </h4>
-                    <p class="graph-subtitle">Exploring the quantum measurement space</p>
-
-                    <!-- Custom Tooltip -->
-                    <div class="graph-tooltip" id="graph-tooltip">
-                        This distribution shows the frequency of outcomes from 1000 quantum simulations. The gray line represents random chance (50% baseline). Your pink line shows the actual result from your focused intention. The red vertical marker indicates your final outcome percentage.
-                    </div>
+                    <h4 class="graph-title">Distribution of Possible Outcomes</h4>
 
                     <svg class="probability-graph" viewBox="0 0 240 140" id="prob-graph" preserveAspectRatio="xMidYMid meet">
                         <!-- Gradient definitions -->
@@ -2551,14 +2587,6 @@
                                 <stop offset="0%" style="stop-color:#ffffff;stop-opacity:0.3" />
                                 <stop offset="100%" style="stop-color:#ffffff;stop-opacity:0.15" />
                             </linearGradient>
-                            <linearGradient id="highlightGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                                <stop offset="0%" style="stop-color:#f5576c;stop-opacity:0.6" />
-                                <stop offset="100%" style="stop-color:#f093fb;stop-opacity:0.2" />
-                            </linearGradient>
-                            <!-- Sacred Geometry Pattern -->
-                            <pattern id="sacredPattern" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
-                                <circle cx="20" cy="20" r="8" fill="none" stroke="white" stroke-width="0.3" opacity="0.03"/>
-                            </pattern>
                         </defs>
                         <!-- Bars, grids, and markers will be rendered by JavaScript -->
                     </svg>
@@ -2573,18 +2601,34 @@
                             <span class="legend-text">Baseline</span>
                         </div>
                         <div class="legend-item">
-                            <span class="legend-marker" style="background: linear-gradient(90deg, #8B5CF6, #EC4899); width: 12px; height: 6px; opacity: 0.3;"></span>
-                            <span class="legend-text">95% zone</span>
-                        </div>
-                        <div class="legend-item">
-                            <span class="legend-marker" style="border-top: 2px dashed rgba(255,255,255,0.4); width: 12px;"></span>
-                            <span class="legend-text">Random chance</span>
-                        </div>
-                        <div class="legend-item">
                             <span class="legend-marker" style="border-left: 2px solid #f5576c; height: 12px;"></span>
                             <span class="legend-text">Your result</span>
                         </div>
                     </div>
+                </div>
+
+                <!-- Result Explanation Panel (4-Tier System) -->
+                <div class="explanation-panel" id="explanation-panel" style="display: none;">
+                    <div class="explanation-header">
+                        <span class="explanation-icon" id="explanation-icon"></span>
+                        <h4 class="explanation-title" id="explanation-title"></h4>
+                    </div>
+                    <p class="explanation-description" id="explanation-description"></p>
+                    <div class="explanation-metrics">
+                        <div class="metric">
+                            <span class="metric-label">Baseline</span>
+                            <span class="metric-value">50%</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">Your Result</span>
+                            <span class="metric-value" id="result-value"></span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">Shift</span>
+                            <span class="metric-value" id="shift-value"></span>
+                        </div>
+                    </div>
+                    <div class="explanation-action" id="explanation-action"></div>
                 </div>
 
                 <button class="wish-again-btn" onclick="resetWish()">Make Another Wish</button>
@@ -3089,16 +3133,16 @@
         const wishText = document.getElementById('wish-text');
         const resultsContainer = document.getElementById('results-container');
 
-        // Check if user has reached their free wish limit (3 wishes for anonymous users)
+        // Check if user has reached their free wish limit (1 wish for anonymous users)
         function hasReachedWishLimit() {
             const count = parseInt(localStorage.getItem('wishes_completed') || '0');
-            return count >= 3; // Changed from 1 to 3 free wishes
+            return count >= 1; // 1 free wish for better conversion
         }
 
         function incrementWishCount() {
             const count = parseInt(localStorage.getItem('wishes_completed') || '0');
             localStorage.setItem('wishes_completed', (count + 1).toString());
-            console.log(`Wish count: ${count + 1}/3`);
+            console.log(`Wish count: ${count + 1}/1`);
         }
 
         function getWishCount() {
@@ -3634,43 +3678,6 @@
         }
 
 
-        // Custom tooltip functionality for graph info icon
-        const infoIcon = document.getElementById('info-icon');
-        const graphTooltip = document.getElementById('graph-tooltip');
-
-        if (infoIcon && graphTooltip) {
-            // Click to toggle tooltip (works on mobile and desktop)
-            infoIcon.addEventListener('click', function(e) {
-                e.stopPropagation();
-                graphTooltip.classList.toggle('show');
-            });
-
-            // Hover to show on desktop (optional enhancement)
-            infoIcon.addEventListener('mouseenter', function() {
-                if (window.innerWidth > 768) { // Only on desktop
-                    graphTooltip.classList.add('show');
-                }
-            });
-
-            infoIcon.addEventListener('mouseleave', function() {
-                if (window.innerWidth > 768) { // Only on desktop
-                    // Delay hiding to allow user to read
-                    setTimeout(() => {
-                        if (!graphTooltip.matches(':hover')) {
-                            graphTooltip.classList.remove('show');
-                        }
-                    }, 300);
-                }
-            });
-
-            // Close tooltip when clicking outside
-            document.addEventListener('click', function(e) {
-                if (!infoIcon.contains(e.target) && !graphTooltip.contains(e.target)) {
-                    graphTooltip.classList.remove('show');
-                }
-            });
-        }
-
         function displayResults(data, wish, intensity) {
             // CRITICAL: Ensure sacred geometry backdrop is completely removed
             const sacredBackdrop = document.getElementById('sacredBackdrop');
@@ -3702,6 +3709,10 @@
 
             // Store this wish result for paywall messaging
             storeWishResult(manifestPercent);
+
+            // Show result explanation panel (4-tier system)
+            const shift = manifestPercent - 50;
+            showResultExplanation(manifestPercent, shift, coherenceLabel);
 
             let message = '';
             let icon = '';
@@ -3795,6 +3806,75 @@
             });
         }
 
+        // 4-Tier Result Explanation System
+        function generateResultExplanation(manifestPercent, shift, coherence) {
+            let tier, icon, title, description, action, color;
+
+            if (manifestPercent >= 90) {
+                // Tier 4: Exceptional (≥90%)
+                tier = 4;
+                icon = '✨🌟✨';
+                title = 'Exceptional Consciousness Coherence';
+                description = `Your intention created a remarkable shift in quantum probability. This result is ${shift.toFixed(1)}% above random chance, suggesting strong consciousness-matter interaction. The bimodal distribution shows clear evidence of observer effect.`;
+                action = 'Your consciousness signal is exceptionally strong. Consider documenting this practice and exploring deeper intention-setting techniques.';
+                color = '#10b981'; // Green
+            } else if (manifestPercent >= 75) {
+                // Tier 3: Strong (75-90%)
+                tier = 3;
+                icon = '🌟';
+                title = 'Strong Consciousness Influence';
+                description = `Measurable consciousness influence detected. Your wish shifted probability ${shift.toFixed(1)}% from baseline. Quantum coherence is ${coherence.toLowerCase()}, indicating meaningful observer effect.`;
+                action = 'You\'re demonstrating consistent influence. Continue practicing to strengthen your consciousness signal further.';
+                color = '#a855f7'; // Purple
+            } else if (manifestPercent >= 60) {
+                // Tier 2.5: Moderate (60-75%)
+                tier = 2.5;
+                icon = '⚛️';
+                title = 'Moderate Consciousness Pattern';
+                description = `Your intention shows measurable effect (${shift.toFixed(1)}% above baseline). The distribution reveals emerging patterns beyond random chance.`;
+                action = 'You\'re building momentum. Try increasing intention intensity or practicing focused meditation before your next wish.';
+                color = '#eab308'; // Yellow
+            } else if (manifestPercent >= 45 && manifestPercent <= 59) {
+                // Tier 2: Baseline (45-60%)
+                tier = 2;
+                icon = '🌙';
+                title = 'Baseline Quantum Behavior';
+                description = `Your result aligns with baseline quantum randomness (around 50%). This is the starting point for most practitioners—consciousness influence takes practice to develop.`;
+                action = 'Start with clear, specific intentions. Try the "consciousness warm-up" exercise: visualize your wish for 60 seconds before clicking.';
+                color = '#6b7280'; // Gray
+            } else {
+                // Tier 1: Below baseline (<45%)
+                tier = 1;
+                icon = '🔮';
+                title = 'Subtle Quantum Pattern';
+                description = `Your result shows ${Math.abs(shift).toFixed(1)}% variation from baseline. Quantum systems can fluctuate—this is normal variance.`;
+                action = 'No worry—consciousness influence strengthens with practice. Focus on emotional clarity and specific visualization.';
+                color = '#6b7280'; // Gray
+            }
+
+            return { tier, icon, title, description, action, color };
+        }
+
+        function showResultExplanation(manifestPercent, shift, coherence) {
+            const explanation = generateResultExplanation(manifestPercent, shift, coherence);
+
+            // Populate DOM elements
+            document.getElementById('explanation-icon').textContent = explanation.icon;
+            document.getElementById('explanation-title').textContent = explanation.title;
+            document.getElementById('explanation-description').textContent = explanation.description;
+            document.getElementById('result-value').textContent = `${manifestPercent.toFixed(0)}%`;
+
+            const shiftText = shift >= 0 ? `+${shift.toFixed(1)}%` : `${shift.toFixed(1)}%`;
+            document.getElementById('shift-value').textContent = shiftText;
+
+            document.getElementById('explanation-action').innerHTML = `<strong>Next Step:</strong> ${explanation.action}`;
+
+            // Apply color theme
+            const panel = document.getElementById('explanation-panel');
+            panel.style.borderLeftColor = explanation.color;
+            panel.style.display = 'block';
+        }
+
         function resetWish() {
             // Check if anonymous user has reached their wish limit (3 wishes)
             if (hasReachedWishLimit()) {
@@ -3864,8 +3944,8 @@
             // Context-aware title
             if (lastResult !== null && lastResult >= 80) {
                 modalTitle.textContent = `Incredible! You hit ${lastResult.toFixed(0)}%`;
-            } else if (wishCount === 3) {
-                modalTitle.textContent = 'You\'ve completed 3 wishes!';
+            } else if (wishCount === 1) {
+                modalTitle.textContent = 'Your free wish is complete';
             } else {
                 modalTitle.textContent = 'Continue the Practice?';
             }
@@ -3873,10 +3953,10 @@
             // Context-aware subtitle
             if (averageShift !== null) {
                 const shiftText = averageShift >= 0 ? `+${averageShift.toFixed(1)}%` : `${averageShift.toFixed(1)}%`;
-                modalSubtitle.textContent = `Your wishes are averaging ${shiftText} from baseline. Keep going to strengthen your consciousness signal—or unlock unlimited wishes.`;
+                modalSubtitle.textContent = `Your wish shifted probability ${shiftText} from baseline. Keep going to strengthen your consciousness signal—or unlock unlimited wishes.`;
 
                 // Show stats
-                modalStats.textContent = `📊 Your average: ${(50 + averageShift).toFixed(0)}% manifestation (${wishCount}/3 wishes used)`;
+                modalStats.textContent = `📊 Your result: ${(50 + averageShift).toFixed(0)}% manifestation (${wishCount}/1 wish used)`;
                 modalStats.style.display = 'block';
             } else {
                 modalSubtitle.textContent = 'Each wish matters. No infinite scrolling, no ambient noise—just intentional focus. Try one more for a quarter, or join the practice with 10 curated wishes per month.';
