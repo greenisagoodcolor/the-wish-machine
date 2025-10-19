@@ -163,11 +163,47 @@
         }
 
         .logo {
-            font-size: var(--text-4xl);
-            margin-bottom: var(--space-3);
+            font-size: 72px;
+            margin-bottom: 24px;
             /* No animation - minimal design */
         }
 
+        /* New hero text hierarchy - modern, breathing spacing */
+        .hero-brand {
+            font-family: var(--font-sans);
+            font-size: 56px;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 32px;
+            letter-spacing: -0.03em;
+            line-height: 1.1;
+        }
+
+        .hero-value-prop {
+            font-size: 24px;
+            font-weight: 400;
+            color: rgba(255, 255, 255, 0.85);
+            line-height: 1.5;
+            letter-spacing: -0.01em;
+            margin-bottom: 40px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .hero-cta-text {
+            font-size: 20px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.95);
+            margin-bottom: 48px;
+            line-height: 1.4;
+        }
+
+        .hero-cta-text strong {
+            font-weight: 600;
+        }
+
+        /* Legacy styles for backward compatibility */
         h1 {
             font-family: var(--font-sans);
             font-size: var(--text-3xl);
@@ -2131,6 +2167,29 @@
            ============================================ */
         @media (max-width: 768px) {
             /* Hero section mobile optimization */
+            .logo {
+                font-size: 56px;
+                margin-bottom: 20px;
+            }
+
+            .hero-brand {
+                font-size: 40px;
+                margin-bottom: 24px;
+                letter-spacing: -0.02em;
+            }
+
+            .hero-value-prop {
+                font-size: 20px;
+                margin-bottom: 32px;
+                padding: 0 16px;
+            }
+
+            .hero-cta-text {
+                font-size: 18px;
+                margin-bottom: 40px;
+            }
+
+            /* Legacy mobile styles */
             h1 {
                 font-size: 42px;
                 letter-spacing: -1px;
@@ -2477,13 +2536,9 @@
 
             <div class="hero-content">
                 <div class="logo">✨</div>
-                <h1>Does your intention shape reality?</h1>
-                <p class="tagline">Make a wish. We'll run 1000 quantum trials. You'll see if consciousness moves the probability needle.</p>
-
-                <p class="hero-description">
-                    The quantum observer effect isn't mysticism—it's physics. Test it yourself in 60 seconds.
-                    <strong>Your first wish is free.</strong>
-                </p>
+                <h1 class="hero-brand">The Wish Machine</h1>
+                <p class="hero-value-prop">Test if your mind can move probability.</p>
+                <p class="hero-cta-text"><strong>Make your first wish — free.</strong></p>
 
                 <!-- Live social proof -->
                 <div class="social-proof-bar">
