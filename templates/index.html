@@ -189,11 +189,16 @@
         }
 
         .hero-description {
-            font-size: var(--text-base);
-            line-height: var(--leading-relaxed);
-            color: var(--text-secondary);
-            max-width: 680px;
-            margin: var(--space-3) auto;
+            font-size: 18px;
+            line-height: 1.7;
+            color: rgba(255, 255, 255, 0.85);
+            max-width: 700px;
+            margin: 24px auto;
+            text-align: center;
+        }
+
+        .hero-description:first-of-type {
+            margin-top: 40px;
         }
 
         .hero-tagline-secondary {
@@ -245,10 +250,12 @@
             align-items: center;
             gap: 12px;
             justify-content: center;
-            margin-top: 48px;
-            font-size: 14px;
-            color: rgba(255, 255, 255, 0.7);
+            margin-top: 56px;
+            padding-bottom: 24px;
+            font-size: 15px;
+            color: rgba(255, 255, 255, 0.75);
             font-weight: 500;
+            letter-spacing: 0.3px;
         }
 
         .arrow-down {
@@ -2866,38 +2873,43 @@
 
             } catch (error) {
                 console.error('Error:', error);
-                alert('Something went wrong with the quantum field...');
-            } finally {
-                // Ensure minimum 3.5 second backdrop display for better UX
+                // Hide backdrop on error
                 const sacredBackdrop = document.getElementById('sacredBackdrop');
                 if (sacredBackdrop) {
+                    sacredBackdrop.classList.remove('show');
+                    sacredBackdrop.style.display = 'none';
+                }
+                alert('Something went wrong with the quantum field...');
+                makeWishBtn.disabled = false;
+                makeWishBtn.innerHTML = 'Make Your Wish';
+            } finally {
+                // Ensure minimum 3.5 second backdrop display, THEN always show results
+                if (apiData) {
+                    const sacredBackdrop = document.getElementById('sacredBackdrop');
                     const elapsed = Date.now() - backdropStartTime;
-                    const remainingTime = Math.max(0, 3500 - elapsed); // Minimum 3.5s display (slower!)
+                    const remainingTime = Math.max(0, 3500 - elapsed);
 
                     setTimeout(() => {
-                        // Hide backdrop first
-                        sacredBackdrop.classList.remove('show');
-
-                        // Then display results if we have data
-                        if (apiData) {
-                            displayResults(apiData, wish, intensity);
-
-                            // Refresh the recent wishes feed to show the new wish
-                            setTimeout(() => fetchRecentWishes(), 1000);
+                        // CRITICAL: Hide backdrop with both methods
+                        if (sacredBackdrop) {
+                            sacredBackdrop.classList.remove('show');
+                            sacredBackdrop.style.display = 'none';
                         }
+
+                        // Display results - this will also force hide backdrop again
+                        displayResults(apiData, wish, intensity);
+
+                        // Refresh the recent wishes feed
+                        setTimeout(() => fetchRecentWishes(), 1000);
 
                         // Reset button
                         makeWishBtn.disabled = false;
                         makeWishBtn.innerHTML = 'Make Your Wish';
                     }, remainingTime);
                 } else {
-                    // Fallback if backdrop element not found
+                    // No data - just reset
                     makeWishBtn.disabled = false;
                     makeWishBtn.innerHTML = 'Make Your Wish';
-                    if (apiData) {
-                        displayResults(apiData, wish, intensity);
-                        setTimeout(() => fetchRecentWishes(), 1000);
-                    }
                 }
             }
         });
