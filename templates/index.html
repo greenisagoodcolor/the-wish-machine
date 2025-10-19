@@ -230,34 +230,6 @@
             z-index: 1;
         }
 
-        .hero-divider {
-            width: 60px;
-            height: 3px;
-            background: linear-gradient(90deg, transparent, #f093fb, transparent);
-            margin: 32px auto;
-            border-radius: 2px;
-            animation: pulse-width 3s ease-in-out infinite;
-        }
-
-        @keyframes pulse-width {
-            0%, 100% { width: 60px; opacity: 0.6; }
-            50% { width: 100px; opacity: 1; }
-        }
-
-        /* Two-column grid for better scanability */
-        .hero-description-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 48px;
-            max-width: 900px;
-            margin: 32px auto;
-            align-items: start;
-        }
-
-        .hero-col {
-            text-align: left;
-        }
-
         .hero-description strong {
             color: white;
             font-weight: 600;
@@ -265,26 +237,6 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-        }
-
-        /* Consciousness metaphor callout */
-        .consciousness-metaphor {
-            background: rgba(168, 85, 247, 0.1);
-            border-left: 3px solid #a855f7;
-            padding: 24px;
-            border-radius: 12px;
-            backdrop-filter: blur(10px);
-            transition: all 0.3s ease;
-        }
-
-        .consciousness-metaphor:hover {
-            background: rgba(168, 85, 247, 0.15);
-            transform: translateX(4px);
-        }
-
-        .metaphor-icon {
-            font-size: 32px;
-            margin-bottom: 12px;
         }
 
         /* CTA hint with animated arrow */
@@ -1997,12 +1949,6 @@
            ============================================ */
         @media (max-width: 768px) {
             /* Hero section mobile optimization */
-            .hero-description-grid {
-                grid-template-columns: 1fr;
-                gap: 24px;
-                padding: 0 16px;
-            }
-
             h1 {
                 font-size: 42px;
                 letter-spacing: -1px;
@@ -2015,18 +1961,6 @@
             .hero-description {
                 font-size: 15px;
                 text-align: center;
-            }
-
-            .hero-col {
-                text-align: center;
-            }
-
-            .consciousness-metaphor {
-                padding: 20px;
-            }
-
-            .metaphor-icon {
-                font-size: 28px;
             }
 
             /* Consciousness meter mobile */
@@ -2122,10 +2056,6 @@
             h1 {
                 font-size: 54px;
             }
-
-            .hero-description-grid {
-                gap: 32px;
-            }
         }
 
         /* ============================================
@@ -2170,12 +2100,6 @@
                 transform: none;
             }
 
-            .hero-divider {
-                animation: none;
-                width: 80px;
-                opacity: 1;
-            }
-
             .arrow-down {
                 animation: none;
             }
@@ -2190,11 +2114,6 @@
             .card {
                 background: rgba(255, 255, 255, 0.15);
                 border: 2px solid rgba(255, 255, 255, 0.4);
-            }
-
-            .consciousness-metaphor {
-                background: rgba(168, 85, 247, 0.2);
-                border-left-width: 4px;
             }
 
             .wish-input {
@@ -2231,7 +2150,6 @@
         /* GPU acceleration for smooth animations */
         .make-wish-btn,
         .card,
-        .consciousness-metaphor,
         .sacred-geometry-large,
         .quantum-particle {
             will-change: transform;
@@ -2239,8 +2157,7 @@
 
         /* Optimize for 60 FPS */
         @media (hover: hover) {
-            .card:hover,
-            .consciousness-metaphor:hover {
+            .card:hover {
                 backface-visibility: hidden;
                 perspective: 1000px;
             }
@@ -2300,34 +2217,17 @@
                 <h1>The Wish Machine</h1>
                 <p class="tagline">Where consciousness shapes quantum reality</p>
 
-                <!-- Breathing room separator -->
-                <div class="hero-divider"></div>
-
-                <!-- Two-column layout for better scanability -->
-                <div class="hero-description-grid">
-                    <div class="hero-col">
-                        <p class="hero-description">
-                            We're not saying it's magic. We're saying <strong>intention is measurable</strong> and consciousness affects outcomes.
-                        </p>
-                        <p class="hero-description">
-                            The quantum observer effect is real physics: your attention literally changes what's being observed.
-                        </p>
-                    </div>
-                    <div class="hero-col">
-                        <div class="consciousness-metaphor">
-                            <div class="metaphor-icon">🧬</div>
-                            <p class="hero-tagline-secondary">
-                                Think of <strong>consciousness as your credit score for the universe</strong>:
-                                it starts wherever it starts, but compounds with intention.
-                            </p>
-                        </div>
-                    </div>
-                </div>
+                <p class="hero-description">
+                    We're not saying it's magic. We're saying <strong>intention is measurable</strong> and consciousness affects outcomes.
+                </p>
+                <p class="hero-description">
+                    The quantum observer effect is real physics: your attention literally changes what's being observed.
+                </p>
 
                 <!-- Call to action hint -->
                 <div class="hero-cta-hint">
-                    <svg class="arrow-down" width="24" height="24" viewBox="0 0 24 24">
-                        <path d="M12 4v16m0 0l-6-6m6 6l6-6" stroke="white" stroke-width="2" fill="none"/>
+                    <svg class="arrow-down" width="24" height="24" viewBox="0 0 24 24" style="overflow: visible;">
+                        <path d="M12 4v16m0 0l-6-6m6 6l6-6" stroke="white" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
                     <span>Make your first wish</span>
                 </div>
@@ -3396,15 +3296,25 @@
         }
 
         function displayResults(data, wish, intensity) {
-            // Hide sacred geometry backdrop
+            // CRITICAL: Ensure sacred geometry backdrop is completely removed
             const sacredBackdrop = document.getElementById('sacredBackdrop');
             if (sacredBackdrop) {
                 sacredBackdrop.classList.remove('show');
+                // Force hide with inline style as failsafe
+                sacredBackdrop.style.display = 'none';
             }
 
             // Show results container
-            resultsContainer.classList.add('show');
-            resultsContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            const container = document.getElementById('results-container');
+            if (container) {
+                container.classList.add('show');
+                container.style.display = 'block'; // Failsafe
+
+                // Scroll into view after a small delay to ensure rendering
+                setTimeout(() => {
+                    container.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }, 100);
+            }
 
             // === 4-TIER DYNAMIC RESULT MESSAGING ===
             // Uses distribution metrics to provide personalized feedback
