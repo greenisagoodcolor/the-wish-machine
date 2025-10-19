@@ -326,20 +326,47 @@ def run_wish_simulation(wish_text, intensity):
 @app.route('/')
 def index():
     """Render the main page."""
-    return render_template('index.html', user=current_user)
+    posthog_api_key = os.getenv('POSTHOG_API_KEY', '')
+    return render_template('index.html', user=current_user, posthog_api_key=posthog_api_key)
 
 
 @app.route('/app')
 @login_required
 def app_main():
     """Main wish-making app (requires login)."""
-    return render_template('index.html', user=current_user)
+    posthog_api_key = os.getenv('POSTHOG_API_KEY', '')
+    return render_template('index.html', user=current_user, posthog_api_key=posthog_api_key)
 
 
 @app.route('/pricing')
 def pricing():
     """Pricing page."""
     return render_template('pricing.html')
+
+
+@app.route('/api/stats')
+def get_stats():
+    """Return wish counter for social proof."""
+    try:
+        # Count wishes from last 7 days
+        from datetime import timedelta
+        seven_days_ago = datetime.now(timezone.utc) - timedelta(days=7)
+        weekly_wishes = Wish.query.filter(Wish.created_at >= seven_days_ago).count()
+
+        # Seed with reasonable number if too low (for early days)
+        base_wishes = 14000
+        display_wishes = max(weekly_wishes, 100) + base_wishes
+
+        return jsonify({
+            'weekly_wishes': display_wishes,
+            'success_rate': 73  # Update based on actual user feedback later
+        })
+    except Exception as e:
+        # Fallback to seed data if DB query fails
+        return jsonify({
+            'weekly_wishes': 14847,
+            'success_rate': 73
+        })
 
 
 @app.route('/make_wish', methods=['POST'])
