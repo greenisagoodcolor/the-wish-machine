@@ -3210,79 +3210,67 @@
 
         if (intensitySlider && intensityValue) {
             // Initialize state
-            let actualValue = 1; // Start at 1%
-            let lastRawValue = 1;
-            let isDragging = false;
+            let currentValue = 1; // Start at 1%
+            let lastSliderPosition = 1;
 
             // Initialize display
-            intensityValue.textContent = actualValue + '%';
+            intensityValue.textContent = currentValue + '%';
+            intensitySlider.dataset.actualValue = currentValue;
 
             // Exponential resistance function
-            // Returns damping factor: 1.0 at low values, approaching 0 at high values
-            function getResistance(value) {
-                // Cubic exponential curve: easy at start, very hard near 100%
-                // At 1%: ~1.0 (no resistance)
-                // At 50%: ~0.875 (mild resistance)
-                // At 90%: ~0.271 (strong resistance)
-                // At 99%: ~0.03 (very strong resistance)
+            // Returns resistance multiplier: higher value = MORE resistance
+            function getResistanceMultiplier(value) {
+                // Exponential curve: 1.0 at low values, up to 20x at high values
+                // This makes it take ~20x more drag distance to go from 90→100 vs 1→10
                 const normalized = value / 100;
-                return Math.pow(1 - normalized, 3);
+                return 1 + Math.pow(normalized, 3) * 19; // Range: 1x to 20x resistance
             }
 
             // Handle slider movement with resistance
             intensitySlider.addEventListener('input', function(e) {
-                const rawValue = parseFloat(e.target.value);
-                const delta = rawValue - lastRawValue;
+                const newSliderPosition = parseFloat(e.target.value);
+                const delta = newSliderPosition - lastSliderPosition;
 
-                // Apply exponential resistance to the change
-                const resistance = getResistance(actualValue);
-                const dampedDelta = delta * (0.1 + resistance * 0.9); // Min 10% speed, max 100%
+                if (delta !== 0) {
+                    // Calculate resistance based on current value
+                    const resistanceMultiplier = getResistanceMultiplier(currentValue);
 
-                // Update actual value with damped delta
-                actualValue = Math.max(1, Math.min(100, actualValue + dampedDelta));
+                    // Apply resistance: divide delta by resistance multiplier
+                    const adjustedDelta = delta / resistanceMultiplier;
 
-                // Update display
-                intensityValue.textContent = Math.round(actualValue) + '%';
+                    // Update current value
+                    currentValue = Math.max(1, Math.min(100, currentValue + adjustedDelta));
 
-                // Store the true value in a data attribute for form submission
-                intensitySlider.dataset.actualValue = actualValue;
+                    // Sync slider position to match current value
+                    // This creates the "resistance" feel
+                    intensitySlider.value = currentValue;
+                    lastSliderPosition = currentValue;
 
-                // Update last raw value
-                lastRawValue = rawValue;
+                    // Update display
+                    intensityValue.textContent = Math.round(currentValue) + '%';
 
-                // Visual feedback: change cursor based on resistance
-                const resistancePct = Math.round(resistance * 100);
-                if (resistancePct < 30) {
-                    intensitySlider.style.cursor = 'grabbing';
-                } else if (resistancePct < 60) {
-                    intensitySlider.style.cursor = 'grab';
-                } else {
-                    intensitySlider.style.cursor = 'pointer';
+                    // Store for form submission
+                    intensitySlider.dataset.actualValue = currentValue;
+
+                    // Visual feedback based on resistance
+                    if (resistanceMultiplier > 10) {
+                        intensitySlider.style.cursor = 'grabbing'; // Very hard to move
+                    } else if (resistanceMultiplier > 3) {
+                        intensitySlider.style.cursor = 'grab'; // Moderate resistance
+                    } else {
+                        intensitySlider.style.cursor = 'ew-resize'; // Easy to move
+                    }
                 }
             });
 
-            // Reset raw value on mousedown/touchstart
-            intensitySlider.addEventListener('mousedown', function() {
-                isDragging = true;
-                lastRawValue = parseFloat(intensitySlider.value);
+            // Reset cursor after dragging
+            intensitySlider.addEventListener('mouseup', function() {
+                intensitySlider.style.cursor = 'ew-resize';
             });
 
-            intensitySlider.addEventListener('touchstart', function() {
-                isDragging = true;
-                lastRawValue = parseFloat(intensitySlider.value);
+            intensitySlider.addEventListener('touchend', function() {
+                intensitySlider.style.cursor = 'ew-resize';
             });
-
-            // Handle end of drag
-            function handleDragEnd() {
-                if (isDragging) {
-                    isDragging = false;
-                    intensitySlider.style.cursor = 'pointer';
-                }
-            }
-
-            intensitySlider.addEventListener('mouseup', handleDragEnd);
-            intensitySlider.addEventListener('touchend', handleDragEnd);
-            intensitySlider.addEventListener('change', handleDragEnd);
 
         } else {
             console.error('Intensity slider elements not found!', {
