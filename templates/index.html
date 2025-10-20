@@ -53,6 +53,23 @@
             --accent2: #F5576C;
             --dark: #0F0F23;
             --light: #F8F9FA;
+
+            /* Typography system - PRD Advisory Team approved */
+            --text-primary: rgba(255, 255, 255, 0.95);
+            --text-secondary: rgba(255, 255, 255, 0.70);
+            --text-tertiary: rgba(255, 255, 255, 0.50);
+
+            /* Type scale */
+            --text-xs: 0.75rem;   /* 12px */
+            --text-sm: 0.875rem;  /* 14px */
+            --text-base: 1rem;    /* 16px */
+            --text-lg: 1.125rem;  /* 18px */
+
+            /* Spacing */
+            --space-xs: 0.5rem;   /* 8px */
+            --space-sm: 0.75rem;  /* 12px */
+            --space-md: 1rem;     /* 16px */
+            --space-lg: 1.5rem;   /* 24px */
         }
 
         body {
@@ -1703,6 +1720,139 @@
             color: var(--primary);
         }
 
+        /* ═══════════════════════════════════════════════════════════════════
+           PRD: Explanatory Text & Information Architecture
+           Advisory Team: Susan Orlean, Jessica Hische, Paul Graham, Tobias van Schneider
+           ═══════════════════════════════════════════════════════════════════ */
+
+        /* Level 1: Primary labels */
+        .label-main,
+        .viz-title,
+        .slider-label {
+            font-size: var(--text-sm);
+            font-weight: 500;
+            color: var(--text-primary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: var(--space-xs);
+            display: block;
+        }
+
+        /* Level 2: Helper text (main explanations) */
+        .input-helper,
+        .slider-context,
+        .result-context {
+            font-size: var(--text-base);
+            color: var(--text-secondary);
+            line-height: 1.5;
+            margin: var(--space-sm) 0;
+        }
+
+        /* Level 3: Subtle hints */
+        .label-sub,
+        .outcome-helper,
+        .stats-helper,
+        .influence-helper,
+        .viz-explainer {
+            font-size: var(--text-sm);
+            color: var(--text-tertiary);
+            font-weight: 400;
+            margin-top: var(--space-xs);
+            line-height: 1.6;
+        }
+
+        /* Result context box - highlighted explanation */
+        .result-context {
+            padding: var(--space-lg);
+            background: rgba(139, 92, 246, 0.1);
+            border-left: 3px solid var(--primary);
+            border-radius: 4px;
+            margin: var(--space-lg) 0;
+        }
+
+        /* Chart annotations */
+        .chart-annotations {
+            display: flex;
+            justify-content: space-between;
+            margin-top: var(--space-md);
+            padding: var(--space-md);
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            gap: var(--space-sm);
+        }
+
+        .annotation {
+            text-align: center;
+            flex: 1;
+        }
+
+        .annotation-label {
+            display: block;
+            font-size: var(--text-xs);
+            color: var(--text-tertiary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 4px;
+        }
+
+        .annotation-value {
+            display: block;
+            font-size: var(--text-lg);
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .baseline-annotation .annotation-value {
+            color: rgba(156, 163, 175, 0.9);
+        }
+
+        .result-annotation .annotation-value {
+            color: #10b981;
+        }
+
+        .shift-annotation .annotation-value {
+            color: #8b5cf6;
+        }
+
+        /* Staggered fade-in animations for progressive disclosure */
+        .outcome-helper,
+        .stats-helper,
+        .influence-helper,
+        .viz-explainer {
+            opacity: 0;
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+            }
+        }
+
+        .outcome-helper { animation-delay: 0.5s; }
+        .stats-helper { animation-delay: 0.7s; }
+        .influence-helper { animation-delay: 0.9s; }
+        .viz-explainer { animation-delay: 1.1s; }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .chart-annotations {
+                flex-direction: column;
+                gap: var(--space-md);
+            }
+
+            .annotation {
+                text-align: left;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            .annotation-label {
+                margin-bottom: 0;
+            }
+        }
+
         @media (max-width: 768px) {
             .explanation-panel {
                 padding: 20px;
@@ -2601,6 +2751,7 @@
 
         <div class="card">
             <label for="wish-text">Your Wish</label>
+            <p class="input-helper">What would change your life if it came true?</p>
             <textarea
                 id="wish-text"
                 class="wish-input"
@@ -2609,9 +2760,13 @@
             ></textarea>
 
             <div class="intensity-slider">
-                <label>Intention Intensity</label>
+                <label class="slider-label">
+                    <span class="label-main">How much do you want this?</span>
+                    <span class="label-sub">Slide to show your commitment</span>
+                </label>
                 <input type="range" id="intensity" min="1" max="100" value="1">
                 <div class="intensity-value" id="intensity-value">1%</div>
+                <p class="slider-context">Higher intention = stronger focus in the simulation</p>
             </div>
 
             <button class="make-wish-btn" id="make-wish-btn">
@@ -2667,7 +2822,7 @@
 
                 <!-- Probability Distribution Graph -->
                 <div class="probability-graph-container">
-                    <h4 class="graph-title">Distribution of Possible Outcomes</h4>
+                    <h4 class="viz-title">How your focus changed the odds</h4>
 
                     <svg class="probability-graph" viewBox="0 0 240 140" id="prob-graph" preserveAspectRatio="xMidYMid meet">
                         <!-- Gradient definitions -->
@@ -2700,6 +2855,25 @@
                             <span class="legend-text">Shift arrow</span>
                         </div>
                     </div>
+
+                    <!-- PRD: Chart annotations with dynamic values -->
+                    <div class="chart-annotations" id="chart-annotations" style="display: none;">
+                        <div class="annotation baseline-annotation">
+                            <span class="annotation-label">Baseline</span>
+                            <span class="annotation-value">50%</span>
+                        </div>
+                        <div class="annotation result-annotation">
+                            <span class="annotation-label">Your result</span>
+                            <span class="annotation-value" id="chart-result-value">--</span>
+                        </div>
+                        <div class="annotation shift-annotation">
+                            <span class="annotation-label">Shift</span>
+                            <span class="annotation-value" id="chart-shift-value">--</span>
+                        </div>
+                    </div>
+
+                    <!-- PRD: Visualization explainer -->
+                    <p class="viz-explainer" id="viz-explainer" style="display: none;"></p>
                 </div>
 
                 <!-- Result Explanation Panel (4-Tier System) -->
@@ -2709,6 +2883,10 @@
                         <h4 class="explanation-title" id="explanation-title"></h4>
                     </div>
                     <p class="explanation-description" id="explanation-description"></p>
+
+                    <!-- PRD: Result context explanation (biggest impact) -->
+                    <p class="result-context" id="result-context"></p>
+
                     <div class="explanation-metrics">
                         <div class="metric">
                             <span class="metric-label">Baseline</span>
@@ -2723,6 +2901,10 @@
                             <span class="metric-value" id="shift-value"></span>
                         </div>
                     </div>
+
+                    <!-- PRD: Helper text under numbers -->
+                    <p class="outcome-helper" id="outcome-helper"></p>
+
                     <div class="explanation-action" id="explanation-action"></div>
                 </div>
 
@@ -4073,6 +4255,53 @@
             document.getElementById('shift-value').textContent = shiftText;
 
             document.getElementById('explanation-action').innerHTML = `<strong>Next Step:</strong> ${explanation.action}`;
+
+            // PRD: Result context explanation (biggest impact)
+            const resultContext = document.getElementById('result-context');
+            if (resultContext) {
+                resultContext.textContent = `Your focused intention shifted the odds dramatically. What starts at 50% random chance moved to ${manifestPercent.toFixed(0)}% likelihood.`;
+                resultContext.style.display = 'block';
+            }
+
+            // PRD: Helper text under numbers (outcome-helper)
+            const outcomeHelper = document.getElementById('outcome-helper');
+            if (outcomeHelper) {
+                const manifestedCount = Math.round((manifestPercent / 100) * 1000);
+                outcomeHelper.textContent = `Out of 1000 possible futures, ${manifestedCount} aligned with your wish`;
+                outcomeHelper.style.display = 'block';
+            }
+
+            // PRD: Chart annotations - populate dynamic values
+            const chartAnnotations = document.getElementById('chart-annotations');
+            if (chartAnnotations) {
+                const chartResultValue = document.getElementById('chart-result-value');
+                const chartShiftValue = document.getElementById('chart-shift-value');
+
+                if (chartResultValue) {
+                    chartResultValue.textContent = `${manifestPercent.toFixed(0)}%`;
+                }
+                if (chartShiftValue) {
+                    const shiftText = shift >= 0 ? `+${shift.toFixed(1)}%` : `${shift.toFixed(1)}%`;
+                    chartShiftValue.textContent = shiftText;
+                }
+
+                chartAnnotations.style.display = 'flex';
+            }
+
+            // PRD: Visualization explainer - dynamic based on result
+            const vizExplainer = document.getElementById('viz-explainer');
+            if (vizExplainer) {
+                if (manifestPercent >= 70) {
+                    vizExplainer.textContent = `Like an athlete who visualizes success, your focused intention created a probability peak at ${manifestPercent.toFixed(0)}% instead of random 50/50 chance.`;
+                } else if (manifestPercent >= 55) {
+                    vizExplainer.textContent = `Your intention nudged the probability slightly above baseline. With practice, this shift can become stronger.`;
+                } else if (manifestPercent >= 45) {
+                    vizExplainer.textContent = `This shows baseline quantum randomness at 50%. Your consciousness signal is just beginning to emerge.`;
+                } else {
+                    vizExplainer.textContent = `Quantum systems naturally fluctuate around 50%. Even small variations contain information about consciousness patterns.`;
+                }
+                vizExplainer.style.display = 'block';
+            }
 
             // Apply color theme
             const panel = document.getElementById('explanation-panel');
