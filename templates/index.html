@@ -2760,10 +2760,20 @@
             api_host: 'https://us.i.posthog.com',
             person_profiles: 'identified_only',
             autocapture: false,
-            capture_pageview: true,
-            capture_pageleave: true,
+            capture_pageview: false, // Manual pageview tracking
+            capture_pageleave: false, // Manual pageleave tracking
             loaded: function(posthog) {
                 console.log('PostHog loaded successfully');
+                // MANUALLY capture pageview after init
+                posthog.capture('$pageview');
+                console.log('Manual $pageview event sent');
+            }
+        });
+
+        // CRITICAL FIX: Manual pageleave tracking
+        window.addEventListener('beforeunload', function() {
+            if (typeof posthog !== 'undefined' && posthog && posthog.capture) {
+                posthog.capture('$pageleave');
             }
         });
     </script>
