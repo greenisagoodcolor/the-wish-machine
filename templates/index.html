@@ -2129,21 +2129,21 @@
         .modal-subtitle {
             font-size: 18px;
             color: rgba(255, 255, 255, 0.9);
-            margin-bottom: 30px;
-            line-height: 1.6;
+            margin-bottom: 35px;
+            line-height: 1.7;
         }
 
         .modal-price {
             font-size: 56px;
             font-weight: 700;
-            margin: 20px 0;
+            margin: 25px 0 15px 0;
             color: white;
         }
 
         .modal-price-label {
             font-size: 14px;
             color: rgba(255, 255, 255, 0.8);
-            margin-bottom: 30px;
+            margin-bottom: 35px;
         }
 
         .modal-cta-primary {
@@ -2158,7 +2158,7 @@
             cursor: pointer;
             transition: all 0.3s ease;
             font-family: 'Space Grotesk', sans-serif;
-            margin-bottom: 15px;
+            margin-bottom: 18px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
         }
 
@@ -3158,7 +3158,7 @@
             <div class="modal-price">$0.25</div>
             <div class="modal-price-label">one wish, no subscription</div>
             <a href="/buy-single-wish-guest" class="modal-cta-primary" onclick="trackEvent('checkout_clicked', {plan: 'single_wish', price: 0.25})">One More Wish ($0.25)</a>
-            <a href="/auth/signup" class="modal-cta-secondary" onclick="trackEvent('checkout_clicked', {plan: 'signup', price: 0})">Join for 10 Free Wishes/Month</a>
+            <a href="/auth/signup" class="modal-cta-secondary" onclick="trackEvent('checkout_clicked', {plan: 'signup', price: 0})">Join for 1 Free Wish/Month</a>
 
             <div style="margin-top: 30px; padding-top: 25px; border-top: 1px solid rgba(255,255,255,0.2);">
                 <p style="font-size: 14px; color: rgba(255,255,255,0.8); margin-bottom: 15px;">Stay connected: Get matched with wish mates, receive consciousness insights, explore wave-particle duality.</p>
@@ -3401,13 +3401,21 @@
             intensityValue.textContent = currentValue + '%';
             intensitySlider.dataset.actualValue = currentValue;
 
-            // Exponential resistance function
+            // Exponential resistance function with steeper curve after 30%
             // Returns resistance multiplier: higher value = MORE resistance
             function getResistanceMultiplier(value) {
-                // Exponential curve: 1.0 at low values, up to 20x at high values
-                // This makes it take ~20x more drag distance to go from 90→100 vs 1→10
-                const normalized = value / 100;
-                return 1 + Math.pow(normalized, 3) * 19; // Range: 1x to 20x resistance
+                if (value <= 30) {
+                    // Easy zone (1-30%): Linear, minimal resistance
+                    return 1 + (value / 30) * 2; // Range: 1x to 3x
+                } else if (value <= 80) {
+                    // Medium zone (30-80%): Exponential ramp up
+                    const normalized = (value - 30) / 50; // 0 to 1
+                    return 3 + Math.pow(normalized, 2.5) * 25; // Range: 3x to 28x
+                } else {
+                    // Hard zone (80-100%): Super exponential, almost impossible
+                    const normalized = (value - 80) / 20; // 0 to 1
+                    return 28 + Math.pow(normalized, 4) * 172; // Range: 28x to 200x
+                }
             }
 
             // Handle slider movement with resistance
