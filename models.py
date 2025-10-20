@@ -51,11 +51,11 @@ class User(UserMixin, db.Model):
     def get_wish_limit(self) -> int:
         """Get the maximum number of wishes allowed per month for this user's tier."""
         limits = {
-            'free': 10,
-            'premium': 100,
+            'free': 1,
+            'premium': 10,
             'unlimited': 999999
         }
-        return limits.get(self.subscription_tier, 10)
+        return limits.get(self.subscription_tier, 1)
 
     def can_make_wish(self) -> bool:
         """Check if user has wishes remaining this month."""

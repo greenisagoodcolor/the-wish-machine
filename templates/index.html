@@ -2289,15 +2289,15 @@
                     opacity: 1;
                 }
                 35% {
-                    width: min(500px, 120vw);
-                    height: min(500px, 120vh);
-                    transform: rotate(540deg) scale(1.1);
-                    filter: drop-shadow(0 0 80px rgba(240, 147, 251, 1));
+                    width: min(300px, 100vw);
+                    height: min(300px, 100vw);
+                    transform: rotate(540deg) scale(0.9);
+                    filter: drop-shadow(0 0 60px rgba(240, 147, 251, 1));
                 }
                 65% {
-                    width: min(500px, 120vw);
-                    height: min(500px, 120vh);
-                    transform: rotate(900deg) scale(1.05);
+                    width: min(300px, 100vw);
+                    height: min(300px, 100vw);
+                    transform: rotate(900deg) scale(0.85);
                     opacity: 1;
                 }
                 95% {
@@ -2305,7 +2305,7 @@
                     height: 0px;
                     transform: rotate(1440deg) scale(0);
                     opacity: 0.3;
-                    filter: drop-shadow(0 0 100px rgba(245, 87, 108, 1));
+                    filter: drop-shadow(0 0 80px rgba(245, 87, 108, 1));
                 }
                 100% {
                     width: 0px;
@@ -2573,10 +2573,11 @@
             <div class="hero-content">
                 <div class="logo">✨</div>
                 <h1 class="hero-brand">The Wish Machine</h1>
-                <p class="hero-value-prop">Test if your mind can move probability.</p>
-                <p class="hero-cta-text"><strong>Make your first wish — free.</strong></p>
+                <p class="hero-value-prop">What makes wishes come true?</p>
+                <p class="hero-cta-text"><strong>It starts with intention.</strong></p>
 
                 <!-- Live social proof -->
+                <!--
                 <div class="social-proof-bar">
                     <span class="wish-counter">
                         <span id="wish-count">14,847</span> wishes made this week
@@ -2586,6 +2587,7 @@
                         Live
                     </span>
                 </div>
+                -->
 
                 <!-- Call to action hint -->
                 <div class="hero-cta-hint">
@@ -2608,8 +2610,8 @@
 
             <div class="intensity-slider">
                 <label>Intention Intensity</label>
-                <input type="range" id="intensity" min="1" max="100" value="50">
-                <div class="intensity-value" id="intensity-value">50%</div>
+                <input type="range" id="intensity" min="1" max="100" value="1">
+                <div class="intensity-value" id="intensity-value">1%</div>
             </div>
 
             <button class="make-wish-btn" id="make-wish-btn">
@@ -2752,6 +2754,7 @@
         </div>
 
         <!-- Testimonials Section -->
+        <!--
         <div class="testimonials-section">
             <h3 class="testimonials-title">What People Are Experiencing</h3>
             <div class="testimonials-grid">
@@ -2780,6 +2783,7 @@
                 </div>
             </div>
         </div>
+        -->
 
         <!-- Email Signup Bar -->
         <div class="email-signup-bar">
@@ -3187,6 +3191,9 @@
             }
         }
 
+        // Check if user is authenticated (passed from Flask template)
+        const isAuthenticated = {% if user and user.is_authenticated %}true{% else %}false{% endif %};
+
         // Nav scroll effect
         window.addEventListener('scroll', () => {
             const nav = document.getElementById('nav');
@@ -3197,23 +3204,86 @@
             }
         });
 
-        // Intensity slider with defensive coding
+        // Intensity slider with exponential resistance
         const intensitySlider = document.getElementById('intensity');
         const intensityValue = document.getElementById('intensity-value');
 
         if (intensitySlider && intensityValue) {
-            // Initialize the display value on page load
-            intensityValue.textContent = intensitySlider.value + '%';
+            // Initialize state
+            let actualValue = 1; // Start at 1%
+            let lastRawValue = 1;
+            let isDragging = false;
 
-            // Update value on slider input (real-time)
+            // Initialize display
+            intensityValue.textContent = actualValue + '%';
+
+            // Exponential resistance function
+            // Returns damping factor: 1.0 at low values, approaching 0 at high values
+            function getResistance(value) {
+                // Cubic exponential curve: easy at start, very hard near 100%
+                // At 1%: ~1.0 (no resistance)
+                // At 50%: ~0.875 (mild resistance)
+                // At 90%: ~0.271 (strong resistance)
+                // At 99%: ~0.03 (very strong resistance)
+                const normalized = value / 100;
+                return Math.pow(1 - normalized, 3);
+            }
+
+            // Handle slider movement with resistance
             intensitySlider.addEventListener('input', function(e) {
-                intensityValue.textContent = e.target.value + '%';
+                const rawValue = parseFloat(e.target.value);
+                const delta = rawValue - lastRawValue;
+
+                // Apply exponential resistance to the change
+                const resistance = getResistance(actualValue);
+                const dampedDelta = delta * (0.1 + resistance * 0.9); // Min 10% speed, max 100%
+
+                // Update actual value with damped delta
+                actualValue = Math.max(1, Math.min(100, actualValue + dampedDelta));
+
+                // Update display
+                intensityValue.textContent = Math.round(actualValue) + '%';
+
+                // Store the true value in a data attribute for form submission
+                intensitySlider.dataset.actualValue = actualValue;
+
+                // Update last raw value
+                lastRawValue = rawValue;
+
+                // Visual feedback: change cursor based on resistance
+                const resistancePct = Math.round(resistance * 100);
+                if (resistancePct < 30) {
+                    intensitySlider.style.cursor = 'grabbing';
+                } else if (resistancePct < 60) {
+                    intensitySlider.style.cursor = 'grab';
+                } else {
+                    intensitySlider.style.cursor = 'pointer';
+                }
             });
 
-            // Also listen to 'change' event for broader browser compatibility
-            intensitySlider.addEventListener('change', function(e) {
-                intensityValue.textContent = e.target.value + '%';
+            // Reset raw value on mousedown/touchstart
+            intensitySlider.addEventListener('mousedown', function() {
+                isDragging = true;
+                lastRawValue = parseFloat(intensitySlider.value);
             });
+
+            intensitySlider.addEventListener('touchstart', function() {
+                isDragging = true;
+                lastRawValue = parseFloat(intensitySlider.value);
+            });
+
+            // Handle end of drag
+            function handleDragEnd() {
+                if (isDragging) {
+                    isDragging = false;
+                    intensitySlider.style.cursor = 'pointer';
+                }
+            }
+
+            intensitySlider.addEventListener('mouseup', handleDragEnd);
+            intensitySlider.addEventListener('touchend', handleDragEnd);
+            intensitySlider.addEventListener('change', handleDragEnd);
+
         } else {
             console.error('Intensity slider elements not found!', {
                 slider: !!intensitySlider,
@@ -3226,8 +3296,15 @@
         const wishText = document.getElementById('wish-text');
         const resultsContainer = document.getElementById('results-container');
 
-        // Check if user has reached their free wish limit (1 wish for anonymous users)
+        // Check if user has reached their free wish limit (1 wish for anonymous users ONLY)
         function hasReachedWishLimit() {
+            // Authenticated users should NEVER hit this client-side limit
+            // Server will handle their subscription limits
+            if (isAuthenticated) {
+                return false;
+            }
+
+            // Only check localStorage for anonymous users
             const count = parseInt(localStorage.getItem('wishes_completed') || '0');
             return count >= 1; // 1 free wish for better conversion
         }
@@ -3283,7 +3360,8 @@
 
         makeWishBtn.addEventListener('click', async () => {
             const wish = wishText.value.trim();
-            const intensity = parseInt(intensitySlider.value);
+            // Use actualValue from dataset (exponential resistance), fallback to slider value
+            const intensity = parseInt(intensitySlider.dataset.actualValue || intensitySlider.value || 1);
 
             if (!wish) {
                 alert('Please enter a wish first!');
@@ -3834,7 +3912,7 @@
 
                 // Scroll into view after a small delay to ensure rendering
                 setTimeout(() => {
-                    container.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    container.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 }, 100);
             }
 
@@ -4023,8 +4101,9 @@
 
             resultsContainer.classList.remove('show');
             wishText.value = '';
-            intensitySlider.value = 50;
-            intensityValue.textContent = '50%';
+            intensitySlider.value = 1;
+            intensitySlider.dataset.actualValue = 1;
+            intensityValue.textContent = '1%';
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
