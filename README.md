@@ -127,8 +127,8 @@ Copy `.env.example` to `.env` and configure:
 - `ADMIN_EMAIL`: Admin notification email
 
 #### Application Settings
-- `MAX_WISHES_FREE`: Free tier monthly limit (default: 10)
-- `MAX_WISHES_PREMIUM`: Premium tier monthly limit (default: 100)
+- `MAX_WISHES_FREE`: Free tier monthly limit (default: 1)
+- `MAX_WISHES_PREMIUM`: Premium tier monthly limit (default: 10)
 - `MAX_WISHES_UNLIMITED`: Unlimited tier limit (default: 999999)
 
 ### Stripe Setup
@@ -317,7 +317,7 @@ choicemaker/
 | Feature | Free | Premium | Unlimited |
 |---------|------|---------|-----------|
 | **Price** | $0 | $9.99/mo | $29.99/mo |
-| **Wishes/Month** | 10 | 100 | Unlimited |
+| **Wishes/Month** | 1 | 10 | Unlimited |
 | **Processing** | Standard | Priority | Highest Priority |
 | **Analytics** | Basic | Advanced | Premium Dashboard |
 | **History** | Last 30 days | Unlimited | Unlimited |

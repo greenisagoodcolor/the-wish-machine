@@ -444,7 +444,7 @@ def make_wish():
             anonymous_wishes = session.get('anonymous_wish_count', 0)
             if anonymous_wishes >= 1:
                 return jsonify({
-                    "error": "You've used your free wish. Sign up for 10 free wishes per month!",
+                    "error": "You've used your free wish. Sign up for 1 free wish per month!",
                     "limit_reached": True,
                     "anonymous": True,
                     "show_upsell": True

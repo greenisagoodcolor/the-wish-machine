@@ -237,7 +237,7 @@ class EmailService:
 
                 <p><strong>Here's what you get as an early member:</strong></p>
                 <ul>
-                    <li>10 free wishes per month (forever!)</li>
+                    <li>1 free wish per month (forever!)</li>
                     <li>Special founding member pricing on upgrades</li>
                     <li>Priority support from our team</li>
                     <li>Influence on future features</li>
@@ -278,7 +278,7 @@ class EmailService:
             True if sent successfully
         """
         tier_benefits = {
-            'premium': ['100 wishes per month', 'Priority processing', 'Advanced analytics'],
+            'premium': ['10 wishes per month', 'Priority processing', 'Advanced analytics'],
             'unlimited': ['Unlimited wishes', 'Highest priority processing', 'Premium analytics', 'Early access to new features']
         }
 
