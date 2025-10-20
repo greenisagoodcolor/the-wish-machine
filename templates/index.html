@@ -2679,11 +2679,13 @@
 
         posthog.init('phc_3LVAMPpwJoDgTWRSZFhucMBN2SqVcAMOJTFBKzgsuBu', {
             api_host: 'https://us.i.posthog.com',
-            defaults: '2025-05-24',
             person_profiles: 'identified_only',
             autocapture: false,
             capture_pageview: true,
-            capture_pageleave: true
+            capture_pageleave: true,
+            loaded: function(posthog) {
+                console.log('PostHog loaded successfully');
+            }
         });
     </script>
 </head>
