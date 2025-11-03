@@ -2759,14 +2759,11 @@
         posthog.init('phc_3LVAMPpwJoDgTWRSZFhucMBN2SqVcAMOJTFBKzgsuBu', {
             api_host: 'https://us.i.posthog.com',
             person_profiles: 'identified_only',
-            autocapture: false,
-            capture_pageview: false, // Manual pageview tracking
-            capture_pageleave: false, // Manual pageleave tracking
+            autocapture: true,  // FIXED: Enable auto-capture
+            capture_pageview: true,  // FIXED: Enable auto pageview tracking
+            capture_pageleave: true,  // FIXED: Enable auto pageleave tracking
             loaded: function(posthog) {
-                console.log('PostHog loaded successfully');
-                // MANUALLY capture pageview after init
-                posthog.capture('$pageview');
-                console.log('Manual $pageview event sent');
+                console.log('PostHog loaded successfully - auto-capture enabled');
             }
         });
 
