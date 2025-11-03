@@ -2813,9 +2813,9 @@
 
             <div class="hero-content">
                 <div class="logo">✨</div>
-                <h1 class="hero-brand">The Wish Machine</h1>
-                <p class="hero-value-prop">What makes wishes come true?</p>
-                <p class="hero-cta-text"><strong>It starts with intention.</strong></p>
+                <h1 class="hero-brand">Make a wish. Focus your attention. See the odds shift.</h1>
+                <p class="hero-value-prop">When you focus and take small actions, the model shows how your odds can improve.</p>
+                <p class="hero-cta-text"><strong>Make Your First Wish</strong></p>
 
                 <!-- Live social proof -->
                 <!--
@@ -2887,10 +2887,10 @@
                 <!-- PRD: Explanatory text #2 - Under Statistics Row -->
                 <p class="stats-explainer">The stronger your intention, the more reality shifts in your favor</p>
 
-                <!-- Consciousness Influence Meter -->
+                <!-- Influence Score Meter -->
                 <div class="consciousness-influence-meter" id="consciousness-meter" style="display: none;">
                     <div class="meter-header">
-                        <span class="meter-title">Consciousness Influence</span>
+                        <span class="meter-title">Influence score</span>
                         <span class="meter-value" id="influence-value">+0%</span>
                     </div>
 
@@ -2918,8 +2918,19 @@
                     </div>
                 </div>
 
-                <!-- PRD: Explanatory text #3 - Under CONSCIOUSNESS INFLUENCE bar -->
+                <!-- PRD: Explanatory text #3 - Under INFLUENCE SCORE bar -->
                 <p class="influence-explainer">Daily practice builds your influence—like training for the life you want</p>
+
+                <!-- Metric Tooltips -->
+                <div class="metric-tooltips" style="font-size: 12px; color: rgba(255,255,255,0.6); margin-top: 20px; padding: 16px; background: rgba(255,255,255,0.03); border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);">
+                    <div style="font-weight: 600; color: rgba(255,255,255,0.8); margin-bottom: 12px;">Metric Definitions</div>
+                    <div style="margin-bottom: 8px;"><strong style="color: rgba(255,255,255,0.9);">Manifested (%)</strong>: Share of simulations that met your target</div>
+                    <div style="margin-bottom: 8px;"><strong style="color: rgba(255,255,255,0.9);">Trials (count)</strong>: Number of simulations run</div>
+                    <div style="margin-bottom: 8px;"><strong style="color: rgba(255,255,255,0.9);">Success count</strong>: Simulations meeting your target</div>
+                    <div style="margin-bottom: 8px;"><strong style="color: rgba(255,255,255,0.9);">Intention (0–100)</strong>: Your chosen slider value</div>
+                    <div style="margin-bottom: 8px;"><strong style="color: rgba(255,255,255,0.9);">Baseline shift (pp)</strong>: Difference vs 50% baseline (percentage points)</div>
+                    <div style="margin-bottom: 8px;"><strong style="color: rgba(255,255,255,0.9);">Influence score</strong>: Estimated effect size normalized to 0–100</div>
+                </div>
 
                 <!-- Probability Distribution Graph -->
                 <div class="probability-graph-container">
@@ -2939,22 +2950,12 @@
                         </defs>
                         <!-- Visualization rendered by JavaScript -->
                     </svg>
-                    <!-- Simplified Legend (Updated for new visualization) -->
-                    <div class="graph-legend">
-                        <div class="legend-item">
-                            <span class="legend-marker" style="border-left: 2px dashed rgba(156, 163, 175, 0.6); height: 12px;"></span>
-                            <span class="legend-text">Baseline (50%)</span>
-                        </div>
-                        <div class="legend-item">
-                            <span class="legend-marker" style="border-left: 3px solid #10b981; height: 12px;"></span>
-                            <span class="legend-text">Your result</span>
-                        </div>
-                        <div class="legend-item">
-                            <span class="legend-marker" style="background: linear-gradient(90deg, #10b981, transparent); width: 16px; height: 3px; display: inline-block; position: relative;">
-                                <span style="position: absolute; right: -3px; top: -2px; width: 0; height: 0; border-left: 5px solid #10b981; border-top: 3px solid transparent; border-bottom: 3px solid transparent;"></span>
-                            </span>
-                            <span class="legend-text">Shift arrow</span>
-                        </div>
+                    <!-- Unified Legend (PRD Specification) -->
+                    <div class="graph-legend" style="text-align: center; font-size: 13px; margin-top: 16px; padding: 12px; background: rgba(255,255,255,0.05); border-radius: 8px;">
+                        <strong style="color: rgba(255,255,255,0.9);">Legend:</strong>
+                        <span style="color: #10b981; font-weight: 600;">Green</span> = better than baseline;
+                        <span style="color: #ef4444; font-weight: 600;">Red</span> = worse;
+                        <span style="color: #9ca3af; font-weight: 600;">Gray</span> = no change
                     </div>
 
                     <!-- PRD: Chart annotations with dynamic values -->
@@ -3027,15 +3028,12 @@
 
         <!-- How It Works Section -->
         <div class="info-section">
-            <h3>How It Works</h3>
+            <h3>How your attention changes the odds</h3>
             <p>
-                Yes, this sounds ridiculous. Olympic athletes have been visualizing their performance for decades. The body doesn't know the difference between a vividly imagined experience and a real one. We're simply extending that logic to everything that matters. Whether you're building relationships, making art, or growing a business, the mechanism is the same: focused consciousness influences how your reality unfolds.
+                When you focus your attention on a specific outcome—and act toward it—the odds can shift. Elite athletes have visualized for decades; we apply that practice to the goals that matter to you.
             </p>
             <p>
-                Your baseline Consciousness is like your credit score for the universe: it starts wherever it starts, but it compounds with intention. We help you take actions that increase your Consciousness so wishes have better chances of coming true. Each wish runs 1000 quantum collapse simulations, measuring how your focused attention influences your reality. The more you practice, the stronger your signal gets. 
-            </p>
-            <p>
-                In an era of infinite digital noise, we're curating something else: deliberate, meaningful intention. Most worthwhile things are absurd until they're not.
+                Each wish runs 1,000 simulations against a baseline. We compare your result to 50% baseline and show the shift. Practice builds skill; skill compounds. Most worthwhile things are absurd—until they're not.
             </p>
         </div>
 
@@ -3074,7 +3072,7 @@
         <!-- Email Signup Bar -->
         <div class="email-signup-bar">
             <h3>Stay Connected</h3>
-            <p>Get matched with wish mates, receive consciousness insights, and explore the practice with us.</p>
+            <p>Get matched with wish-mates, receive practice tips, and keep your attention on what matters.</p>
             <form class="email-signup-form" onsubmit="handleEmailSignup(event)">
                 <input
                     type="email"
@@ -3189,7 +3187,8 @@
         </div>
 
         <footer>
-            <p>Building Consciousness since &copy; 2025 The Wish Machine.  All rights reserved. <br> <br> Your intention is unique, but the patterns are universal. </p>
+            <p>&copy; 2025 The Wish Machine. All rights reserved.</p>
+            <p style="margin-top: 16px; font-style: italic; color: rgba(255,255,255,0.7);">Your intention is unique, but the patterns are universal.</p>
         </footer>
     </div>
 
