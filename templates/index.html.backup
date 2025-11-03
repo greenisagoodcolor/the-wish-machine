@@ -1,0 +1,2818 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Wish Machine - Where Consciousness Shapes Quantum Reality</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;600;700&family=Inter:wght@300;400;600&display=swap">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #667eea;
+            --secondary: #764ba2;
+            --accent: #f093fb;
+            --accent2: #f5576c;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: white;
+            overflow-x: hidden;
+        }
+
+        /* Animated background particles */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 50%;
+            animation: float 15s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) translateX(0); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-100vh) translateX(50px); opacity: 0; }
+        }
+
+        /* Navigation */
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(15, 15, 35, 0.8);
+            backdrop-filter: blur(10px);
+            padding: 15px 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .nav.scrolled {
+            background: rgba(15, 15, 35, 0.95);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-brand {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 20px;
+            font-weight: 700;
+            color: white;
+            text-decoration: none;
+            transition: transform 0.3s ease;
+        }
+
+        .nav-brand:hover {
+            transform: scale(1.05);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 25px;
+            align-items: center;
+        }
+
+        .nav-link {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-link:hover {
+            color: white;
+        }
+
+        .nav-link.btn {
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent2) 100%);
+            padding: 8px 20px;
+            border-radius: 8px;
+            color: white;
+        }
+
+        .nav-link.btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(240, 147, 251, 0.4);
+        }
+
+        .user-info {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        /* Container */
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 100px 20px 40px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            margin-bottom: 80px;
+            animation: fadeInDown 0.8s ease-out;
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .logo {
+            font-size: 80px;
+            margin-bottom: 20px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.08); }
+        }
+
+        h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 64px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #ffffff 0%, #f093fb 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 24px;
+            letter-spacing: -1.5px;
+            line-height: 1.1;
+        }
+
+        .tagline {
+            font-size: 22px;
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 400;
+            letter-spacing: 0.3px;
+            max-width: 650px;
+            margin: 0 auto;
+            line-height: 1.5;
+        }
+
+        .hero-description {
+            font-size: 17px;
+            line-height: 1.7;
+            color: rgba(255, 255, 255, 0.85);
+            max-width: 680px;
+            margin: 24px auto;
+        }
+
+        .hero-tagline-secondary {
+            font-size: 18px;
+            line-height: 1.6;
+            color: rgba(255, 255, 255, 0.9);
+            max-width: 650px;
+            margin: 20px auto 0;
+        }
+
+        .hero-tagline-secondary strong {
+            color: white;
+            font-weight: 600;
+        }
+
+        /* Card */
+        .card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 28px;
+            padding: 48px;
+            margin-bottom: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: fadeInUp 0.8s ease-out;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 32px 90px rgba(0, 0, 0, 0.4);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: rgba(255, 255, 255, 0.9);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .wish-input {
+            width: 100%;
+            padding: 24px;
+            font-size: 18px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.08);
+            color: white;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            resize: vertical;
+            min-height: 140px;
+            margin-bottom: 36px;
+            line-height: 1.6;
+        }
+
+        .wish-input:focus {
+            outline: none;
+            border-color: rgba(255, 255, 255, 0.6);
+            background: rgba(255, 255, 255, 0.12);
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.2), 0 0 30px rgba(102, 126, 234, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .wish-input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        /* Intensity Slider */
+        .intensity-slider {
+            margin: 30px 0;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            height: 8px;
+            border-radius: 5px;
+            background: rgba(255, 255, 255, 0.15);
+            outline: none;
+            -webkit-appearance: none;
+            margin: 20px 0;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent2) 100%);
+            cursor: pointer;
+            box-shadow: 0 0 20px rgba(240, 147, 251, 0.6);
+            transition: transform 0.2s;
+        }
+
+        input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent2) 100%);
+            cursor: pointer;
+            box-shadow: 0 0 20px rgba(240, 147, 251, 0.6);
+            border: none;
+        }
+
+        .intensity-value {
+            text-align: center;
+            font-size: 36px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent2) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-top: 10px;
+        }
+
+        .make-wish-btn {
+            width: 100%;
+            padding: 26px;
+            font-size: 20px;
+            font-weight: 600;
+            color: white;
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent2) 100%);
+            border: none;
+            border-radius: 18px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-family: 'Space Grotesk', sans-serif;
+            letter-spacing: 0.5px;
+            box-shadow: 0 12px 35px rgba(240, 147, 251, 0.35);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .make-wish-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .make-wish-btn:hover::before {
+            left: 100%;
+        }
+
+        .make-wish-btn:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 18px 45px rgba(240, 147, 251, 0.5);
+        }
+
+        .make-wish-btn:focus {
+            outline: none;
+            box-shadow: 0 0 0 4px rgba(240, 147, 251, 0.4), 0 18px 45px rgba(240, 147, 251, 0.5);
+        }
+
+        .make-wish-btn:active {
+            transform: translateY(-1px);
+        }
+
+        .make-wish-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Sacred Geometry Loading */
+        .sacred-geometry-container {
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .flower-of-life {
+            width: 50px;
+            height: 50px;
+            margin-right: 12px;
+            vertical-align: middle;
+        }
+
+        .flower-of-life circle {
+            fill: none;
+            stroke: white;
+            stroke-width: 1.5;
+            opacity: 0.8;
+        }
+
+        .outer-ring {
+            animation: rotate-cw 4s linear infinite;
+            transform-origin: 100px 100px;
+        }
+
+        .center-circle {
+            animation: rotate-ccw 3s linear infinite, pulse-geometry 2s ease-in-out infinite;
+            transform-origin: 100px 100px;
+        }
+
+        @keyframes rotate-cw {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes rotate-ccw {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(-360deg); }
+        }
+
+        @keyframes pulse-geometry {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1.0; }
+        }
+
+        /* Accessibility: Reduce motion */
+        @media (prefers-reduced-motion: reduce) {
+            .outer-ring, .center-circle {
+                animation: none !important;
+            }
+        }
+
+        .loading-text {
+            font-size: 15px;
+            color: white;
+            font-weight: 500;
+            letter-spacing: 0.3px;
+        }
+
+        /* Probability Distribution Graph */
+        .probability-graph-container {
+            margin: 35px 0;
+            padding: 25px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+        }
+
+        .graph-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 16px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .graph-subtitle {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.6);
+            margin-bottom: 20px;
+            font-style: italic;
+        }
+
+        .info-icon {
+            display: inline-block;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.15);
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 12px;
+            font-weight: 700;
+            text-align: center;
+            line-height: 18px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .info-icon:hover {
+            background: rgba(255, 255, 255, 0.25);
+            color: white;
+            transform: scale(1.1);
+        }
+
+        /* Custom Tooltip */
+        .graph-tooltip {
+            position: absolute;
+            bottom: calc(100% + 10px);
+            left: 50%;
+            transform: translateX(-50%) translateY(-10px);
+            max-width: 280px;
+            padding: 15px 18px;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.95) 0%, rgba(118, 75, 162, 0.95) 100%);
+            backdrop-filter: blur(12px);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+            font-size: 13px;
+            line-height: 1.6;
+            color: rgba(255, 255, 255, 0.95);
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.2s ease-out;
+            z-index: 1000;
+        }
+
+        .graph-tooltip::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-style: solid;
+            border-width: 8px 8px 0 8px;
+            border-color: rgba(102, 126, 234, 0.95) transparent transparent transparent;
+        }
+
+        .graph-tooltip.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+            pointer-events: auto;
+        }
+
+        .probability-graph {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+
+        .graph-labels {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 8px;
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.6);
+            font-weight: 500;
+        }
+
+        .center-label {
+            font-size: 10px;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        @keyframes growBar {
+            from { height: 0; y: 70; }
+            to { height: var(--bar-height); y: var(--bar-y); }
+        }
+
+        @keyframes pulseHighlight {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 0.9; }
+        }
+
+        /* Sacred Geometry Loading Backdrop - QUANTUM COLLAPSE ANIMATION */
+        .sacred-backdrop {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at center, rgba(102, 126, 234, 0.98) 0%, rgba(118, 75, 162, 0.98) 100%);
+            backdrop-filter: blur(10px);
+            z-index: 10000;
+            overflow: hidden;
+        }
+
+        .sacred-backdrop.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 30px;
+            animation: backdropReveal 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @keyframes backdropReveal {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* QUANTUM PARTICLE FIELD - Creates depth and movement */
+        .quantum-field {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .quantum-particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: white;
+            border-radius: 50%;
+            animation: particleFloat 3.5s ease-out forwards;
+        }
+
+        @keyframes particleFloat {
+            0% {
+                opacity: 0;
+                transform: translate(0, 0) scale(0);
+            }
+            20% {
+                opacity: 0.8;
+            }
+            50% {
+                opacity: 1;
+            }
+            80% {
+                opacity: 0.6;
+            }
+            100% {
+                opacity: 0;
+                transform: translate(var(--tx), var(--ty)) scale(0);
+            }
+        }
+
+        /* PRIMARY SACRED GEOMETRY - Quantum collapse animation */
+        .sacred-geometry-large {
+            width: 0px;
+            height: 0px;
+            position: relative;
+            filter: drop-shadow(0 0 60px rgba(255, 255, 255, 0.7));
+            animation: quantumCollapse 3.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+
+        /* MULTI-LAYERED GEOMETRY FOR DEPTH */
+        .geometry-layer-1 {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            animation: layer1Animation 3.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+
+        .geometry-layer-2 {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            animation: layer2Animation 3.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+
+        .geometry-layer-3 {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            animation: layer3Animation 3.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        /* MAIN QUANTUM COLLAPSE - Point to screen to point */
+        @keyframes quantumCollapse {
+            0% {
+                width: 0px;
+                height: 0px;
+                opacity: 0;
+                transform: rotate(0deg) scale(0);
+                filter: drop-shadow(0 0 0px rgba(255, 255, 255, 0));
+            }
+            5% {
+                opacity: 1;
+            }
+            35% {
+                width: max(150vw, 150vh);
+                height: max(150vw, 150vh);
+                transform: rotate(540deg) scale(1.2);
+                filter: drop-shadow(0 0 100px rgba(240, 147, 251, 1));
+            }
+            65% {
+                width: max(150vw, 150vh);
+                height: max(150vw, 150vh);
+                transform: rotate(900deg) scale(1.15);
+                opacity: 1;
+            }
+            95% {
+                width: 0px;
+                height: 0px;
+                transform: rotate(1440deg) scale(0);
+                opacity: 0.3;
+                filter: drop-shadow(0 0 120px rgba(245, 87, 108, 1));
+            }
+            100% {
+                width: 0px;
+                height: 0px;
+                transform: rotate(1440deg) scale(0);
+                opacity: 0;
+                filter: drop-shadow(0 0 0px rgba(255, 255, 255, 0));
+            }
+        }
+
+        /* LAYER ANIMATIONS - Different expansion rates for depth */
+        @keyframes layer1Animation {
+            0%, 100% {
+                transform: rotate(0deg) scale(1);
+                opacity: 0;
+            }
+            35% {
+                transform: rotate(-720deg) scale(1.3);
+                opacity: 0.95;
+            }
+            65% {
+                transform: rotate(-1080deg) scale(1.25);
+                opacity: 0.9;
+            }
+        }
+
+        @keyframes layer2Animation {
+            0%, 100% {
+                transform: rotate(0deg) scale(1);
+                opacity: 0;
+            }
+            35% {
+                transform: rotate(360deg) scale(0.85);
+                opacity: 0.7;
+            }
+            65% {
+                transform: rotate(540deg) scale(0.8);
+                opacity: 0.65;
+            }
+        }
+
+        @keyframes layer3Animation {
+            0%, 100% {
+                transform: rotate(0deg) scale(1);
+                opacity: 0;
+            }
+            35% {
+                transform: rotate(900deg) scale(1.5);
+                opacity: 0.4;
+            }
+            65% {
+                transform: rotate(1260deg) scale(1.45);
+                opacity: 0.35;
+            }
+        }
+
+        /* CIRCLE STROKE ANIMATIONS - Sacred geometry breathing */
+        .sacred-geometry-large circle {
+            fill: none;
+            stroke: white;
+            stroke-width: 2;
+            opacity: 0;
+            animation: circleReveal 3.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+
+        @keyframes circleReveal {
+            0% {
+                opacity: 0;
+                stroke-width: 0;
+                stroke: rgba(255, 255, 255, 0);
+            }
+            20% {
+                opacity: 0.9;
+                stroke-width: 2.5;
+                stroke: rgba(255, 255, 255, 1);
+            }
+            40% {
+                stroke: rgba(240, 147, 251, 1);
+            }
+            60% {
+                stroke: rgba(245, 87, 108, 1);
+            }
+            80% {
+                opacity: 0.7;
+                stroke-width: 1.5;
+                stroke: rgba(255, 255, 255, 0.8);
+            }
+            100% {
+                opacity: 0;
+                stroke-width: 0;
+                stroke: rgba(255, 255, 255, 0);
+            }
+        }
+
+        /* LAYER-SPECIFIC CIRCLE COLORS */
+        .geometry-layer-1 circle {
+            animation: circleLayer1 3.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+
+        .geometry-layer-2 circle {
+            animation: circleLayer2 3.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+
+        .geometry-layer-3 circle {
+            animation: circleLayer3 3.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+
+        @keyframes circleLayer1 {
+            0%, 100% { opacity: 0; stroke: rgba(255, 255, 255, 0); }
+            35% { opacity: 1; stroke: rgba(240, 147, 251, 1); }
+            65% { opacity: 0.9; stroke: rgba(245, 87, 108, 0.9); }
+        }
+
+        @keyframes circleLayer2 {
+            0%, 100% { opacity: 0; stroke: rgba(255, 255, 255, 0); }
+            35% { opacity: 0.7; stroke: rgba(255, 255, 255, 0.7); }
+            65% { opacity: 0.6; stroke: rgba(240, 147, 251, 0.6); }
+        }
+
+        @keyframes circleLayer3 {
+            0%, 100% { opacity: 0; stroke: rgba(255, 255, 255, 0); }
+            35% { opacity: 0.4; stroke: rgba(245, 87, 108, 0.5); }
+            65% { opacity: 0.3; stroke: rgba(255, 255, 255, 0.3); }
+        }
+
+        /* LIGHT RAYS FROM CENTER */
+        .light-ray {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 3px;
+            height: 0%;
+            background: linear-gradient(to bottom,
+                rgba(255, 255, 255, 0) 0%,
+                rgba(240, 147, 251, 0.8) 50%,
+                rgba(255, 255, 255, 0) 100%
+            );
+            transform-origin: top center;
+            opacity: 0;
+            animation: rayExpand 3.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+
+        @keyframes rayExpand {
+            0% {
+                height: 0%;
+                opacity: 0;
+            }
+            35% {
+                height: 100vh;
+                opacity: 0.9;
+            }
+            65% {
+                height: 100vh;
+                opacity: 0.7;
+            }
+            100% {
+                height: 0%;
+                opacity: 0;
+            }
+        }
+
+        /* GLOW PULSE FROM CENTER */
+        .center-glow {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0px;
+            height: 0px;
+            background: radial-gradient(circle,
+                rgba(240, 147, 251, 0.9) 0%,
+                rgba(245, 87, 108, 0.6) 30%,
+                rgba(255, 255, 255, 0) 70%
+            );
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            animation: glowExpand 3.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+
+        @keyframes glowExpand {
+            0% {
+                width: 0px;
+                height: 0px;
+                opacity: 0;
+            }
+            35% {
+                width: 120vmax;
+                height: 120vmax;
+                opacity: 0.6;
+            }
+            65% {
+                width: 120vmax;
+                height: 120vmax;
+                opacity: 0.4;
+            }
+            100% {
+                width: 0px;
+                height: 0px;
+                opacity: 0;
+            }
+        }
+
+        /* SACRED GEOMETRY LOADING TEXT */
+        .sacred-backdrop-text {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 24px;
+            font-weight: 600;
+            color: white;
+            text-align: center;
+            letter-spacing: 1px;
+            z-index: 100;
+            animation: textPulseCollapse 3.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+            text-shadow: 0 0 30px rgba(240, 147, 251, 0.8);
+        }
+
+        @keyframes textPulseCollapse {
+            0% {
+                opacity: 0;
+                transform: scale(0.5);
+            }
+            20% {
+                opacity: 1;
+                transform: scale(1);
+                text-shadow: 0 0 30px rgba(240, 147, 251, 0.8);
+            }
+            50% {
+                text-shadow: 0 0 60px rgba(245, 87, 108, 1);
+            }
+            80% {
+                opacity: 0.9;
+                transform: scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+        }
+
+        /* Results */
+        .results-container {
+            display: none;
+        }
+
+        .results-container.show {
+            display: block;
+        }
+
+        .outcome-message {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 600;
+            margin: 30px 0;
+            padding: 30px;
+            background: rgba(240, 147, 251, 0.15);
+            border-radius: 16px;
+            border-left: 4px solid var(--accent);
+        }
+
+        .probability-display {
+            display: flex;
+            justify-content: space-around;
+            margin: 30px 0;
+            gap: 20px;
+        }
+
+        .prob-item {
+            flex: 1;
+            text-align: center;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            border: 2px solid rgba(255, 255, 255, 0.15);
+            transition: all 0.3s ease;
+        }
+
+        .prob-item:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent);
+        }
+
+        .prob-label {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .prob-value {
+            font-size: 48px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent2) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .stat-card {
+            text-align: center;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .stat-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--accent);
+        }
+
+        .wish-again-btn {
+            width: 100%;
+            padding: 20px;
+            font-size: 18px;
+            font-weight: 600;
+            color: white;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Space Grotesk', sans-serif;
+            margin-top: 20px;
+        }
+
+        .wish-again-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+
+        .wish-again-btn.disabled {
+            opacity: 0.4;
+            cursor: pointer;
+            background: rgba(128, 128, 128, 0.2);
+            border-color: rgba(128, 128, 128, 0.4);
+        }
+
+        .wish-again-btn.disabled:hover {
+            background: rgba(128, 128, 128, 0.3);
+            border-color: rgba(128, 128, 128, 0.5);
+        }
+
+        /* Recent Wishes Feed */
+        .recent-wishes-section {
+            margin-top: 60px;
+            margin-bottom: 60px;
+        }
+
+        .recent-wishes-section h2 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 32px;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .recent-wishes-subtitle {
+            text-align: center;
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 40px;
+            font-style: italic;
+        }
+
+        .wish-feed {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .wish-feed-item {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 20px 25px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            transition: all 0.3s ease;
+            animation: slideInFeed 0.5s ease-out;
+        }
+
+        @keyframes slideInFeed {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .wish-feed-item:hover {
+            background: rgba(255, 255, 255, 0.12);
+            border-color: rgba(255, 255, 255, 0.25);
+            transform: translateX(5px);
+        }
+
+        .wish-feed-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .wish-feed-time {
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.5);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .wish-feed-percent {
+            font-size: 16px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent2) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .wish-feed-text {
+            font-size: 14px;
+            line-height: 1.5;
+            color: rgba(255, 255, 255, 0.85);
+            font-style: italic;
+        }
+
+        .wish-feed-loading {
+            text-align: center;
+            padding: 40px;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 14px;
+        }
+
+        /* Pricing Section */
+        .pricing-section {
+            margin-top: 100px;
+            padding-top: 80px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .pricing-section h2 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 48px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .pricing-subtitle {
+            text-align: center;
+            font-size: 18px;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 60px;
+        }
+
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+
+        .pricing-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 28px;
+            padding: 48px 36px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .pricing-card:hover {
+            transform: translateY(-12px);
+            border-color: rgba(255, 255, 255, 0.4);
+            box-shadow: 0 24px 70px rgba(0, 0, 0, 0.3);
+        }
+
+        .pricing-card.featured {
+            border-color: var(--accent);
+            box-shadow: 0 24px 70px rgba(240, 147, 251, 0.35);
+            transform: scale(1.03);
+        }
+
+        .pricing-card.featured:hover {
+            transform: scale(1.03) translateY(-12px);
+            box-shadow: 0 28px 80px rgba(240, 147, 251, 0.45);
+        }
+
+        .pricing-card.special {
+            border-color: rgba(240, 147, 251, 0.4);
+            box-shadow: 0 15px 40px rgba(240, 147, 251, 0.2);
+            transform: scale(1.02);
+        }
+
+        .badge {
+            position: absolute;
+            top: -15px;
+            right: 20px;
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent2) 100%);
+            color: white;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .tier-name {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .price {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 5px;
+            background: linear-gradient(135deg, white 0%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .price-period {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 30px;
+        }
+
+        .features {
+            list-style: none;
+            margin-bottom: 30px;
+            flex-grow: 1;
+        }
+
+        .features li {
+            padding: 12px 0;
+            padding-left: 30px;
+            position: relative;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 14px;
+        }
+
+        .features li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: var(--accent);
+            font-weight: 700;
+            font-size: 16px;
+        }
+
+        .cta-button {
+            width: 100%;
+            padding: 18px;
+            background: white;
+            color: var(--primary);
+            border: none;
+            border-radius: 14px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none;
+            display: block;
+            text-align: center;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.3);
+            background: rgba(255, 255, 255, 0.95);
+        }
+
+        .cta-button:focus {
+            outline: none;
+            box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.3), 0 12px 35px rgba(0, 0, 0, 0.3);
+        }
+
+        .cta-button.secondary {
+            background: transparent;
+            border: 2px solid rgba(255, 255, 255, 0.8);
+            color: white;
+        }
+
+        .cta-button.secondary:hover {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: white;
+        }
+
+        .cta-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Info Section */
+        .info-section {
+            font-size: 16px;
+            line-height: 1.8;
+            color: rgba(255, 255, 255, 0.9);
+            padding: 52px 48px;
+            background: rgba(255, 255, 255, 0.06);
+            border-radius: 28px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            margin-top: 80px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .info-section:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .info-section h3 {
+            color: white;
+            margin-bottom: 24px;
+            font-size: 28px;
+            font-weight: 600;
+            font-family: 'Space Grotesk', sans-serif;
+            letter-spacing: -0.5px;
+        }
+
+        .info-section p {
+            margin-bottom: 20px;
+        }
+
+        .info-section p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Email Signup Bar */
+        .email-signup-bar {
+            margin-top: 80px;
+            padding: 40px 48px;
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            text-align: center;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .email-signup-bar:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .email-signup-bar h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: white;
+        }
+
+        .email-signup-bar p {
+            font-size: 16px;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .email-signup-form {
+            display: flex;
+            gap: 15px;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .email-signup-input {
+            flex: 1;
+            padding: 18px 24px;
+            font-size: 16px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        .email-signup-input:focus {
+            outline: none;
+            border-color: rgba(255, 255, 255, 0.6);
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.2);
+        }
+
+        .email-signup-input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .email-signup-button {
+            padding: 18px 36px;
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent2) 100%);
+            color: white;
+            border: none;
+            border-radius: 14px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Space Grotesk', sans-serif;
+            white-space: nowrap;
+        }
+
+        .email-signup-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(240, 147, 251, 0.4);
+        }
+
+        .email-signup-message {
+            margin-top: 15px;
+            font-size: 14px;
+            display: none;
+        }
+
+        /* Special Wish Card */
+        .special-wish-container {
+            margin-top: 50px;
+            margin-bottom: 60px;
+        }
+
+        .special-wish-card {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(20px);
+            border-radius: 28px;
+            padding: 48px;
+            border: 2px solid rgba(240, 147, 251, 0.3);
+            text-align: center;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .special-wish-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(240, 147, 251, 0.5);
+            box-shadow: 0 24px 60px rgba(240, 147, 251, 0.3);
+        }
+
+        .special-wish-emoji {
+            font-size: 64px;
+            margin-bottom: 20px;
+        }
+
+        .special-wish-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: white;
+        }
+
+        .special-wish-subtitle {
+            font-size: 16px;
+            color: rgba(255, 255, 255, 0.85);
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .special-wish-price {
+            font-size: 48px;
+            font-weight: 700;
+            margin: 20px 0;
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent2) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .special-wish-cta {
+            width: 100%;
+            max-width: 400px;
+            padding: 20px;
+            background: white;
+            color: var(--primary);
+            border: none;
+            border-radius: 16px;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Space Grotesk', sans-serif;
+            text-decoration: none;
+            display: inline-block;
+            margin: 0 auto;
+        }
+
+        .special-wish-cta:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(8px);
+            z-index: 9999;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .modal-overlay.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.95) 0%, rgba(118, 75, 162, 0.95) 100%);
+            backdrop-filter: blur(20px);
+            border-radius: 32px;
+            padding: 50px 40px;
+            max-width: 500px;
+            width: 100%;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5);
+            position: relative;
+            animation: slideUp 0.4s ease-out;
+            text-align: center;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 20px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-close:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: rotate(90deg);
+        }
+
+        .modal-emoji {
+            font-size: 72px;
+            margin-bottom: 20px;
+            animation: pulse 2s infinite;
+        }
+
+        .modal-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            background: linear-gradient(135deg, #ffffff 0%, #f093fb 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .modal-subtitle {
+            font-size: 18px;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .modal-price {
+            font-size: 56px;
+            font-weight: 700;
+            margin: 20px 0;
+            color: white;
+        }
+
+        .modal-price-label {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 30px;
+        }
+
+        .modal-cta-primary {
+            width: 100%;
+            padding: 20px;
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--primary);
+            background: white;
+            border: none;
+            border-radius: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Space Grotesk', sans-serif;
+            margin-bottom: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .modal-cta-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .modal-cta-secondary {
+            width: 100%;
+            padding: 18px;
+            font-size: 16px;
+            font-weight: 600;
+            color: white;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Inter', sans-serif;
+            text-decoration: none;
+            display: block;
+        }
+
+        .modal-cta-secondary:hover {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 14px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            margin-top: 80px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 42px;
+                letter-spacing: -1px;
+                margin-bottom: 20px;
+            }
+            .logo { font-size: 64px; }
+            .tagline {
+                font-size: 18px;
+                line-height: 1.6;
+            }
+            .card {
+                padding: 36px 24px;
+                border-radius: 24px;
+            }
+            .pricing-grid {
+                grid-template-columns: 1fr;
+                gap: 24px;
+            }
+            .pricing-card {
+                padding: 40px 28px;
+            }
+            .pricing-card.featured {
+                transform: scale(1);
+            }
+            .pricing-card.featured:hover {
+                transform: translateY(-8px);
+            }
+            .nav-links { gap: 15px; font-size: 13px; }
+
+            .wish-input {
+                padding: 20px;
+                min-height: 120px;
+                font-size: 16px;
+            }
+
+            .make-wish-btn {
+                padding: 22px;
+                font-size: 18px;
+            }
+
+            .cta-button {
+                padding: 16px;
+                min-height: 56px;
+            }
+
+            .modal-overlay {
+                align-items: flex-end;  /* Bottom sheet style on mobile */
+            }
+
+            .modal {
+                padding: 40px 25px;
+                margin: 0;
+                border-bottom-left-radius: 0;
+                border-bottom-right-radius: 0;
+                max-height: 90vh;
+                overflow-y: auto;
+                width: 100%;
+                max-width: 100%;
+            }
+
+            .modal-title {
+                font-size: 28px;
+            }
+
+            .modal-subtitle {
+                font-size: 16px;
+            }
+
+            .modal-price {
+                font-size: 48px;
+            }
+
+            .modal-cta-primary,
+            .modal-cta-secondary {
+                font-size: 16px;
+                padding: 18px;
+                min-height: 56px;  /* Touch-friendly tap target */
+            }
+
+            .email-signup-bar {
+                padding: 32px 24px;
+                margin-top: 60px;
+            }
+
+            .email-signup-form {
+                flex-direction: column;
+                gap: 12px;
+            }
+
+            .email-signup-button {
+                width: 100%;
+                padding: 18px;
+            }
+
+            .special-wish-card {
+                padding: 36px 24px;
+            }
+
+            .special-wish-emoji {
+                font-size: 48px;
+            }
+
+            .special-wish-title {
+                font-size: 26px;
+            }
+
+            .special-wish-price {
+                font-size: 40px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="particles" id="particles"></div>
+
+    <nav class="nav" id="nav">
+        <div class="nav-container">
+            <a href="/" class="nav-brand">✨ The Wish Machine</a>
+            <div class="nav-links">
+                {% if user and user.is_authenticated %}
+                    <span class="user-info">{{ user.email }}</span>
+                    <a href="/#pricing" class="nav-link">Pricing</a>
+                    <a href="/auth/account" class="nav-link">Account</a>
+                    <a href="/auth/logout" class="nav-link">Logout</a>
+                {% else %}
+                    <a href="/#pricing" class="nav-link">Pricing</a>
+                    <a href="/auth/login" class="nav-link">Login</a>
+                    <a href="/auth/signup" class="nav-link btn">Sign Up</a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="hero">
+            <div class="logo">✨</div>
+            <h1>The Wish Machine</h1>
+            <p class="tagline">Where consciousness shapes quantum reality</p>
+
+            <p class="hero-description">
+                We're not saying it's magic. We're saying intention is measurable and consciousness affects outcomes. The quantum observer effect is real physics: your attention literally changes what's being observed.
+            </p>
+
+            <p class="hero-tagline-secondary">
+                <strong>Call it quantum entanglement if you want. We call it intentional curation.</strong>
+            </p>
+        </div>
+
+        <div class="card">
+            <label for="wish-text">Your Wish</label>
+            <textarea
+                id="wish-text"
+                class="wish-input"
+                placeholder="Type your wish here... The universe is listening."
+                maxlength="500"
+            ></textarea>
+
+            <div class="intensity-slider">
+                <label>Intention Intensity</label>
+                <input type="range" id="intensity" min="1" max="100" value="50">
+                <div class="intensity-value" id="intensity-value">50%</div>
+            </div>
+
+            <button class="make-wish-btn" id="make-wish-btn">
+                Make Your Wish
+            </button>
+        </div>
+
+        <div class="results-container" id="results-container">
+            <div class="card">
+                <div class="outcome-message" id="outcome-message"></div>
+                <div class="probability-display">
+                    <div class="prob-item">
+                        <div class="prob-label">Manifested</div>
+                        <div class="prob-value" id="success-prob">0%</div>
+                    </div>
+                    <div class="prob-item">
+                        <div class="prob-label">Not Yet</div>
+                        <div class="prob-value" id="failure-prob">0%</div>
+                    </div>
+                </div>
+                <div class="stats-grid" id="stats-grid"></div>
+
+                <!-- Probability Distribution Graph -->
+                <div class="probability-graph-container">
+                    <h4 class="graph-title">
+                        Quantum Collapse Distribution
+                        <span class="info-icon" id="info-icon">ⓘ</span>
+                    </h4>
+                    <p class="graph-subtitle">Your Result vs. 1000 Simulations</p>
+
+                    <!-- Custom Tooltip -->
+                    <div class="graph-tooltip" id="graph-tooltip">
+                        This graph shows all 1000 quantum collapse simulations we ran for your wish. The white curve is what happens by chance. Your focused intention shifted the distribution higher. The higher your score appears, the stronger your manifestation potential.
+                    </div>
+
+                    <svg class="probability-graph" viewBox="0 0 240 80" id="prob-graph" preserveAspectRatio="xMidYMid meet">
+                        <!-- Gradient definitions -->
+                        <defs>
+                            <linearGradient id="barGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                                <stop offset="0%" style="stop-color:#f093fb;stop-opacity:0.9" />
+                                <stop offset="100%" style="stop-color:#764ba2;stop-opacity:0.9" />
+                            </linearGradient>
+                            <linearGradient id="baselineGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                                <stop offset="0%" style="stop-color:#ffffff;stop-opacity:0.3" />
+                                <stop offset="100%" style="stop-color:#ffffff;stop-opacity:0.15" />
+                            </linearGradient>
+                            <linearGradient id="highlightGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                                <stop offset="0%" style="stop-color:#f5576c;stop-opacity:0.6" />
+                                <stop offset="100%" style="stop-color:#f093fb;stop-opacity:0.2" />
+                            </linearGradient>
+                            <!-- Sacred Geometry Pattern -->
+                            <pattern id="sacredPattern" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
+                                <circle cx="20" cy="20" r="8" fill="none" stroke="white" stroke-width="0.3" opacity="0.03"/>
+                            </pattern>
+                        </defs>
+                        <!-- Bars, grids, and markers will be rendered by JavaScript -->
+                    </svg>
+                    <div class="graph-labels">
+                        <span>0%</span>
+                        <span class="center-label">Baseline (50%)</span>
+                        <span>100%</span>
+                    </div>
+                </div>
+
+                <button class="wish-again-btn" onclick="resetWish()">Make Another Wish</button>
+            </div>
+        </div>
+
+        <!-- Recent Wishes Feed -->
+        <div class="recent-wishes-section">
+            <h2>Last 5 Wishes</h2>
+            <p class="recent-wishes-subtitle">A curated glimpse into collective intention</p>
+            <div class="wish-feed" id="wish-feed">
+                <div class="wish-feed-loading">Loading recent wishes...</div>
+            </div>
+        </div>
+
+        <!-- How It Works Section -->
+        <div class="info-section">
+            <h3>How It Works</h3>
+            <p>
+                Yes, this sounds ridiculous. Olympic athletes have been visualizing their performance for decades. The body doesn't know the difference between a vividly imagined experience and a real one. We're simply extending that logic to everything that matters. Whether you're building relationships, making art, or growing a business, the mechanism is the same: focused consciousness influences how your reality unfolds.
+            </p>
+            <p>
+                Your baseline Consciousness is like your credit score for the universe: it starts wherever it starts, but it compounds with intention. We help you take actions that increase your Consciousness so wishes have better chances of coming true. Each wish runs 1000 quantum collapse simulations, measuring how your focused attention influences your reality. The more you practice, the stronger your signal gets. 
+            </p>
+            <p>
+                In an era of infinite digital noise, we're curating something else: deliberate, meaningful intention. Most worthwhile things are absurd until they're not.
+            </p>
+        </div>
+
+        <!-- Email Signup Bar -->
+        <div class="email-signup-bar">
+            <h3>Stay Connected</h3>
+            <p>Get matched with wish mates, receive consciousness insights, and explore the practice with us.</p>
+            <form class="email-signup-form" onsubmit="handleEmailSignup(event)">
+                <input
+                    type="email"
+                    id="main-email-input"
+                    class="email-signup-input"
+                    placeholder="your@email.com"
+                    required
+                />
+                <button type="submit" class="email-signup-button">Join the Practice</button>
+            </form>
+            <div id="main-email-message" class="email-signup-message"></div>
+            <p style="margin-top: 20px; font-size: 14px; color: rgba(255,255,255,0.7);">
+                Want unlimited wishes? <a href="/#pricing" style="color: var(--accent); text-decoration: underline; font-weight: 600;">Explore Premium</a>
+            </p>
+        </div>
+
+        <!-- Pricing Section -->
+        <div class="pricing-section" id="pricing">
+            <h2>Choose Your Practice</h2>
+            <p class="pricing-subtitle">Intentional focus over infinite noise</p>
+
+            <div class="pricing-grid">
+                <div class="pricing-card">
+                    <div class="tier-name">Free</div>
+                    <div class="price">$0</div>
+                    <div class="price-period">forever</div>
+                    <p style="font-size: 13px; line-height: 1.6; margin-bottom: 20px; color: rgba(255,255,255,0.85);">
+                        For those interested in exploring. Spend time exploring what Consciousness means and how to build it: your own understanding of yourself and the cosmos. No commitments, just pure curiosity and delight.
+                    </p>
+                    <ul class="features">
+                        <li>1 wish per month</li>
+                        <li>Accountability Tactics</li>
+                        <li>Basic analytics</li>
+                    </ul>
+                    {% if user and user.is_authenticated %}
+                        {% if user.subscription_tier == 'free' %}
+                            <button class="cta-button" disabled>Current Plan</button>
+                        {% else %}
+                            <a href="/auth/account" class="cta-button secondary">Manage Plan</a>
+                        {% endif %}
+                    {% else %}
+                        <a href="/auth/signup" class="cta-button">Get Started Free</a>
+                    {% endif %}
+                </div>
+
+                <div class="pricing-card featured">
+                    <div class="badge">Most Popular</div>
+                    <div class="tier-name">Premium</div>
+                    <div class="tier-subtitle" style="font-size: 13px; color: rgba(255,255,255,0.7); margin-bottom: 15px; font-style: italic;">"The Collective"</div>
+                    <div class="price">$9.99</div>
+                    <div class="price-period">per month</div>
+                    <p style="font-size: 13px; line-height: 1.6; margin-bottom: 20px; color: rgba(255,255,255,0.85);">
+                        In an age of infinite content, we're curating meaningful connections. Get matched with others pursuing similar intentions. Learn from those who've walked your path a community walking the journey from intent to reality. 
+                    </p>
+                    <ul class="features">
+                        <li>10 wishes per month</li>
+                        <li>Match with similar wish-makers</li>
+                        <li>Consciousness improvement strategies</li>
+                        <li>Advanced analytics & insights</li>
+                    </ul>
+                    {% if user and user.is_authenticated %}
+                        {% if user.subscription_tier == 'premium' and user.subscription_status == 'active' %}
+                            <button class="cta-button" disabled>Current Plan</button>
+                        {% else %}
+                            <a href="/subscribe/premium" class="cta-button">Upgrade to Premium</a>
+                        {% endif %}
+                    {% else %}
+                        <a href="/subscribe/premium" class="cta-button">Start Premium</a>
+                    {% endif %}
+                </div>
+
+                <div class="pricing-card">
+                    <div class="tier-name">Unlimited</div>
+                    <div class="tier-subtitle" style="font-size: 13px; color: rgba(255,255,255,0.7); margin-bottom: 15px; font-style: italic;">"The Actualization Lab"</div>
+                    <div class="price">$29.99</div>
+                    <div class="price-period">per month</div>
+                    <p style="font-size: 13px; line-height: 1.6; margin-bottom: 20px; color: rgba(255,255,255,0.85);">
+                        For those committed to the practice. Facilitated introductions to people manifesting complementary intentions—seeking accountability partners. Build the support structures that turn your intention into reality. 
+                    </p>
+                    <ul class="features">
+                        <li>Unlimited wishes</li>
+                        <li>Curated introductions (opt-in, privacy-first)</li>
+                        <li>Intention Groups</li>
+                        <li>Advanced manifestation analytics</li>
+                        <li>Pattern analysis across cohorts</li>
+                        <li>Early access to new features</li>
+                    </ul>
+                    {% if user and user.is_authenticated %}
+                        {% if user.subscription_tier == 'unlimited' and user.subscription_status == 'active' %}
+                            <button class="cta-button" disabled>Current Plan</button>
+                        {% else %}
+                            <a href="/subscribe/unlimited" class="cta-button">Go Unlimited</a>
+                        {% endif %}
+                    {% else %}
+                        <a href="/subscribe/unlimited" class="cta-button">Get Unlimited</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Special Wish Card -->
+        <div class="special-wish-container">
+            <div class="special-wish-card">
+                <div class="special-wish-emoji">✨</div>
+                <h3 class="special-wish-title">Just One More Wish</h3>
+                <p class="special-wish-subtitle">
+                    Not ready to commit to a monthly practice? Throw one more quarter in the wishing well. No subscription, no signup—just pure intention. <br> Examine that fractal edge of possibility one more time.
+                </p>
+                <div class="special-wish-price">$0.25</div>
+                <a href="/buy-single-wish-guest" class="special-wish-cta">Make One More Wish</a>
+            </div>
+        </div>
+
+        <footer>
+            <p>Building Consciousness since &copy; 2025 The Wish Machine.  All rights reserved. <br> <br> Your intention is unique, but the patterns are universal. </p>
+        </footer>
+    </div>
+
+    <!-- Sacred Geometry Loading Backdrop - QUANTUM COLLAPSE -->
+    <div class="sacred-backdrop" id="sacredBackdrop">
+        <!-- Quantum particle field background -->
+        <div class="quantum-field" id="quantumField"></div>
+
+        <!-- Center glow pulse -->
+        <div class="center-glow"></div>
+
+        <!-- Light rays emanating from center -->
+        <div class="light-ray" style="transform: translate(-50%, -50%) rotate(0deg);"></div>
+        <div class="light-ray" style="transform: translate(-50%, -50%) rotate(45deg);"></div>
+        <div class="light-ray" style="transform: translate(-50%, -50%) rotate(90deg);"></div>
+        <div class="light-ray" style="transform: translate(-50%, -50%) rotate(135deg);"></div>
+        <div class="light-ray" style="transform: translate(-50%, -50%) rotate(180deg);"></div>
+        <div class="light-ray" style="transform: translate(-50%, -50%) rotate(225deg);"></div>
+        <div class="light-ray" style="transform: translate(-50%, -50%) rotate(270deg);"></div>
+        <div class="light-ray" style="transform: translate(-50%, -50%) rotate(315deg);"></div>
+
+        <!-- Multi-layered sacred geometry - Layer 3 (largest, slowest) -->
+        <svg class="sacred-geometry-large" viewBox="0 0 200 200">
+            <g class="geometry-layer-3">
+                <circle cx="100" cy="100" r="50" />
+                <circle cx="143.3" cy="125" r="50" />
+                <circle cx="143.3" cy="75" r="50" />
+                <circle cx="100" cy="50" r="50" />
+                <circle cx="56.7" cy="75" r="50" />
+                <circle cx="56.7" cy="125" r="50" />
+                <circle cx="100" cy="150" r="50" />
+            </g>
+
+            <!-- Layer 2 (medium, counter-rotating) -->
+            <g class="geometry-layer-2">
+                <circle cx="100" cy="100" r="50" />
+                <circle cx="143.3" cy="125" r="50" />
+                <circle cx="143.3" cy="75" r="50" />
+                <circle cx="100" cy="50" r="50" />
+                <circle cx="56.7" cy="75" r="50" />
+                <circle cx="56.7" cy="125" r="50" />
+                <circle cx="100" cy="150" r="50" />
+            </g>
+
+            <!-- Layer 1 (primary, fastest) -->
+            <g class="geometry-layer-1">
+                <circle cx="100" cy="100" r="50" />
+                <circle cx="143.3" cy="125" r="50" />
+                <circle cx="143.3" cy="75" r="50" />
+                <circle cx="100" cy="50" r="50" />
+                <circle cx="56.7" cy="75" r="50" />
+                <circle cx="56.7" cy="125" r="50" />
+                <circle cx="100" cy="150" r="50" />
+            </g>
+        </svg>
+
+        <div class="sacred-backdrop-text">Collapsing 1000 quantum states...</div>
+    </div>
+
+    <!-- Upsell Modal -->
+    <div class="modal-overlay" id="upsellModal">
+        <div class="modal">
+            <button class="modal-close" onclick="closeModal()">&times;</button>
+            <div class="modal-emoji">✨</div>
+            <h3 class="modal-title">Continue the Practice?</h3>
+            <p class="modal-subtitle">Each wish matters. No infinite scrolling, no ambient noise—just intentional focus. Try one more for a quarter, or join the practice with 10 curated wishes per month.</p>
+            <div class="modal-price">$0.25</div>
+            <div class="modal-price-label">one wish, no subscription</div>
+            <a href="/buy-single-wish-guest" class="modal-cta-primary">One More Wish ($0.25)</a>
+            <a href="/auth/signup" class="modal-cta-secondary">Join for 10 Free Wishes/Month</a>
+
+            <div style="margin-top: 30px; padding-top: 25px; border-top: 1px solid rgba(255,255,255,0.2);">
+                <p style="font-size: 14px; color: rgba(255,255,255,0.8); margin-bottom: 15px;">Stay connected: Get matched with wish mates, receive consciousness insights, explore wave-particle duality.</p>
+                <input type="email" id="email-subscribe-input" placeholder="your@email.com" style="width: 100%; padding: 14px; font-size: 14px; border: 2px solid rgba(255,255,255,0.3); border-radius: 10px; background: rgba(255,255,255,0.1); color: white; font-family: 'Inter', sans-serif; margin-bottom: 12px;">
+                <button onclick="subscribeEmail()" class="modal-cta-secondary" style="margin: 0; padding: 14px;">Keep Me in the Loop</button>
+                <div id="email-subscribe-message" style="margin-top: 12px; font-size: 13px; display: none;"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Separate flags to track different modal triggers
+        let modalShownAfterWish = false;
+        let modalShownByScroll = false;
+
+        // Create floating particles
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            for (let i = 0; i < 50; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 15 + 's';
+                particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
+                particlesContainer.appendChild(particle);
+            }
+        }
+        createParticles();
+
+        // Create quantum particles emanating from center during collapse
+        function createQuantumParticles() {
+            const quantumField = document.getElementById('quantumField');
+            if (!quantumField) return;
+
+            // Clear any existing particles
+            quantumField.innerHTML = '';
+
+            // Create 200 particles emanating from center
+            for (let i = 0; i < 200; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'quantum-particle';
+
+                // Random angle for particle trajectory
+                const angle = (Math.PI * 2 * i) / 200 + (Math.random() * 0.1);
+
+                // Random distance (some particles go further)
+                const distance = 100 + Math.random() * 400;
+
+                // Calculate final position
+                const tx = Math.cos(angle) * distance;
+                const ty = Math.sin(angle) * distance;
+
+                // Set CSS custom properties for animation
+                particle.style.setProperty('--tx', `${tx}px`);
+                particle.style.setProperty('--ty', `${ty}px`);
+
+                // Start from center of screen
+                particle.style.left = '50%';
+                particle.style.top = '50%';
+
+                // Stagger the animation slightly
+                particle.style.animationDelay = `${i * 2}ms`;
+
+                // Random size variation
+                const size = 1 + Math.random() * 2;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+
+                quantumField.appendChild(particle);
+            }
+        }
+
+        // Nav scroll effect
+        window.addEventListener('scroll', () => {
+            const nav = document.getElementById('nav');
+            if (window.scrollY > 50) {
+                nav.classList.add('scrolled');
+            } else {
+                nav.classList.remove('scrolled');
+            }
+        });
+
+        // Intensity slider with defensive coding
+        const intensitySlider = document.getElementById('intensity');
+        const intensityValue = document.getElementById('intensity-value');
+
+        if (intensitySlider && intensityValue) {
+            // Initialize the display value on page load
+            intensityValue.textContent = intensitySlider.value + '%';
+
+            // Update value on slider input (real-time)
+            intensitySlider.addEventListener('input', function(e) {
+                intensityValue.textContent = e.target.value + '%';
+            });
+
+            // Also listen to 'change' event for broader browser compatibility
+            intensitySlider.addEventListener('change', function(e) {
+                intensityValue.textContent = e.target.value + '%';
+            });
+        } else {
+            console.error('Intensity slider elements not found!', {
+                slider: !!intensitySlider,
+                value: !!intensityValue
+            });
+        }
+
+        // Make wish functionality
+        const makeWishBtn = document.getElementById('make-wish-btn');
+        const wishText = document.getElementById('wish-text');
+        const resultsContainer = document.getElementById('results-container');
+
+        // Check if user has already used their free wish (for anonymous users)
+        function hasUsedFreeWish() {
+            return sessionStorage.getItem('anonymousWishUsed') === 'true';
+        }
+
+        function markWishAsUsed() {
+            sessionStorage.setItem('anonymousWishUsed', 'true');
+        }
+
+        makeWishBtn.addEventListener('click', async () => {
+            const wish = wishText.value.trim();
+            const intensity = parseInt(intensitySlider.value);
+
+            if (!wish) {
+                alert('Please enter a wish first!');
+                return;
+            }
+
+            // Disable button and show sacred geometry loading
+            makeWishBtn.disabled = true;
+            makeWishBtn.innerHTML = `
+                <svg class="flower-of-life" viewBox="0 0 200 200">
+                    <g class="outer-ring">
+                        <circle cx="100" cy="100" r="50" />
+                        <circle cx="143.3" cy="125" r="50" />
+                        <circle cx="143.3" cy="75" r="50" />
+                        <circle cx="100" cy="50" r="50" />
+                        <circle cx="56.7" cy="75" r="50" />
+                        <circle cx="56.7" cy="125" r="50" />
+                    </g>
+                    <circle class="center-circle" cx="100" cy="100" r="50" />
+                </svg>
+                <span class="loading-text">Collapsing 1000 quantum states...</span>
+            `;
+
+            // Show sacred geometry backdrop during loading
+            const sacredBackdrop = document.getElementById('sacredBackdrop');
+            const backdropStartTime = Date.now(); // Track when backdrop was shown
+            if (sacredBackdrop) {
+                sacredBackdrop.classList.add('show');
+                // Create quantum particles emanating from center
+                createQuantumParticles();
+            }
+
+            let apiData = null;  // Store data to display after backdrop
+
+            try {
+                const response = await fetch('/make_wish', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ wish, intensity })
+                });
+
+                const data = await response.json();
+
+                // Check for limit reached
+                if (data.limit_reached) {
+                    if (data.show_upsell || data.anonymous) {
+                        // For anonymous users, mark wish as used and show modal
+                        markWishAsUsed();
+                        showModal();
+                    } else {
+                        alert(data.error + '\n\nClick OK to view pricing plans.');
+                        window.location.href = '#pricing';
+                        setTimeout(() => window.scrollTo({
+                            top: document.getElementById('pricing').offsetTop - 100,
+                            behavior: 'smooth'
+                        }), 100);
+                    }
+                    return;
+                }
+
+                // Check for other errors
+                if (data.error) {
+                    alert(data.error);
+                    return;
+                }
+
+                // Store data to display AFTER backdrop hiding
+                apiData = data;
+
+                // Removed auto-popup modal trigger per team consensus
+                // Modal now only shows when user clicks "Make Another Wish" after limit
+
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Something went wrong with the quantum field...');
+            } finally {
+                // Ensure minimum 3.5 second backdrop display for better UX
+                const sacredBackdrop = document.getElementById('sacredBackdrop');
+                if (sacredBackdrop) {
+                    const elapsed = Date.now() - backdropStartTime;
+                    const remainingTime = Math.max(0, 3500 - elapsed); // Minimum 3.5s display (slower!)
+
+                    setTimeout(() => {
+                        // Hide backdrop first
+                        sacredBackdrop.classList.remove('show');
+
+                        // Then display results if we have data
+                        if (apiData) {
+                            displayResults(apiData, wish, intensity);
+
+                            // Refresh the recent wishes feed to show the new wish
+                            setTimeout(() => fetchRecentWishes(), 1000);
+                        }
+
+                        // Reset button
+                        makeWishBtn.disabled = false;
+                        makeWishBtn.innerHTML = 'Make Your Wish';
+                    }, remainingTime);
+                } else {
+                    // Fallback if backdrop element not found
+                    makeWishBtn.disabled = false;
+                    makeWishBtn.innerHTML = 'Make Your Wish';
+                    if (apiData) {
+                        displayResults(apiData, wish, intensity);
+                        setTimeout(() => fetchRecentWishes(), 1000);
+                    }
+                }
+            }
+        });
+
+        function renderProbabilityGraph(histogram, baseline, userScore) {
+            const svg = document.getElementById('prob-graph');
+
+            // Validate inputs
+            if (!Array.isArray(histogram) || !Array.isArray(baseline)) {
+                console.error('renderProbabilityGraph: histogram and baseline must be arrays');
+                return;
+            }
+
+            if (histogram.length === 0 || baseline.length === 0) {
+                console.error('renderProbabilityGraph: arrays cannot be empty');
+                return;
+            }
+
+            if (isNaN(userScore) || userScore < 0 || userScore > 100) {
+                console.error('renderProbabilityGraph: invalid userScore', userScore);
+                return;
+            }
+
+            // Clear existing content (except defs)
+            const defs = svg.querySelector('defs');
+            svg.innerHTML = '';
+            svg.appendChild(defs);
+
+            // Find max value for scaling - handle edge cases
+            const maxValue = Math.max(...histogram, ...baseline);
+            if (maxValue === 0 || isNaN(maxValue) || !isFinite(maxValue)) {
+                console.error('renderProbabilityGraph: invalid maxValue', maxValue);
+                return;
+            }
+
+            // 1. Sacred geometry background layer
+            const sacredBackground = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+            sacredBackground.setAttribute('x', '0');
+            sacredBackground.setAttribute('y', '0');
+            sacredBackground.setAttribute('width', '240');
+            sacredBackground.setAttribute('height', '70');
+            sacredBackground.setAttribute('fill', 'url(#sacredPattern)');
+            sacredBackground.setAttribute('opacity', '1');
+            svg.appendChild(sacredBackground);
+
+            // 2. Horizontal gridlines at quartiles (ggplot-style)
+            const gridY = [0, 25, 50, 75, 100];
+            gridY.forEach(percent => {
+                const y = 70 - (percent / 100) * 60;
+                const gridline = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                gridline.setAttribute('x1', '0');
+                gridline.setAttribute('y1', y);
+                gridline.setAttribute('x2', '240');
+                gridline.setAttribute('y2', y);
+                gridline.setAttribute('stroke', 'white');
+                gridline.setAttribute('stroke-width', '0.3');
+                gridline.setAttribute('opacity', '0.1');
+                svg.appendChild(gridline);
+            });
+
+            // 3. Y-axis labels (left side)
+            const yLabels = [
+                { value: maxValue, y: 10 },
+                { value: Math.round(maxValue / 2), y: 40 },
+                { value: 0, y: 70 }
+            ];
+            yLabels.forEach(label => {
+                const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                text.setAttribute('x', '-2');
+                text.setAttribute('y', label.y);
+                text.setAttribute('text-anchor', 'end');
+                text.setAttribute('font-size', '7');
+                text.setAttribute('fill', 'rgba(255,255,255,0.5)');
+                text.textContent = label.value;
+                svg.appendChild(text);
+            });
+
+            // 4. X-axis percentage markers (bottom)
+            const xMarkers = [
+                { percent: '0%', x: 0 },
+                { percent: '50%', x: 120 },
+                { percent: '100%', x: 240 }
+            ];
+            xMarkers.forEach(marker => {
+                const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                text.setAttribute('x', marker.x);
+                text.setAttribute('y', '78');
+                text.setAttribute('text-anchor', 'middle');
+                text.setAttribute('font-size', '7');
+                text.setAttribute('fill', 'rgba(255,255,255,0.5)');
+                text.textContent = marker.percent;
+                svg.appendChild(text);
+            });
+
+            // 5. Smooth Bézier baseline curve (not linear)
+            const baselinePath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+            let baselineD = '';
+            baseline.forEach((value, i) => {
+                const x = i * 2.4;
+                const height = (value / maxValue) * 60;
+                const y = 70 - height;
+                if (i === 0) {
+                    baselineD = `M ${x} ${y}`;
+                } else if (i === 1) {
+                    // Start with a line for the first segment
+                    baselineD += ` L ${x} ${y}`;
+                } else {
+                    // Use quadratic Bézier curve for smoothness
+                    const prevX = (i - 1) * 2.4;
+                    const prevHeight = (baseline[i - 1] / maxValue) * 60;
+                    const prevY = 70 - prevHeight;
+                    const controlX = (prevX + x) / 2;
+                    const controlY = (prevY + y) / 2;
+                    baselineD += ` Q ${controlX} ${controlY}, ${x} ${y}`;
+                }
+            });
+            baselinePath.setAttribute('d', baselineD);
+            baselinePath.setAttribute('fill', 'none');
+            baselinePath.setAttribute('stroke', 'url(#baselineGradient)');
+            baselinePath.setAttribute('stroke-width', '2');
+            baselinePath.setAttribute('opacity', '0.6');
+            svg.appendChild(baselinePath);
+
+            // 6. Render histogram bars
+            histogram.forEach((count, i) => {
+                const height = (count / maxValue) * 60;
+                const y = 70 - height;
+                const bar = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+                bar.setAttribute('x', i * 2.4);
+                bar.setAttribute('y', 70); // Start at bottom
+                bar.setAttribute('width', 2.2);
+                bar.setAttribute('height', 0); // Start at 0 for animation
+                bar.setAttribute('fill', 'url(#barGradient)');
+                bar.setAttribute('opacity', '0.85');
+
+                // Animate the bar growing
+                setTimeout(() => {
+                    bar.setAttribute('y', y);
+                    bar.setAttribute('height', height);
+                    bar.style.transition = 'y 0.8s ease-out, height 0.8s ease-out';
+                }, i * 3); // Stagger by 3ms per bar
+
+                svg.appendChild(bar);
+            });
+
+            // 7. Gradient highlight zone (5% width) instead of red line
+            const markerX = (userScore / 100) * 240;
+            const highlightWidth = 240 * 0.05; // 5% of total width
+            const highlightZone = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+            highlightZone.setAttribute('x', markerX - highlightWidth / 2);
+            highlightZone.setAttribute('y', '0');
+            highlightZone.setAttribute('width', highlightWidth);
+            highlightZone.setAttribute('height', '70');
+            highlightZone.setAttribute('fill', 'url(#highlightGradient)');
+            highlightZone.setAttribute('opacity', '0');
+            highlightZone.style.animation = 'pulseHighlight 2s ease-in-out infinite';
+            svg.appendChild(highlightZone);
+
+            // Fade in highlight zone after bars animate
+            setTimeout(() => {
+                highlightZone.style.transition = 'opacity 0.5s ease-in';
+                highlightZone.setAttribute('opacity', '0.6');
+            }, 500);
+
+            // 8. Add marker label
+            const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            label.setAttribute('x', markerX);
+            label.setAttribute('y', -2);
+            label.setAttribute('text-anchor', 'middle');
+            label.setAttribute('font-size', '10');
+            label.setAttribute('font-weight', '700');
+            label.setAttribute('fill', '#f5576c');
+            label.setAttribute('opacity', '0');
+            label.textContent = `${userScore.toFixed(1)}%`;
+            svg.appendChild(label);
+
+            setTimeout(() => {
+                label.style.transition = 'opacity 0.5s ease-in';
+                label.setAttribute('opacity', '1');
+            }, 500);
+        }
+
+        // Custom tooltip functionality for graph info icon
+        const infoIcon = document.getElementById('info-icon');
+        const graphTooltip = document.getElementById('graph-tooltip');
+
+        if (infoIcon && graphTooltip) {
+            // Click to toggle tooltip (works on mobile and desktop)
+            infoIcon.addEventListener('click', function(e) {
+                e.stopPropagation();
+                graphTooltip.classList.toggle('show');
+            });
+
+            // Hover to show on desktop (optional enhancement)
+            infoIcon.addEventListener('mouseenter', function() {
+                if (window.innerWidth > 768) { // Only on desktop
+                    graphTooltip.classList.add('show');
+                }
+            });
+
+            infoIcon.addEventListener('mouseleave', function() {
+                if (window.innerWidth > 768) { // Only on desktop
+                    // Delay hiding to allow user to read
+                    setTimeout(() => {
+                        if (!graphTooltip.matches(':hover')) {
+                            graphTooltip.classList.remove('show');
+                        }
+                    }, 300);
+                }
+            });
+
+            // Close tooltip when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!infoIcon.contains(e.target) && !graphTooltip.contains(e.target)) {
+                    graphTooltip.classList.remove('show');
+                }
+            });
+        }
+
+        function displayResults(data, wish, intensity) {
+            // Hide sacred geometry backdrop
+            const sacredBackdrop = document.getElementById('sacredBackdrop');
+            if (sacredBackdrop) {
+                sacredBackdrop.classList.remove('show');
+            }
+
+            // Show results container
+            resultsContainer.classList.add('show');
+            resultsContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+            // Display outcome message
+            const outcomeMsg = document.getElementById('outcome-message');
+            if (data.manifested_percent > 70) {
+                outcomeMsg.innerHTML = `🌟 Strong manifestation detected! Your wish is resonating with the quantum field.`;
+            } else if (data.manifested_percent > 50) {
+                outcomeMsg.innerHTML = `✨ Your wish is influencing reality. Keep focusing your intention!`;
+            } else {
+                outcomeMsg.innerHTML = `🌙 The quantum field heard you. Manifestation takes time and focus.`;
+            }
+
+            // Display probabilities
+            document.getElementById('success-prob').textContent = data.manifested_percent.toFixed(1) + '%';
+            document.getElementById('failure-prob').textContent = data.not_manifested_percent.toFixed(1) + '%';
+
+            // Display stats
+            const statsGrid = document.getElementById('stats-grid');
+            statsGrid.innerHTML = `
+                <div class="stat-card">
+                    <div class="stat-label">Trials</div>
+                    <div class="stat-value">${data.num_trials}</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Success Count</div>
+                    <div class="stat-value">${data.manifested_count}</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Intention Power</div>
+                    <div class="stat-value">${data.intensity}%</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Baseline Shift</div>
+                    <div class="stat-value">${data.difference_from_baseline > 0 ? '+' : ''}${data.difference_from_baseline.toFixed(1)}%</div>
+                </div>
+            `;
+
+            // Render probability distribution graph with error handling
+            if (data.trial_histogram && data.baseline_histogram &&
+                Array.isArray(data.trial_histogram) && data.trial_histogram.length === 100 &&
+                Array.isArray(data.baseline_histogram) && data.baseline_histogram.length === 100) {
+                try {
+                    renderProbabilityGraph(data.trial_histogram, data.baseline_histogram, data.manifested_percent);
+                } catch (error) {
+                    console.error('Error rendering probability graph:', error);
+                    // Graph fails gracefully - other results still show
+                }
+            } else {
+                console.error('Invalid histogram data:', {
+                    trial_histogram: data.trial_histogram ? `array of ${data.trial_histogram.length}` : 'missing',
+                    baseline_histogram: data.baseline_histogram ? `array of ${data.baseline_histogram.length}` : 'missing'
+                });
+            }
+
+            // Update the "Make Another Wish" button state
+            checkAndUpdateButtonState();
+        }
+
+        function resetWish() {
+            // Check if anonymous user has used their free wish
+            if (hasUsedFreeWish()) {
+                showModal();
+                return;
+            }
+
+            resultsContainer.classList.remove('show');
+            wishText.value = '';
+            intensitySlider.value = 50;
+            intensityValue.textContent = '50%';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Update "Make Another Wish" button appearance based on usage
+        function updateMakeAnotherWishButton() {
+            const wishAgainBtn = document.querySelector('.wish-again-btn');
+            if (wishAgainBtn && hasUsedFreeWish()) {
+                wishAgainBtn.classList.add('disabled');
+                wishAgainBtn.textContent = 'Get More Wishes';
+            }
+        }
+
+        // Call this when results are displayed
+        function checkAndUpdateButtonState() {
+            updateMakeAnotherWishButton();
+        }
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+
+        // Modal functions
+        function showModal(trigger = 'default') {
+            // Allow modal to show once after wish AND once by scroll
+            if (trigger === 'afterWish' && modalShownAfterWish) {
+                return;
+            }
+            if (trigger === 'scroll' && modalShownByScroll) {
+                return;
+            }
+
+            // Mark the appropriate flag
+            if (trigger === 'afterWish') {
+                modalShownAfterWish = true;
+            } else if (trigger === 'scroll') {
+                modalShownByScroll = true;
+            }
+
+            const modal = document.getElementById('upsellModal');
+            modal.classList.add('show');
+            document.body.style.overflow = 'hidden';  // Prevent scrolling
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('upsellModal');
+            modal.classList.remove('show');
+            document.body.style.overflow = '';  // Restore scrolling
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('upsellModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+
+        // Close modal with Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeModal();
+            }
+        });
+
+        // Email subscription function for main signup bar
+        async function handleEmailSignup(event) {
+            event.preventDefault();
+
+            const emailInput = document.getElementById('main-email-input');
+            const messageDiv = document.getElementById('main-email-message');
+            const email = emailInput.value.trim();
+
+            if (!email) {
+                messageDiv.style.display = 'block';
+                messageDiv.style.color = 'rgba(245, 87, 108, 0.9)';
+                messageDiv.textContent = 'Please enter your email';
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/subscribe-email', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        email: email,
+                        source: 'main_email_bar'
+                    })
+                });
+
+                const data = await response.json();
+
+                messageDiv.style.display = 'block';
+                if (response.ok) {
+                    messageDiv.style.color = 'rgba(144, 238, 144, 0.9)';
+                    messageDiv.textContent = data.message || 'Success! Check your inbox soon.';
+                    emailInput.value = '';
+                } else {
+                    messageDiv.style.color = 'rgba(245, 87, 108, 0.9)';
+                    messageDiv.textContent = data.error || 'Something went wrong. Please try again.';
+                }
+            } catch (error) {
+                console.error('Error subscribing email:', error);
+                messageDiv.style.display = 'block';
+                messageDiv.style.color = 'rgba(245, 87, 108, 0.9)';
+                messageDiv.textContent = 'Network error. Please try again.';
+            }
+        }
+
+        // Email subscription function for modal
+        async function subscribeEmail() {
+            const emailInput = document.getElementById('email-subscribe-input');
+            const messageDiv = document.getElementById('email-subscribe-message');
+            const email = emailInput.value.trim();
+
+            if (!email) {
+                messageDiv.style.display = 'block';
+                messageDiv.style.color = 'rgba(245, 87, 108, 0.9)';
+                messageDiv.textContent = 'Please enter your email';
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/subscribe-email', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        email: email,
+                        source: 'post_wish_modal'
+                    })
+                });
+
+                const data = await response.json();
+
+                messageDiv.style.display = 'block';
+                if (response.ok) {
+                    messageDiv.style.color = 'rgba(144, 238, 144, 0.9)';
+                    messageDiv.textContent = data.message || 'Success! Check your inbox soon.';
+                    emailInput.value = '';
+                } else {
+                    messageDiv.style.color = 'rgba(245, 87, 108, 0.9)';
+                    messageDiv.textContent = data.error || 'Something went wrong. Please try again.';
+                }
+            } catch (error) {
+                console.error('Error subscribing email:', error);
+                messageDiv.style.display = 'block';
+                messageDiv.style.color = 'rgba(245, 87, 108, 0.9)';
+                messageDiv.textContent = 'Network error. Please try again.';
+            }
+        }
+
+        // Removed scroll-triggered modal per team consensus
+        // It was interrupting users while reading "How It Works" section
+        // Modal now only shows when user clicks "Make Another Wish" after limit
+
+        // Recent Wishes Feed
+        async function fetchRecentWishes() {
+            try {
+                const response = await fetch('/api/recent-wishes');
+                const wishes = await response.json();
+
+                const feedContainer = document.getElementById('wish-feed');
+
+                if (!wishes || wishes.length === 0) {
+                    feedContainer.innerHTML = '<div class="wish-feed-loading">No recent wishes yet. Be the first!</div>';
+                    return;
+                }
+
+                feedContainer.innerHTML = wishes.map(wish => `
+                    <div class="wish-feed-item">
+                        <div class="wish-feed-header">
+                            <span class="wish-feed-time">${wish.time_ago}</span>
+                            <span class="wish-feed-percent">${wish.manifested_percent}% manifested</span>
+                        </div>
+                        <div class="wish-feed-text">"${wish.wish}"</div>
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error('Error fetching recent wishes:', error);
+                document.getElementById('wish-feed').innerHTML =
+                    '<div class="wish-feed-loading">Unable to load recent wishes</div>';
+            }
+        }
+
+        // Load recent wishes on page load
+        fetchRecentWishes();
+
+        // Auto-refresh every 30 seconds
+        setInterval(fetchRecentWishes, 30000);
+    </script>
+</body>
+</html>

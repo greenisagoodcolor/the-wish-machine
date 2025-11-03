@@ -98,6 +98,10 @@ migrate = Migrate(app, db)
 # CSRF Protection
 csrf = CSRFProtect(app)
 
+# Exempt specific API endpoints from CSRF (JSON APIs that use session auth)
+# These endpoints still require @login_required for security
+csrf.exempt('auth.update_profile')  # Profile update API endpoint
+
 # Security Headers with Flask-Talisman
 csp = {
     'default-src': ["'self'"],
