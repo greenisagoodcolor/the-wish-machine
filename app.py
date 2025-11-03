@@ -478,6 +478,7 @@ def make_wish():
         if is_authenticated:
             # Increment counter for authenticated users
             current_user.increment_wish_count()
+            db.session.commit()  # FIX BUG-001: Persist wish counter to database
 
             # Add usage info to response
             results['wishes_remaining'] = current_user.get_wish_limit() - current_user.wishes_this_month
