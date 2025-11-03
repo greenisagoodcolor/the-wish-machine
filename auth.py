@@ -12,6 +12,10 @@ from email_service import email_service
 
 auth_bp = Blueprint('auth', __name__)
 
+# Import CSRF protection to exempt API endpoints
+from flask_wtf.csrf import CSRFProtect
+csrf = CSRFProtect()
+
 
 @auth_bp.route('/signup', methods=['GET', 'POST'])
 def signup():
@@ -261,6 +265,7 @@ def account():
 
 @auth_bp.route('/api/profile/update', methods=['POST'])
 @login_required
+@csrf.exempt
 def update_profile():
     """Update user profile preferences (PRD Section 4)."""
     try:
