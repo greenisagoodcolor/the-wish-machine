@@ -351,6 +351,101 @@
             <a href="/#pricing" class="btn">See Pricing Plans</a>
         </div>
         {% endif %}
+
+        <!-- Profile Preferences (PRD Section 4) -->
+        <div class="card">
+            <h2>Profile Preferences</h2>
+
+            <div style="margin-bottom: 24px;">
+                <label style="display: block; font-weight: 600; margin-bottom: 8px;">Top 3 wish themes</label>
+                <p style="font-size: 13px; color: rgba(255,255,255,0.7); margin-bottom: 12px;">
+                    Pick up to three (e.g., Health, Career, Relationships).
+                </p>
+                <select id="wish-themes" multiple style="width: 100%; padding: 12px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.3); border-radius: 8px; color: white; font-size: 14px; min-height: 120px;">
+                    <option value="Health">Health & Wellness</option>
+                    <option value="Career">Career & Work</option>
+                    <option value="Relationships">Relationships & Love</option>
+                    <option value="Finance">Finance & Abundance</option>
+                    <option value="Creativity">Creativity & Art</option>
+                    <option value="Purpose">Purpose & Meaning</option>
+                    <option value="Growth">Personal Growth</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div>
+
+            <div style="margin-bottom: 24px;">
+                <label style="display: flex; align-items: center; cursor: pointer;">
+                    <input type="checkbox" id="open-to-connect" style="margin-right: 12px; width: 20px; height: 20px; cursor: pointer;">
+                    <span style="font-weight: 600;">Open to connect</span>
+                </label>
+                <p style="font-size: 13px; color: rgba(255,255,255,0.7); margin-top: 8px; margin-left: 32px;">
+                    Let others with similar themes find you. You can change this anytime.
+                </p>
+            </div>
+
+            <button onclick="saveProfile()" class="btn">Save Preferences</button>
+            <div id="profile-message" style="margin-top: 12px; font-size: 14px; display: none;"></div>
+        </div>
     </div>
+
+    <script>
+        // Load existing preferences
+        function loadProfile() {
+            {% if user.wish_themes %}
+            const themes = {{ user.wish_themes | tojson }};
+            const select = document.getElementById('wish-themes');
+            Array.from(select.options).forEach(opt => {
+                if (themes.includes(opt.value)) opt.selected = true;
+            });
+            {% endif %}
+
+            {% if user.open_to_connect %}
+            document.getElementById('open-to-connect').checked = true;
+            {% endif %}
+        }
+
+        async function saveProfile() {
+            const select = document.getElementById('wish-themes');
+            const themes = Array.from(select.selectedOptions).map(opt => opt.value);
+            const openToConnect = document.getElementById('open-to-connect').checked;
+
+            if (themes.length > 3) {
+                alert('Please select maximum 3 themes');
+                return;
+            }
+
+            try {
+                const response = await fetch('/auth/api/profile/update', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        wish_themes: themes,
+                        open_to_connect: openToConnect
+                    })
+                });
+
+                const data = await response.json();
+                const messageDiv = document.getElementById('profile-message');
+                messageDiv.style.display = 'block';
+
+                if (response.ok) {
+                    messageDiv.style.color = '#86efac';
+                    messageDiv.textContent = data.message;
+                } else {
+                    messageDiv.style.color = '#fca5a5';
+                    messageDiv.textContent = data.error;
+                }
+            } catch (error) {
+                console.error('Error saving profile:', error);
+                const messageDiv = document.getElementById('profile-message');
+                messageDiv.style.display = 'block';
+                messageDiv.style.color = '#fca5a5';
+                messageDiv.textContent = 'Network error. Please try again.';
+            }
+        }
+
+        // Load profile on page load
+        loadProfile();
+    </script>
 </body>
 </html>

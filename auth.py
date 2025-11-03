@@ -257,3 +257,35 @@ def api_waitlist():
 def account():
     """User account page."""
     return render_template('account.html', user=current_user)
+
+
+@auth_bp.route('/api/profile/update', methods=['POST'])
+@login_required
+def update_profile():
+    """Update user profile preferences (PRD Section 4)."""
+    try:
+        data = request.get_json()
+
+        # Validate wish_themes (max 3)
+        wish_themes = data.get('wish_themes', [])
+        if not isinstance(wish_themes, list):
+            return jsonify({'error': 'wish_themes must be an array'}), 400
+        if len(wish_themes) > 3:
+            return jsonify({'error': 'Maximum 3 themes allowed'}), 400
+
+        # Validate open_to_connect (boolean)
+        open_to_connect = data.get('open_to_connect', False)
+        if not isinstance(open_to_connect, bool):
+            return jsonify({'error': 'Invalid connect preference'}), 400
+
+        # Update user
+        current_user.wish_themes = wish_themes if wish_themes else None
+        current_user.open_to_connect = open_to_connect
+        db.session.commit()
+
+        return jsonify({'message': 'Profile updated successfully'}), 200
+
+    except Exception as e:
+        db.session.rollback()
+        current_app.logger.error(f'Error updating profile: {str(e)}')
+        return jsonify({'error': 'An error occurred'}), 500

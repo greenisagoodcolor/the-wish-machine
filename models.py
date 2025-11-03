@@ -37,6 +37,10 @@ class User(UserMixin, db.Model):
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
     last_login = db.Column(db.DateTime, nullable=True)
 
+    # Profile preferences (PRD Section 4)
+    wish_themes = db.Column(db.JSON, nullable=True, default=None)  # Array of up to 3 themes
+    open_to_connect = db.Column(db.Boolean, default=False, nullable=False)
+
     # Relationships
     wishes = db.relationship('Wish', backref='user', lazy='dynamic', cascade='all, delete-orphan')
 

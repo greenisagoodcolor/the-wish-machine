@@ -3014,6 +3014,13 @@
                 </div>
 
                 <button class="wish-again-btn" onclick="resetWish()">Make Another Wish</button>
+
+                <!-- Conditional "Connect with peers" CTA (PRD Section 4) -->
+                {% if user and user.is_authenticated and user.open_to_connect %}
+                <a href="#" class="wish-again-btn" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); margin-top: 16px; display: inline-block; text-decoration: none; text-align: center;" onclick="alert('Matching feature coming soon! We will connect you with similar wish-makers based on your profile themes.'); return false;">
+                    Connect with peers
+                </a>
+                {% endif %}
             </div>
         </div>
 

@@ -45,6 +45,29 @@ def run_migrations():
             else:
                 print('⚠ user_id column not found in wishes table')
 
+        # 3. Add profile columns to users table if they don't exist (PRD Checkpoint Charlie)
+        if 'users' in tables:
+            columns = inspector.get_columns('users')
+            column_names = [c['name'] for c in columns]
+
+            if 'wish_themes' not in column_names:
+                print('\n→ Adding wish_themes column to users...')
+                with db.engine.connect() as conn:
+                    conn.execute(text('ALTER TABLE users ADD COLUMN wish_themes JSON'))
+                    conn.commit()
+                print('✓ wish_themes column added')
+            else:
+                print('\n✓ wish_themes column already exists')
+
+            if 'open_to_connect' not in column_names:
+                print('\n→ Adding open_to_connect column to users...')
+                with db.engine.connect() as conn:
+                    conn.execute(text('ALTER TABLE users ADD COLUMN open_to_connect BOOLEAN DEFAULT FALSE'))
+                    conn.commit()
+                print('✓ open_to_connect column added')
+            else:
+                print('\n✓ open_to_connect column already exists')
+
         print('\n✅ All migrations completed successfully!')
 
         # Verify final state
