@@ -105,11 +105,11 @@ csrf.exempt('auth.update_profile')  # Profile update API endpoint
 # Security Headers with Flask-Talisman
 csp = {
     'default-src': ["'self'"],
-    'script-src': ["'self'", "'unsafe-inline'"],  # unsafe-inline needed for inline scripts
+    'script-src': ["'self'", "'unsafe-inline'", 'https://us-assets.i.posthog.com'],  # PostHog assets + inline scripts
     'style-src': ["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com'],
     'font-src': ["'self'", 'https://fonts.gstatic.com'],
     'img-src': ["'self'", 'data:', 'https:'],
-    'connect-src': ["'self'", 'https://api.stripe.com'],
+    'connect-src': ["'self'", 'https://api.stripe.com', 'https://us.i.posthog.com', 'https://us-assets.i.posthog.com'],  # PostHog API + assets
 }
 
 # Initialize Talisman with security headers
